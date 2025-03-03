@@ -1,0 +1,13 @@
+{
+  "name": "@sffvektor/scheduler",
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-env main.ts --env-file .env.local --env-file .env --env-file ../.env.local --env-file ../.env",
+    "prod": "deno run --allow-net --allow-env main.ts --env-file .env.local --env-file .env --env-file ../.env.local --env-file ../.env",
+    "test": "deno test"
+  },
+  "imports": {
+    "@/": "./",
+    "@ssfvektor/lib": "jsr:@ssfvektor/lib"
+  },
+  "exports": "./main.ts"
+}

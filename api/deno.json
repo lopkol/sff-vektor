@@ -1,0 +1,18 @@
+{
+  "name": "@sffvektor/api",
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-read --allow-env main.ts",
+    "prod": "deno run --allow-net --allow-read --allow-env main.ts --env-file=.env.local --env-file=.env --env-file=../.env.local --env-file=../.env",
+    "test": "deno test"
+  },
+  "imports": {
+    "@/": "./",
+    "@ssfvektor/lib": "jsr:@ssfvektor/lib",
+    "hono": "jsr:@hono/hono@^4.7.2"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  },
+  "exports": "./main.ts"
+}
