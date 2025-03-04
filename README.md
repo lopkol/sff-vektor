@@ -43,6 +43,7 @@ Project level env files always take precedence over root level env files.
 * Hono (web framework): https://hono.dev/docs/getting-started/basic
 * Slonik (PostgreSQL typed native queries): https://github.com/gajus/slonik?tab=readme-ov-file#documentation
 * Zod (validation): https://zod.dev/
+* dbmate (database migrations): https://github.com/amacneil/dbmate
 
 Hono and Slonik are both using Zod, respectfully for validation and typing.
 
