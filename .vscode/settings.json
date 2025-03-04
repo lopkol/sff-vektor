@@ -1,6 +1,9 @@
 {
   "deno.enablePaths": [
-    "./"
+    "./deno.*",
+    "./api",
+    "./lib",
+    "./scheduler",
   ],
   "editor.inlayHints.enabled": "off"
 }
