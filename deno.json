@@ -2,6 +2,7 @@
   "workspace": ["lib", "api", "scheduler"],
   "tasks": {
     "all:test": "deno task --recursive test",
+    "migration": "deno task --filter @sffvektor/api migration",
     "api:dev": "deno task --filter @sffvektor/api dev",
     "api:prod": "deno task --filter @sffvektor/api prod",
     "scheduler:dev": "deno task --filter @sffvektor/scheduler dev",
