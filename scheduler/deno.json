@@ -1,8 +1,8 @@
 {
   "name": "@sffvektor/scheduler",
   "tasks": {
-    "dev": "deno run --watch --allow-net --allow-env main.ts --env-file .env.local --env-file .env --env-file ../.env.local --env-file ../.env",
-    "prod": "deno run --allow-net --allow-env main.ts --env-file .env.local --env-file .env --env-file ../.env.local --env-file ../.env",
+    "dev": "deno run --watch --allow-net --allow-env main.ts",
+    "prod": "deno run --allow-net --allow-env main.ts",
     "test": "deno test"
   },
   "imports": {

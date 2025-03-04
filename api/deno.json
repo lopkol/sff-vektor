@@ -1,14 +1,16 @@
 {
   "name": "@sffvektor/api",
   "tasks": {
-    "dev": "deno run --watch --allow-net --allow-read --allow-env main.ts",
-    "prod": "deno run --allow-net --allow-read --allow-env main.ts --env-file=.env.local --env-file=.env --env-file=../.env.local --env-file=../.env",
-    "test": "deno test"
+    "dev": "deno run --watch --allow-net --allow-read --allow-env --allow-run main.ts",
+    "prod": "deno run --allow-net --allow-read --allow-env --allow-run main.ts",
+    "test": "deno test",
+    "migration": "deno run --allow-net --allow-read --allow-env --allow-run migration-cli.ts"
   },
   "imports": {
     "@/": "./",
     "@ssfvektor/lib": "jsr:@ssfvektor/lib",
-    "hono": "jsr:@hono/hono@^4.7.2"
+    "dbmate": "npm:dbmate@2.26.0",
+    "hono": "jsr:@hono/hono@4.7.2"
   },
   "compilerOptions": {
     "jsx": "precompile",

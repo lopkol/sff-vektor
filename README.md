@@ -19,6 +19,10 @@ At the root of the repository:
 4. Run `deno task scheduler:dev` to run the scheduler in watch mode
 5. Run `deno task all:test` to run all the tests
 6. Run `deno task cleanup` to format and lint the code
+7. Run `deno task migration [OPTIONS] [COMMAND]` to run migrations
+  - `deno task migration new [label]`: create a new timestamped migration file under `api/migrations/`
+  - `deno task migration up`: run the migration (API also runs migration automatically on startup if `DATABASE_RUN_MIGRATIONS=true`, enabled by default)
+  - `deno task migration down`: revert the last migration
 
 ### Env files explained:
 

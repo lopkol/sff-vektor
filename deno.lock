@@ -1,14 +1,19 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@hono/hono@^4.7.2": "4.7.2",
+    "jsr:@hono/hono@4.7.2": "4.7.2",
     "jsr:@std/assert@1": "1.0.11",
     "jsr:@std/dotenv@0.225.3": "0.225.3",
     "jsr:@std/internal@^1.0.5": "1.0.5",
+    "npm:@slonik/pg-driver@46.4.0": "46.4.0_zod@3.24.2_pg@8.13.3",
     "npm:@slonik/pg-driver@^46.4.0": "46.4.0_zod@3.24.2_pg@8.13.3",
     "npm:@types/node@*": "22.12.0",
     "npm:create-hono@latest": "0.15.3",
+    "npm:dbmate@2.26.0": "2.26.0",
+    "npm:dbmate@^2.26.0": "2.26.0",
+    "npm:slonik@46.4.0": "46.4.0_zod@3.24.2",
     "npm:slonik@^46.4.0": "46.4.0_zod@3.24.2",
+    "npm:zod@3.24.2": "3.24.2",
     "npm:zod@^3.24.2": "3.24.2"
   },
   "jsr": {
@@ -29,6 +34,27 @@
     }
   },
   "npm": {
+    "@dbmate/darwin-arm64@2.26.0": {
+      "integrity": "sha512-gcFzfK3woPs5cRqE7WhLIAppaXXPJeXtXDZsG7Dx9KjKmQrT1b+dzD3CgLTMynRCki6c2sXMlj0dw+GpOeiU7w=="
+    },
+    "@dbmate/darwin-x64@2.26.0": {
+      "integrity": "sha512-sDvpo/lmmdpHk72hfrxeNxofVA0VkjzT6iAl1Va9XlsysXryHkfy2kOMKrNTaklGiY1FuiAAaEWHblQbnSIm+A=="
+    },
+    "@dbmate/linux-arm64@2.26.0": {
+      "integrity": "sha512-ug8YWgGaxKW6IGHTI+CRJREVOZSd+dK16O6mLCKLeJ7NGXlajtyjTPEZOrUdJdX95/erYbIN5T2V/jKjVtH1SA=="
+    },
+    "@dbmate/linux-arm@2.26.0": {
+      "integrity": "sha512-XomBeCo8A+hByyAuUa7sjA2e6kenFGODi3rEgNfm8Kr/pkjykRK/59djAiuJNVQRT6y/i9wy4/ZqPzWVmaEolQ=="
+    },
+    "@dbmate/linux-ia32@2.26.0": {
+      "integrity": "sha512-er87GxCyiJAfwBTDaQBkVg3cnwbBiU3tpbx9bME9W+4AxAqiMfSEAnL2P6kN0zHd2BG6VpYkFEnKe66/SlGZrQ=="
+    },
+    "@dbmate/linux-x64@2.26.0": {
+      "integrity": "sha512-VSjWBdu7zEJ8LN8yXGAexyfmdPqVsdL7AkS7MAXhOE0zHZfXZcF+H2Wlwxoas1wg1p9tx7KxjljqJzqQlEE7Fw=="
+    },
+    "@dbmate/win32-x64@2.26.0": {
+      "integrity": "sha512-fMu2nimNX487f1jzES/YjWYZByKJ1vgnLDkDsn8vi1JJahPrVlU8axQ4OY7bUj9uT1hXnWwKsV/YyE+V1IMPvw=="
+    },
     "@slonik/driver@46.4.0_zod@3.24.2": {
       "integrity": "sha512-av8JnxmWzzAauvS6/2NxrYfrVxzopT/a8Iah1vS9OkNI55FaQxal+0QoSixOUqFN0/TLCv6UFZAI7xcUh8Cmzw==",
       "dependencies": [
@@ -95,6 +121,18 @@
     },
     "create-hono@0.15.3": {
       "integrity": "sha512-tgzUUML7zKMlNHb1ki5V3MF9T0g7sFfkyIHA+ZZBvHteDlVsW2AnCMI4eNMiUlDY9FFQl4KvHXBT6LPdknVl3Q=="
+    },
+    "dbmate@2.26.0": {
+      "integrity": "sha512-PZwU/dDm3s3bMN0Ra1SSF3i0sKUy9Ms9QnokrUZHYoKvaJyLFw2XnlTl21ivLJLbOZ/rUPzbpPddGJMzmPNt1Q==",
+      "dependencies": [
+        "@dbmate/darwin-arm64",
+        "@dbmate/darwin-x64",
+        "@dbmate/linux-arm",
+        "@dbmate/linux-arm64",
+        "@dbmate/linux-ia32",
+        "@dbmate/linux-x64",
+        "@dbmate/win32-x64"
+      ]
     },
     "fast-printf@1.6.10": {
       "integrity": "sha512-GwTgG9O4FVIdShhbVF3JxOgSBY2+ePGsu2V/UONgoCPzF9VY6ZdBMKsHKCYQHZwNk3qNouUolRDsgVxcVA5G1w=="
@@ -289,15 +327,16 @@
     "dependencies": [
       "jsr:@std/assert@1",
       "jsr:@std/dotenv@0.225.3",
-      "npm:@slonik/pg-driver@^46.4.0",
-      "npm:slonik@^46.4.0",
-      "npm:zod@^3.24.2"
+      "npm:@slonik/pg-driver@46.4.0",
+      "npm:slonik@46.4.0",
+      "npm:zod@3.24.2"
     ],
     "members": {
       "api": {
         "dependencies": [
-          "jsr:@hono/hono@^4.7.2",
-          "jsr:@ssfvektor/lib@*"
+          "jsr:@hono/hono@4.7.2",
+          "jsr:@ssfvektor/lib@*",
+          "npm:dbmate@2.26.0"
         ]
       },
       "scheduler": {
