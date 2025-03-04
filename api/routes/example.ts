@@ -4,7 +4,7 @@ import { getExample } from "@ssfvektor/lib";
 import { app } from "@/config/application.ts";
 import { pool } from "@/config/database.ts";
 
-app.get("/", async (c) => {
+app.get("/api/example", async (c) => {
   return c.json(await getExample(pool), 201);
 });
 
@@ -13,7 +13,7 @@ const schema = z.object({
 });
 
 app.post(
-  "/",
+  "/api/example",
   validator("form", (value, c) => {
     const parsed = schema.safeParse(value);
     if (!parsed.success) {

@@ -24,6 +24,11 @@ At the root of the repository:
   - `deno task migration up`: run the migration (API also runs migration automatically on startup if `DATABASE_RUN_MIGRATIONS=true`, enabled by default)
   - `deno task migration down`: revert the last migration
 
+For the frontend, you have to go in the `frontend/` folder:
+1. Run `npm i` to install dependencies
+2. Run `npm run dev` to start dev environment
+
+
 ### Env files explained:
 
 There are 2 levels of environment files:
@@ -40,6 +45,8 @@ Project level env files always take precedence over root level env files.
 
 
 ## Libraries used in this project
+
+### Backend
 * Hono (web framework): https://hono.dev/docs/getting-started/basic
 * Slonik (PostgreSQL typed native queries): https://github.com/gajus/slonik?tab=readme-ov-file#documentation
 * Zod (validation): https://zod.dev/
@@ -47,7 +54,11 @@ Project level env files always take precedence over root level env files.
 
 Hono and Slonik are both using Zod, respectfully for validation and typing.
 
+### Frontend
+* NextJS (React fullstack framework): https://nextjs.org/docs/app/getting-started/layouts-and-pages
+* Radix UI (UI components library): https://www.radix-ui.com/themes/docs/overview/getting-started
+  * For extra components, you can use ShadCN website to get ready to go components: https://ui.shadcn.com/ (it uses Radix UI)
+
 <!-- Sylvain's tasks:
-// TODO: 1. add migrations
-// TODO: 2. build infra with Pulumi
+// TODO: build infra with Pulumi
 -->
