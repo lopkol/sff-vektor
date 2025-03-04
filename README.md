@@ -10,13 +10,15 @@
 - Deno installed locally:
   https://docs.deno.com/runtime/getting_started/installation/
 
-### Run the project locally:
+### To run the project locally:
 
-1. Run `docker compose up -d`
-2. Run `deno task api:dev` to serve the API in watch mode
-3. Run `deno task scheduler:dev` to run the scheduler in watch mode
-4. Run `deno task all:test` to run all the tests
-5. Run `deno task cleanup` to format and lint the code
+At the root of the repository:
+1. Run `docker compose up -d` to start local backend services
+2. Run `deno install` to resolve Deno dependencies
+3. Run `deno task api:dev` to serve the API in watch mode
+4. Run `deno task scheduler:dev` to run the scheduler in watch mode
+5. Run `deno task all:test` to run all the tests
+6. Run `deno task cleanup` to format and lint the code
 
 ### Env files explained:
 
@@ -39,3 +41,8 @@ Project level env files always take precedence over root level env files.
 * Zod (validation): https://zod.dev/
 
 Hono and Slonik are both using Zod, respectfully for validation and typing.
+
+<!-- Sylvain's tasks:
+// TODO: 1. add migrations
+// TODO: 2. build infra with Pulumi
+-->
