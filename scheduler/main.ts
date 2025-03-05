@@ -1,4 +1,4 @@
-import { add } from "@ssfvektor/lib";
+import { add } from "@sffvektor/lib";
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {

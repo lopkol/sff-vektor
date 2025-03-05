@@ -7,7 +7,7 @@
   },
   "imports": {
     "@/": "./",
-    "@ssfvektor/lib": "jsr:@ssfvektor/lib"
+    "@sffvektor/lib": "jsr:@sffvektor/lib"
   },
   "exports": "./main.ts"
 }

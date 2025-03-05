@@ -1,6 +1,6 @@
 import z from "zod";
 import { validator } from "hono/validator";
-import { getExample } from "@ssfvektor/lib";
+import { getExample } from "@sffvektor/lib";
 import { app } from "@/config/application.ts";
 import { pool } from "@/config/database.ts";
 

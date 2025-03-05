@@ -8,7 +8,7 @@
   },
   "imports": {
     "@/": "./",
-    "@ssfvektor/lib": "jsr:@ssfvektor/lib",
+    "@sffvektor/lib": "jsr:@sffvektor/lib",
     "dbmate": "npm:dbmate@2.26.0",
     "hono": "jsr:@hono/hono@4.7.2"
   },

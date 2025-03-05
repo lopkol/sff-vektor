@@ -335,13 +335,13 @@
       "api": {
         "dependencies": [
           "jsr:@hono/hono@4.7.2",
-          "jsr:@ssfvektor/lib@*",
+          "jsr:@sffvektor/lib@*",
           "npm:dbmate@2.26.0"
         ]
       },
       "scheduler": {
         "dependencies": [
-          "jsr:@ssfvektor/lib@*"
+          "jsr:@sffvektor/lib@*"
         ]
       }
     }
