@@ -13,7 +13,7 @@ export interface CreateUserProps {
   role: UserRole;
   isActive: boolean;
   molyUsername?: string;
-  molyUrn?: string;
+  molyUrl?: string;
 }
 
 export interface UserProps extends CreateUserProps {
@@ -30,7 +30,7 @@ export const userDb = z.object({
   role: z.nativeEnum(UserRole),
   is_active: z.boolean(),
   moly_username: z.string().optional(),
-  moly_urn: z.string().optional(),
+  moly_url: z.string().optional(),
   created_at: z.date(),
   updated_at: z.date(),
 });
@@ -49,16 +49,17 @@ export async function createUser(connection: DatabasePoolConnection, props: Crea
   const emailEncrypted = await encrypt(props.email);
 
   let readerId: string | null = null;
-  if (props.molyUsername || props.molyUrn) {
+  // TODO: inserts in a transaction
+  if (props.molyUsername || props.molyUrl) {
     const readerResult = await connection.query(sql.typeAlias('id')`
-      insert into reader (moly_username, moly_urn)
-      values (${props.molyUsername || null}, ${props.molyUrn || null})
+      insert into reader (moly_username, moly_url)
+      values (${props.molyUsername || null}, ${props.molyUrl || null})
       returning id;
     `);
     readerId = readerResult.rows[0].id;
   }
   const userResult = await connection.query(sql.typeAlias('user')`
-    insert into user (email_hash, email_encrypted, name, role, is_active, reader_id)
+    insert into "user" (email_hash, email_encrypted, name, role, is_active, reader_id)
     values (${emailHash}, ${emailEncrypted}, ${props.name || null}, ${props.role}, ${props.isActive}, ${readerId})
     returning *;
   `);
@@ -70,7 +71,7 @@ export async function createUser(connection: DatabasePoolConnection, props: Crea
     role: props.role,
     isActive: props.isActive,
     molyUsername: props.molyUsername,
-    molyUrn: props.molyUrn,
+    molyUrl: props.molyUrl,
     createdAt: rawUser.created_at,
     updatedAt: rawUser.updated_at,
   };
@@ -79,8 +80,8 @@ export async function createUser(connection: DatabasePoolConnection, props: Crea
 export async function getUserByEmail(connection: DatabasePoolConnection, email: string): Promise<UserProps> {
   const hashedEmail = await hashEmail(email);
   const userResult = await connection.query(sql.typeAlias("user")`
-    select u.*, r.moly_username, r.moly_urn
-      from user u 
+    select u.*, r.moly_username, r.moly_url
+      from "user" u 
       join reader r on u.reader_id = r.id
      where u.email_hash = ${hashedEmail};
   `);
@@ -93,7 +94,7 @@ export async function getUserByEmail(connection: DatabasePoolConnection, email: 
     role: rawUser.role,
     isActive: rawUser.is_active,
     molyUsername: rawUser.moly_username,
-    molyUrn: rawUser.moly_urn,
+    molyUrl: rawUser.moly_url,
     createdAt: rawUser.created_at,
     updatedAt: rawUser.updated_at,
   };

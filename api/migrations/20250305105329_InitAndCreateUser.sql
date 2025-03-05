@@ -27,10 +27,10 @@ $$ language plpgsql volatile;
 -- reader
 create table public."reader" (
     id            uuid not null default uuid_generate_v7() primary key,
-    moly_username character varying not null,
-    moly_url      character varying not null,
+    moly_username character varying default null,
+    moly_url      character varying default null,
     created_at    timestamp with time zone not null default now(),
-    updated_at    timestamp with time zone not null default now(),
+    updated_at    timestamp with time zone not null default now()
 );
 
 -- user
@@ -44,7 +44,7 @@ create table public."user" (
     created_at      timestamp with time zone not null default now(),
     updated_at      timestamp with time zone not null default now(),
     reader_id       uuid default null,
-    constraint unique_user_email unique (email_hash)
+    constraint unique_user_email unique (email_hash),
     constraint fk_user_reader_id foreign key (reader_id) references public."reader" (id)
 );
 
