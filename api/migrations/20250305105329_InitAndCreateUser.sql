@@ -49,6 +49,6 @@ create table public."user" (
 );
 
 
-
 -- migrate:down
-
+drop table public."user";
+drop table public."reader";
