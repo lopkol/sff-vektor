@@ -1,4 +1,4 @@
-import { loadEnv, getOrCreateDatabasePool, runDbmate } from "@sffvektor/lib";
+import { getOrCreateDatabasePool, loadEnv, runDbmate } from "@sffvektor/lib";
 
 await loadEnv();
 console.log("env loaded");

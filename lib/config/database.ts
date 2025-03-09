@@ -10,6 +10,20 @@ export function isDatabasePoolStarted() {
 async function createDatabasePoolAndConnect() {
   return (globalPool = await createPool(Deno.env.get("DATABASE_URL")!, {
     driverFactory: createPgDriverFactory(),
+    typeParsers: [
+      {
+        name: "date",
+        parse: (value) => value,
+      },
+      {
+        name: "timestamp",
+        parse: (value) => value,
+      },
+      {
+        name: "timestamptz",
+        parse: (value) => value,
+      },
+    ],
   }));
 }
 
