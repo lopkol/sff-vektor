@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {
-    "test": "deno test"
+    "test": "deno test --allow-env --allow-read --parallel"
   },
   "imports": {
     "@/": "./",
