@@ -6,6 +6,7 @@
     "test": "deno test"
   },
   "imports": {
-    "@/": "./"
+    "@/": "./",
+    "dbmate": "npm:dbmate@2.26.0"
   }
 }

@@ -1,7 +1,9 @@
-await import("@/config/env.ts");
+import { loadEnv, getOrCreateDatabasePool, runDbmate } from "@sffvektor/lib";
+
+await loadEnv();
 console.log("env loaded");
 
-await import("@/config/database.ts");
+await getOrCreateDatabasePool();
 console.log("database loaded");
 
 const { app } = await import("@/config/application.ts");
@@ -10,7 +12,6 @@ console.log("app loaded");
 if (
   [true, "true"].includes(Deno.env.get("DATABASE_RUN_MIGRATIONS") ?? "false")
 ) {
-  const { runDbmate } = await import("@/config/migrations.ts");
   console.log("migrations loaded");
   await runDbmate("up");
 }
