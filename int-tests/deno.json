@@ -1,0 +1,12 @@
+{
+  "name": "@sffvektor/int-tests",
+  "tasks": {
+    "db:setup": "deno run --allow-net --allow-read --allow-env --allow-run db-setup-cli.ts",
+    "test": "deno task db:setup && deno test --allow-net --allow-read --allow-env --allow-run"
+  },
+  "imports": {
+    "@/": "./",
+    "@sffvektor/lib": "jsr:@sffvektor/lib"
+  },
+  "exports": "./main.ts"
+}
