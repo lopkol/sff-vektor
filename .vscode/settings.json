@@ -4,6 +4,7 @@
     "./api",
     "./lib",
     "./scheduler",
+    "./int-tests",
   ],
   "editor.inlayHints.enabled": "off",
   "editor.tabSize": 2,

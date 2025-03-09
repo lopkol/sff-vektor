@@ -3,13 +3,12 @@
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-read --allow-env --allow-run main.ts",
     "prod": "deno run --allow-net --allow-read --allow-env --allow-run main.ts",
-    "test": "deno test",
+    "test": "deno test --allow-read --allow-env --parallel",
     "migration": "deno run --allow-net --allow-read --allow-env --allow-run migration-cli.ts"
   },
   "imports": {
     "@/": "./",
     "@sffvektor/lib": "jsr:@sffvektor/lib",
-    "dbmate": "npm:dbmate@2.26.0",
     "hono": "jsr:@hono/hono@4.7.2"
   },
   "compilerOptions": {

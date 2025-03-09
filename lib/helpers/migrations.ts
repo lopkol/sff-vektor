@@ -1,4 +1,16 @@
 import { resolveBinary } from "dbmate";
+import * as path from "jsr:@std/path";
+
+const migrationDirectory = getMigrationDir();
+
+function getMigrationDir() {
+  const MIGRATION_DIR = "migrations";
+  const currentWorkingDir = Deno.cwd();
+  if (currentWorkingDir.endsWith("/api")) {
+    return path.join(".", MIGRATION_DIR);
+  }
+  return path.join("..", "api", MIGRATION_DIR);
+}
 
 export async function runDbmate(comand: string, args: string[] = []) {
   const command = new Deno.Command(resolveBinary(), {
@@ -6,9 +18,9 @@ export async function runDbmate(comand: string, args: string[] = []) {
       "--url",
       Deno.env.get("DATABASE_URL")!,
       "--migrations-dir",
-      "./migrations",
+      migrationDirectory,
       "--schema-file",
-      "./migrations/schema.sql",
+      path.join(migrationDirectory, "schema.sql"),
       comand,
       ...args,
     ],
@@ -18,5 +30,6 @@ export async function runDbmate(comand: string, args: string[] = []) {
   const process = command.spawn();
   await process.stdin.close();
   const result = await process.output();
+  // TODO: improve log so it can be disabled if needed
   console.log(new TextDecoder().decode(result.stdout));
 }

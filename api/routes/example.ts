@@ -1,10 +1,10 @@
 import z from "zod";
 import { validator } from "hono/validator";
-import { getExample } from "@sffvektor/lib";
+import { getExample, getOrCreateDatabasePool } from "@sffvektor/lib";
 import { app } from "@/config/application.ts";
-import { pool } from "@/config/database.ts";
 
 app.get("/api/example", async (c) => {
+  const pool = await getOrCreateDatabasePool();
   return c.json(await getExample(pool), 201);
 });
 

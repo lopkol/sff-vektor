@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "denoland.vscode-deno",
-    "wayou.vscode-todo-highlight"
+    "wayou.vscode-todo-highlight",
+    "thebearingedge.vscode-sql-lit"
   ]
 }

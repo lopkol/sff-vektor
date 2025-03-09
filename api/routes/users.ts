@@ -1,8 +1,12 @@
 import z from "zod";
 import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
-import { pool } from "@/config/database.ts";
-import { UserRole, createUser, getUserByEmail } from "@sffvektor/lib";
+import {
+  UserRole,
+  createUser,
+  getOrCreateDatabasePool,
+  getUserByEmail,
+} from "@sffvektor/lib";
 
 const createUserSchema = z.object({
   email: z.string(),
@@ -14,11 +18,12 @@ const createUserSchema = z.object({
 });
 
 app.get("/api/users", async (c) => {
-  const email = c.req.query('email');
+  const email = c.req.query("email");
   console.log(email);
   if (!email) {
     return c.text("Email missing!", 400);
   }
+  const pool = await getOrCreateDatabasePool();
   return c.json(await getUserByEmail(pool, email), 200);
 });
 
@@ -32,9 +37,18 @@ app.post(
     return parsed.data;
   }),
   async (c) => {
-    const { email, name, role, isActive, molyUsername, molyUrl } = c.req.valid("form");
+    const { email, name, role, isActive, molyUsername, molyUrl } =
+      c.req.valid("form");
+    const pool = await getOrCreateDatabasePool();
     return c.json(
-      await createUser(pool, { email, name, role, isActive, molyUsername, molyUrl }),
+      await createUser(pool, {
+        email,
+        name,
+        role,
+        isActive,
+        molyUsername,
+        molyUrl,
+      }),
       201
     );
   }

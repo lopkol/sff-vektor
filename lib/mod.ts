@@ -1,8 +1,9 @@
-export * from "@/services/index.ts";
-export * from "@/helpers/crypto.ts";
-export * from "@/db/user.ts";
+export * from "@/config/env.ts";
+export * from "@/config/database.ts";
 
-// Code example, remove me
-export function add(a: number, b: number): number {
-  return a + b;
-}
+export * from "@/services/index.ts";
+
+export * from "@/helpers/crypto.ts";
+export * from "@/helpers/migrations.ts";
+
+export * from "@/db/user.ts";
