@@ -8,4 +8,9 @@
   ],
   "editor.inlayHints.enabled": "off",
   "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+      "*.ts": "${capture}.js, ${capture}_test.ts"
+  }
 }
