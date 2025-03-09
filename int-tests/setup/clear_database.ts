@@ -10,7 +10,7 @@ export async function clearDatabase(excludeTables: string[] = []) {
     : sql.fragment``;
 
   const pool = await getOrCreateDatabasePool();
-  await pool.query(sql.type(z.void())`
+  await pool.query(sql.type(z.void())/* sql */ `
     do $$ declare
       r record;
     begin
