@@ -1,4 +1,4 @@
-import { DisplayExample } from "@/components/example/DisplayExample"
+import { DisplayExample } from "./DisplayExample"
 
 export default async function Page() {
   return (
