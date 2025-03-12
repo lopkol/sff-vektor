@@ -80,9 +80,7 @@ export async function createUser(
         if (existingReaderResult.rowCount > 0) {
           readerId = existingReaderResult.rows[0].id;
           await trConnection.query(sql.typeAlias("void")`
-            update reader set moly_url = ${props.molyUrl}, updated_at = ${
-            (new Date()).getTime()
-          } where id = ${readerId};
+            update reader set moly_url = ${props.molyUrl}, updated_at = now() where id = ${readerId};
           `);
         } else {
           const readerResult = await trConnection.query(sql.typeAlias("id")`

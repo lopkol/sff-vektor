@@ -13,15 +13,15 @@ import { getOrCreateDatabasePool, sql } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
 
-beforeAll(async () => {
-  await setup();
-});
+describe("clear database", () => {
+  beforeAll(async () => {
+    await setup();
+  });
 
-afterAll(async () => {
-  await teardown();
-});
+  afterAll(async () => {
+    await teardown();
+  });
 
-describe(() => {
   beforeEach(async () => {
     const pool = await getOrCreateDatabasePool();
     // Create fake table
@@ -47,7 +47,7 @@ describe(() => {
   });
 
   const countResultSchema = z.object({
-    count: z.bigint(),
+    count: z.string(),
   });
 
   it("contains the data in the table when database is not cleared", async () => {
@@ -55,15 +55,16 @@ describe(() => {
     const result = await pool.query(sql.type(countResultSchema)`
       SELECT count(*) FROM public.test_clear_database;
     `);
-    assertEquals(result.rows[0].count, 2n);
+    assertEquals(result.rows[0].count, "2");
   });
 
   it("doesn't contain the data in the table when database is cleared", async () => {
     await clearDatabase();
+
     const pool = await getOrCreateDatabasePool();
     const result = await pool.query(sql.type(countResultSchema)`
       SELECT count(*) FROM public.test_clear_database;
     `);
-    assertEquals(result.rows[0].count, 0n);
+    assertEquals(result.rows[0].count, "0");
   });
 });

@@ -13,15 +13,15 @@ import { getOrCreateDatabasePool, sql } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
 
-beforeAll(async () => {
-  await setup();
-});
+describe("example int test", () => {
+  beforeAll(async () => {
+    await setup();
+  });
 
-afterAll(async () => {
-  await teardown();
-});
+  afterAll(async () => {
+    await teardown();
+  });
 
-describe(() => {
   beforeEach(async () => {
     // Add soemthing in DB...
   });
