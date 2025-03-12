@@ -3,14 +3,15 @@ import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
 import {
   createUser,
+  EntityNotFoundException,
   getOrCreateDatabasePool,
   getUserByEmail,
   getUserById,
+  InvalidArgumentException,
+  UniqueConstraintException,
   updateUser,
   UserRole,
 } from "@sffvektor/lib";
-
-// TODO: error handling
 
 const createUserSchema = z.object({
   email: z.string(),
@@ -42,12 +43,26 @@ app.get("/api/users", async (c) => {
     return c.text("Email missing!", 400);
   }
   const pool = await getOrCreateDatabasePool();
-  return c.json(await getUserByEmail(pool, email), 200);
+  try {
+    return c.json(await getUserByEmail(pool, email), 200);
+  } catch (error) {
+    if (error instanceof EntityNotFoundException) {
+      return c.json({ message: error.message, details: error.details }, 404);
+    }
+    throw error;
+  }
 });
 
 app.get("/api/users/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
-  return c.json(await getUserById(pool, c.req.param("id")), 200);
+  try {
+    return c.json(await getUserById(pool, c.req.param("id")), 200);
+  } catch (error) {
+    if (error instanceof EntityNotFoundException) {
+      return c.json({ message: error.message, details: error.details }, 404);
+    }
+    throw error;
+  }
 });
 
 app.post(
@@ -64,17 +79,24 @@ app.post(
       "form",
     );
     const pool = await getOrCreateDatabasePool();
-    return c.json(
-      await createUser(pool, {
-        email,
-        name,
-        role,
-        isActive,
-        molyUsername,
-        molyUrl,
-      }),
-      201,
-    );
+    try {
+      return c.json(
+        await createUser(pool, {
+          email,
+          name,
+          role,
+          isActive,
+          molyUsername,
+          molyUrl,
+        }),
+        201,
+      );
+    } catch (error) {
+      if (error instanceof UniqueConstraintException) {
+        return c.json({ message: error.message, details: error.details }, 400);
+      }
+      throw error;
+    }
   },
 );
 
@@ -92,16 +114,26 @@ app.patch(
       "form",
     );
     const pool = await getOrCreateDatabasePool();
-    return c.json(
-      await updateUser(pool, c.req.param("id"), {
-        email,
-        name,
-        role,
-        isActive,
-        molyUsername,
-        molyUrl,
-      }),
-      201,
-    );
+    try {
+      return c.json(
+        await updateUser(pool, c.req.param("id"), {
+          email,
+          name,
+          role,
+          isActive,
+          molyUsername,
+          molyUrl,
+        }),
+        201,
+      );
+    } catch (error) {
+      if (
+        error instanceof UniqueConstraintException ||
+        error instanceof InvalidArgumentException
+      ) {
+        return c.json({ message: error.message, details: error.details }, 400);
+      }
+      throw error;
+    }
   },
 );
