@@ -8,9 +8,11 @@ import {
   getOrCreateDatabasePool,
   getUserByEmail,
   getUserById,
+  InvalidArgumentException,
   sql,
   UniqueConstraintException,
   UserRole,
+  updateUser,
 } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
@@ -180,6 +182,107 @@ describe("user db functions", () => {
       assertEquals(readerInDb.rows[0].id, readerId);
       assertEquals(readerInDb.rows[0].moly_username, "vader");
       assertEquals(readerInDb.rows[0].moly_url, "new-url");
+    });
+  });
+
+  describe("updateUser", () => {
+    it("updates a user", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const user = await createUser(pool, {
+        email: "vader@sith.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+
+      await updateUser(pool, user.id, {
+        email: "vader_new@sith.com",
+        role: UserRole.User,
+        isActive: true,
+      });
+
+      const updatedUser = await getUserById(pool, user.id);
+      assertEquals(updatedUser.email, "vader_new@sith.com");
+      assertEquals(updatedUser.role, UserRole.User);
+      assertEquals(updatedUser.isActive, true);
+    });
+
+    it("throws an error if no properties are provided", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const user = await createUser(pool, {
+        email: "vader@sith.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+
+      await assertRejects(
+        async () => await updateUser(pool, user.id, {}),
+        InvalidArgumentException,
+      );
+    });
+
+    it("throws an error if a user with the same email already exists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createUser(pool, {
+        email: "luke@skywalker.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+      const user = await createUser(pool, {
+        email: "vader@sith.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+
+      await assertRejects(
+        async () => await updateUser(pool, user.id, { email: "luke@skywalker.com" }),
+        UniqueConstraintException,
+      );
+    });
+    
+    it("throws an error if the user does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await assertRejects(
+        async () => await updateUser(pool, "01958c19-c7c9-79f3-a1bf-44de302ee617", { email: "vader@sith.com", role: UserRole.Admin, isActive: true }),
+        EntityNotFoundException,
+      );
+    });
+
+    it("updates the reader is user already has one", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const user = await createUser(pool, {
+        email: "vader@sith.com",
+        role: UserRole.Admin,
+        isActive: true,
+        molyUsername: "vader",
+        molyUrl: "url",
+      });
+
+      await updateUser(pool, user.id, {
+        molyUsername: "vader_new",
+        molyUrl: "new-url",
+      });
+
+      const updatedUser = await getUserById(pool, user.id);
+      assertEquals(updatedUser.molyUsername, "vader_new");
+      assertEquals(updatedUser.molyUrl, "new-url");
+      });
+
+    it("creates a reader if the user does not have one", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const user = await createUser(pool, {
+        email: "vader@sith.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+
+      await updateUser(pool, user.id, {
+        molyUsername: "vader_new",
+        molyUrl: "new-url",
+      });
+
+      const updatedUser = await getUserById(pool, user.id);
+      assertEquals(updatedUser.molyUsername, "vader_new");
+      assertEquals(updatedUser.molyUrl, "new-url");
     });
   });
 });
