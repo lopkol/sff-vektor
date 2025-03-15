@@ -2,6 +2,7 @@
   "recommendations": [
     "denoland.vscode-deno",
     "wayou.vscode-todo-highlight",
-    "thebearingedge.vscode-sql-lit"
+    "thebearingedge.vscode-sql-lit",
+    "bradlc.vscode-tailwindcss"
   ]
 }

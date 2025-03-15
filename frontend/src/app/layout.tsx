@@ -8,11 +8,11 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { Header } from "@/components/Header/Header";
-import { NextThemeProvider } from "@/components/ThemeProvider";
 // Theming
-import { Theme } from "@radix-ui/themes";
 import ReactQueryProvider from "./ReactQueryProvider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +26,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SFFVektor",
-  description: "The buddy you'll never have to share your money with",
-  robots: "noindex", // TODO: remove this when we want search engine indexation
+  description: "",
+  robots: "noindex",
 };
 
 export default function RootLayout({
@@ -36,24 +36,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextThemeProvider>
-          <Theme
-            accentColor="mint"
-            grayColor="gray"
-            panelBackground="solid"
-            scaling="100%"
-            radius="full"
-          >
-            <ReactQueryProvider>
-              <Header />
-              {children}
-            </ReactQueryProvider>  
-          </Theme>
-        </NextThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReactQueryProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>{children}</SidebarInset>
+            </SidebarProvider>
+          </ReactQueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
