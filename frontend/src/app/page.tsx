@@ -1,3 +1,4 @@
+import { AppContent } from "@/components/app-content";
 import {
   Box,
   Button,
@@ -10,7 +11,7 @@ import {
 
 export default function Home() {
   return (
-    <>
+    <AppContent>
       <Card my={"7"} variant="classic" size={"4"} style={{ borderRadius: "0" }}>
         <Container py={"6"}>
           <Flex direction={"column"}>
@@ -27,9 +28,6 @@ export default function Home() {
           </Flex>
         </Container>
       </Card>
-      <Container>
-        <h1>Test</h1>
-      </Container>
-    </>
+    </AppContent>
   );
 }
