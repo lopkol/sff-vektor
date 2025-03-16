@@ -49,6 +49,7 @@ app.get("/api/users", async (c) => {
     if (error instanceof EntityNotFoundException) {
       return c.json({ message: error.message, details: error.details }, 404);
     }
+    console.error(error);
     throw error;
   }
 });
@@ -61,6 +62,7 @@ app.get("/api/users/:id", async (c) => {
     if (error instanceof EntityNotFoundException) {
       return c.json({ message: error.message, details: error.details }, 404);
     }
+    console.error(error);
     throw error;
   }
 });
@@ -75,26 +77,17 @@ app.post(
     return parsed.data;
   }),
   async (c) => {
-    const { email, name, role, isActive, molyUsername, molyUrl } = c.req.valid(
-      "form",
-    );
     const pool = await getOrCreateDatabasePool();
     try {
       return c.json(
-        await createUser(pool, {
-          email,
-          name,
-          role,
-          isActive,
-          molyUsername,
-          molyUrl,
-        }),
+        await createUser(pool, c.req.valid("form")),
         201,
       );
     } catch (error) {
       if (error instanceof UniqueConstraintException) {
         return c.json({ message: error.message, details: error.details }, 400);
       }
+      console.error(error);
       throw error;
     }
   },
@@ -110,20 +103,10 @@ app.patch(
     return parsed.data;
   }),
   async (c) => {
-    const { email, name, role, isActive, molyUsername, molyUrl } = c.req.valid(
-      "form",
-    );
     const pool = await getOrCreateDatabasePool();
     try {
       return c.json(
-        await updateUser(pool, c.req.param("id"), {
-          email,
-          name,
-          role,
-          isActive,
-          molyUsername,
-          molyUrl,
-        }),
+        await updateUser(pool, c.req.param("id"), c.req.valid("form")),
         201,
       );
     } catch (error) {
@@ -133,6 +116,10 @@ app.patch(
       ) {
         return c.json({ message: error.message, details: error.details }, 400);
       }
+      if (error instanceof EntityNotFoundException) {
+        return c.json({ message: error.message, details: error.details }, 404);
+      }
+      console.error(error);
       throw error;
     }
   },

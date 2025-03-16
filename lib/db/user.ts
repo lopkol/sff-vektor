@@ -9,6 +9,7 @@ import { UniqueConstraintException } from "@/exceptions/unique-constraint.except
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject } from "@/helpers/type.ts";
+
 export enum UserRole {
   Admin = "admin",
   User = "user",
@@ -16,11 +17,11 @@ export enum UserRole {
 
 export interface CreateUserProps {
   email: string;
-  name?: string;
+  name?: string | null;
   role: UserRole;
   isActive: boolean;
-  molyUsername?: string;
-  molyUrl?: string;
+  molyUsername?: string | null;
+  molyUrl?: string | null;
 }
 
 export interface UserProps extends CreateUserProps {
@@ -33,19 +34,19 @@ export const userDb = z.object({
   id: z.string(),
   email_hash: z.string(),
   email_encrypted: z.string(),
-  name: z.string().optional(),
+  name: z.string().nullable(),
   role: z.nativeEnum(UserRole),
   is_active: z.boolean(),
-  moly_username: z.string().optional(),
-  moly_url: z.string().optional(),
+  moly_username: z.string().nullable(),
+  moly_url: z.string().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
 });
 
 const sql = createSqlTag({
   typeAliases: {
-    void: z.void(),
     user: userDb,
+    void: z.void(),
     id: z.object({
       id: z.string(),
     }),
@@ -186,7 +187,7 @@ export async function updateUser(
     throw new InvalidArgumentException("No properties to update");
   }
 
-  const userPropsToUpdate: Record<string, string | boolean> = {};
+  const userPropsToUpdate: Record<string, string | boolean | null> = {};
   if (props.email) {
     userPropsToUpdate["email_hash"] = await hashEmail(props.email);
     userPropsToUpdate["email_encrypted"] = await encrypt(props.email);
@@ -198,7 +199,7 @@ export async function updateUser(
       }
     });
 
-  const readerPropsToUpdate: Record<string, string> = {};
+  const readerPropsToUpdate: Record<string, string | null> = {};
   (["molyUsername", "molyUrl"] satisfies Partial<keyof CreateUserProps>[])
     .forEach((key) => {
       if (props[key] !== undefined) {
@@ -216,7 +217,7 @@ export async function updateUser(
         // deno-fmt-ignore
         const readerResult = await trConnection.query(sql.typeAlias("id")`
           update reader
-            set ${updatedPropsFragment}, updated_at = ${(new Date()).toISOString()}
+            set ${updatedPropsFragment}, updated_at = now()
           where id = (select reader_id from "user" where id = ${id})
           returning id;
         `);
@@ -241,7 +242,7 @@ export async function updateUser(
         // deno-fmt-ignore
         const userResult = await trConnection.query(sql.typeAlias("id")`
           update "user"
-            set ${updatedPropsFragment}, updated_at = ${(new Date()).toISOString()}
+            set ${updatedPropsFragment}, updated_at = now()
           where id = ${id}
           returning id;
         `);

@@ -1,4 +1,4 @@
-import { sql } from "slonik";
+import { sql, type ValueExpression } from "slonik";
 import { camelToSnakeCase } from "./type.ts";
 
 /**
@@ -6,12 +6,17 @@ import { camelToSnakeCase } from "./type.ts";
  * @returns a slonik sql fragment containing "field = 'value'" pairs, separated by commas
  */
 export function updateFragmentFromProps(
-  props: Record<string, string | boolean>,
+  props: Record<string, ValueExpression | undefined>,
 ): ReturnType<typeof sql.join> {
   return sql.join(
-    Object.entries(props).map(([key, value]) =>
-      sql.fragment`${sql.identifier([camelToSnakeCase(key)])} = ${value}`
-    ),
+    Object.entries(props).reduce((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc.push(
+          sql.fragment`${sql.identifier([camelToSnakeCase(key)])} = ${value}`,
+        );
+      }
+      return acc;
+    }, [] as ReturnType<typeof sql.fragment>[]),
     sql.fragment`, `,
   );
 }
