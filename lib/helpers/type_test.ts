@@ -1,6 +1,15 @@
 import { assertEquals } from "@std/assert/equals";
-import { camelToSnakeCase, emptyObject } from "@/helpers/type.ts";
+import {
+  camelToSnakeCase,
+  emptyObject,
+  enumFromString,
+} from "@/helpers/type.ts";
 import { describe, it } from "@std/testing/bdd";
+
+enum TestEnum {
+  Foo = "foo",
+  Bar = "bar",
+}
 
 describe("camelToSnakeCase", () => {
   it("converts camelCase to snake_case", () => {
@@ -45,5 +54,15 @@ describe("emptyObject", () => {
 
   it("returns true if there are several values but not all are undefined", () => {
     assertEquals(emptyObject({ a: undefined, b: "test", c: undefined }), false);
+  });
+});
+
+describe("enumFromString", () => {
+  it("returns the enum value if it exists", () => {
+    assertEquals(enumFromString(TestEnum, "bar"), TestEnum.Bar);
+  });
+
+  it("returns undefined if the enum value does not exist", () => {
+    assertEquals(enumFromString(TestEnum, "baz"), undefined);
   });
 });
