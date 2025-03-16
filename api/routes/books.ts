@@ -2,31 +2,49 @@ import z from "zod";
 import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
 import {
-  createAuthor,
-  deleteAuthor,
+  createBook,
+  deleteBook,
   EntityNotFoundException,
-  getAuthorById,
+  Genre,
+  getBookById,
   getOrCreateDatabasePool,
   InvalidArgumentException,
-  updateAuthor,
+  updateBook,
 } from "@sffvektor/lib";
 
-const createAuthorSchema = z.object({
-  displayName: z.string(),
-  sortName: z.string(),
+const createBookSchema = z.object({
+  title: z.string(),
+  year: z.number(),
+  genre: z.nativeEnum(Genre),
+  series: z.string().optional(),
+  seriesNumber: z.string().optional(),
   isApproved: z.boolean(),
+  isPending: z.boolean(),
+  alternatives: z.array(z.object({
+    name: z.string(),
+    urls: z.array(z.string()),
+  })).nonempty(),
 });
 
-const updateAuthorSchema = z.object({
-  displayName: z.string().optional(),
-  sortName: z.string().optional(),
+const updateBookSchema = z.object({
+  title: z.string().optional(),
+  year: z.number().optional(),
+  genre: z.nativeEnum(Genre).optional(),
+  series: z.string().optional(),
+  seriesNumber: z.string().optional(),
   isApproved: z.boolean().optional(),
+  isPending: z.boolean().optional(),
+  alternatives: z.array(z.object({
+    name: z.string(),
+    urls: z.array(z.string()),
+  })).nonempty().optional(),
 });
 
-app.get("/api/authors/:id", async (c) => {
+app.get("/api/books/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
-    return c.json(await getAuthorById(pool, c.req.param("id")), 200);
+    const book = await getBookById(pool, c.req.param("id"));
+    return c.json(book);
   } catch (error) {
     if (error instanceof EntityNotFoundException) {
       return c.json({ message: error.message, details: error.details }, 404);
@@ -37,30 +55,9 @@ app.get("/api/authors/:id", async (c) => {
 });
 
 app.post(
-  "/api/authors",
+  "/api/books",
   validator("form", async (_, c) => {
-    const parsed = createAuthorSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
-  async (c) => {
-    const pool = await getOrCreateDatabasePool();
-    try {
-      const author = await createAuthor(pool, c.req.valid("form"));
-      return c.json(author, 201);
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  },
-);
-
-app.patch(
-  "/api/authors/:id",
-  validator("form", async (_, c) => {
-    const parsed = updateAuthorSchema.safeParse(await c.req.json());
+    const parsed = createBookSchema.safeParse(await c.req.json());
     if (!parsed.success) {
       return c.json(parsed.error, 400);
     }
@@ -70,8 +67,31 @@ app.patch(
     const pool = await getOrCreateDatabasePool();
     try {
       return c.json(
-        await updateAuthor(pool, c.req.param("id"), c.req.valid("form")),
-        200,
+        await createBook(pool, c.req.valid("form")),
+        201,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+);
+
+app.patch(
+  "/api/books/:id",
+  validator("form", async (_, c) => {
+    const parsed = updateBookSchema.safeParse(await c.req.json());
+    if (!parsed.success) {
+      return c.json(parsed.error, 400);
+    }
+    return parsed.data;
+  }),
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
+    try {
+      return c.json(
+        await updateBook(pool, c.req.param("id"), c.req.valid("form")),
+        201,
       );
     } catch (error) {
       if (error instanceof InvalidArgumentException) {
@@ -86,11 +106,11 @@ app.patch(
   },
 );
 
-app.delete("/api/authors/:id", async (c) => {
+app.delete("/api/books/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
-    await deleteAuthor(pool, c.req.param("id"));
-    return c.json({ message: "Author deleted" }, 200);
+    await deleteBook(pool, c.req.param("id"));
+    return c.json({ message: "Book deleted" }, 200);
   } catch (error) {
     console.error(error);
     throw error;

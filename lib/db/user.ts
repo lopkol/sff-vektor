@@ -17,11 +17,11 @@ export enum UserRole {
 
 export interface CreateUserProps {
   email: string;
-  name?: string;
+  name?: string | null;
   role: UserRole;
   isActive: boolean;
-  molyUsername?: string;
-  molyUrl?: string;
+  molyUsername?: string | null;
+  molyUrl?: string | null;
 }
 
 export interface UserProps extends CreateUserProps {
@@ -34,11 +34,11 @@ export const userDb = z.object({
   id: z.string(),
   email_hash: z.string(),
   email_encrypted: z.string(),
-  name: z.string().optional(),
+  name: z.string().nullable(),
   role: z.nativeEnum(UserRole),
   is_active: z.boolean(),
-  moly_username: z.string().optional(),
-  moly_url: z.string().optional(),
+  moly_username: z.string().nullable(),
+  moly_url: z.string().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
 });
@@ -187,7 +187,7 @@ export async function updateUser(
     throw new InvalidArgumentException("No properties to update");
   }
 
-  const userPropsToUpdate: Record<string, string | boolean> = {};
+  const userPropsToUpdate: Record<string, string | boolean | null> = {};
   if (props.email) {
     userPropsToUpdate["email_hash"] = await hashEmail(props.email);
     userPropsToUpdate["email_encrypted"] = await encrypt(props.email);
@@ -199,7 +199,7 @@ export async function updateUser(
       }
     });
 
-  const readerPropsToUpdate: Record<string, string> = {};
+  const readerPropsToUpdate: Record<string, string | null> = {};
   (["molyUsername", "molyUrl"] satisfies Partial<keyof CreateUserProps>[])
     .forEach((key) => {
       if (props[key] !== undefined) {

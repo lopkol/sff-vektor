@@ -1,4 +1,4 @@
-import { sql } from "slonik";
+import { sql, type ValueExpression } from "slonik";
 import { camelToSnakeCase } from "./type.ts";
 
 /**
@@ -6,7 +6,7 @@ import { camelToSnakeCase } from "./type.ts";
  * @returns a slonik sql fragment containing "field = 'value'" pairs, separated by commas
  */
 export function updateFragmentFromProps(
-  props: Record<string, string | boolean | undefined>,
+  props: Record<string, ValueExpression | undefined>,
 ): ReturnType<typeof sql.join> {
   return sql.join(
     Object.entries(props).reduce((acc, [key, value]) => {
