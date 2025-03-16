@@ -9,6 +9,7 @@ import { UniqueConstraintException } from "@/exceptions/unique-constraint.except
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject } from "@/helpers/type.ts";
+
 export enum UserRole {
   Admin = "admin",
   User = "user",
@@ -44,8 +45,8 @@ export const userDb = z.object({
 
 const sql = createSqlTag({
   typeAliases: {
-    void: z.void(),
     user: userDb,
+    void: z.void(),
     id: z.object({
       id: z.string(),
     }),
@@ -216,7 +217,7 @@ export async function updateUser(
         // deno-fmt-ignore
         const readerResult = await trConnection.query(sql.typeAlias("id")`
           update reader
-            set ${updatedPropsFragment}, updated_at = ${(new Date()).toISOString()}
+            set ${updatedPropsFragment}, updated_at = now()
           where id = (select reader_id from "user" where id = ${id})
           returning id;
         `);
@@ -241,7 +242,7 @@ export async function updateUser(
         // deno-fmt-ignore
         const userResult = await trConnection.query(sql.typeAlias("id")`
           update "user"
-            set ${updatedPropsFragment}, updated_at = ${(new Date()).toISOString()}
+            set ${updatedPropsFragment}, updated_at = now()
           where id = ${id}
           returning id;
         `);

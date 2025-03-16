@@ -133,6 +133,9 @@ app.patch(
       ) {
         return c.json({ message: error.message, details: error.details }, 400);
       }
+      if (error instanceof EntityNotFoundException) {
+        return c.json({ message: error.message, details: error.details }, 404);
+      }
       throw error;
     }
   },

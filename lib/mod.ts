@@ -2,6 +2,7 @@ export * from "@/config/env.ts";
 export * from "@/config/database.ts";
 
 export * from "@/db/user.ts";
+export * from "@/db/author.ts";
 
 export * from "@/exceptions/entity-not-found.exception.ts";
 export * from "@/exceptions/invalid-argument.exception.ts";
