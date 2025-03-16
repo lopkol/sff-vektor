@@ -31,6 +31,7 @@ app.get("/api/authors/:id", async (c) => {
     if (error instanceof EntityNotFoundException) {
       return c.json({ message: error.message, details: error.details }, 404);
     }
+    console.error(error);
     throw error;
   }
 });
@@ -45,14 +46,14 @@ app.post(
     return parsed.data;
   }),
   async (c) => {
-    const { displayName, sortName, isApproved } = c.req.valid("form");
     const pool = await getOrCreateDatabasePool();
-    const author = await createAuthor(pool, {
-      displayName,
-      sortName,
-      isApproved,
-    });
-    return c.json(author, 201);
+    try {
+      const author = await createAuthor(pool, c.req.valid("form"));
+      return c.json(author, 201);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 );
 
@@ -66,15 +67,10 @@ app.patch(
     return parsed.data;
   }),
   async (c) => {
-    const { displayName, sortName, isApproved } = c.req.valid("form");
     const pool = await getOrCreateDatabasePool();
     try {
       return c.json(
-        await updateAuthor(pool, c.req.param("id"), {
-          displayName,
-          sortName,
-          isApproved,
-        }),
+        await updateAuthor(pool, c.req.param("id"), c.req.valid("form")),
         200,
       );
     } catch (error) {
@@ -84,6 +80,7 @@ app.patch(
       if (error instanceof EntityNotFoundException) {
         return c.json({ message: error.message, details: error.details }, 404);
       }
+      console.error(error);
       throw error;
     }
   },
@@ -91,6 +88,11 @@ app.patch(
 
 app.delete("/api/authors/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
-  await deleteAuthor(pool, c.req.param("id"));
-  return c.json({ message: "Author deleted" }, 200);
+  try {
+    await deleteAuthor(pool, c.req.param("id"));
+    return c.json({ message: "Author deleted" }, 200);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 });
