@@ -1,5 +1,4 @@
 import z from "zod";
-import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
 import {
   createBook,
@@ -11,6 +10,7 @@ import {
   InvalidArgumentException,
   updateBook,
 } from "@sffvektor/lib";
+import { createFormValidator } from "@/helpers/validator.ts";
 
 const createBookSchema = z.object({
   title: z.string(),
@@ -56,13 +56,7 @@ app.get("/api/books/:id", async (c) => {
 
 app.post(
   "/api/books",
-  validator("form", async (_, c) => {
-    const parsed = createBookSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(createBookSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -79,13 +73,7 @@ app.post(
 
 app.patch(
   "/api/books/:id",
-  validator("form", async (_, c) => {
-    const parsed = updateBookSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(updateBookSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {

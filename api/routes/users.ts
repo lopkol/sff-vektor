@@ -1,5 +1,4 @@
 import z from "zod";
-import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
 import {
   createUser,
@@ -12,6 +11,7 @@ import {
   updateUser,
   UserRole,
 } from "@sffvektor/lib";
+import { createFormValidator } from "@/helpers/validator.ts";
 
 const createUserSchema = z.object({
   email: z.string(),
@@ -69,13 +69,7 @@ app.get("/api/users/:id", async (c) => {
 
 app.post(
   "/api/users",
-  validator("form", async (_, c) => {
-    const parsed = createUserSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(createUserSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -95,13 +89,7 @@ app.post(
 
 app.patch(
   "/api/users/:id",
-  validator("form", async (_, c) => {
-    const parsed = updateUserSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(updateUserSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
