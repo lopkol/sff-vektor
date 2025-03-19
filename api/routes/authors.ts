@@ -1,5 +1,4 @@
 import z from "zod";
-import { validator } from "hono/validator";
 import { app } from "@/config/application.ts";
 import {
   createAuthor,
@@ -10,6 +9,7 @@ import {
   InvalidArgumentException,
   updateAuthor,
 } from "@sffvektor/lib";
+import { createFormValidator } from "@/helpers/validator.ts";
 
 const createAuthorSchema = z.object({
   displayName: z.string(),
@@ -38,13 +38,7 @@ app.get("/api/authors/:id", async (c) => {
 
 app.post(
   "/api/authors",
-  validator("form", async (_, c) => {
-    const parsed = createAuthorSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(createAuthorSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -59,13 +53,7 @@ app.post(
 
 app.patch(
   "/api/authors/:id",
-  validator("form", async (_, c) => {
-    const parsed = updateAuthorSchema.safeParse(await c.req.json());
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    return parsed.data;
-  }),
+  createFormValidator(updateAuthorSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
