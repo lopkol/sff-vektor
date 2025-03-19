@@ -7,5 +7,5 @@ export default function Page() {
   const pathname = usePathname();
 
   router.replace(`${pathname}/list`);
-  return null;
+  return <></>;
 }

@@ -9,10 +9,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 // Theming
-import ReactQueryProvider from "./ReactQueryProvider";
+import ReactQueryProvider from "../components/react-query-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
+import { AuthProvider } from "@/components/auth-provider";
+import { UserProvider } from "@/components/user-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,10 +49,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ReactQueryProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>{children}</SidebarInset>
-            </SidebarProvider>
+            <AuthProvider>
+              <UserProvider>
+                <SidebarProvider>
+                  <AppSidebar />
+                  <SidebarInset>{children}</SidebarInset>
+                </SidebarProvider>
+              </UserProvider>
+            </AuthProvider>
           </ReactQueryProvider>
         </ThemeProvider>
       </body>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getSession, signOut } from "next-auth/react";
 
 // Create an axios instance with default configuration
 const http = axios.create({
@@ -10,9 +11,13 @@ const http = axios.create({
 
 // Add request interceptor
 http.interceptors.request.use(
-  (config) => {
-    // You can add common request handling here
-    // For example, adding auth tokens
+  async (config) => {
+    // Get current auth session
+    const session = await getSession();
+    // Add auth token if available
+    if (session?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`;
+    }
     return config;
   },
   (error) => {
@@ -22,11 +27,11 @@ http.interceptors.request.use(
 
 // Add response interceptor
 http.interceptors.response.use(
-  (response) => {
-    // You can transform response data here if needed
-    return response.data;
-  },
-  (error) => {
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      await signOut({ callbackUrl: "/" });
+    }
     // Handle common error cases here
     return Promise.reject(error);
   }

@@ -6,6 +6,7 @@ import { Wand, Orbit, BookCopy, ShieldUser, ChevronRight } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -30,6 +31,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { capitalize } from "@/lib/utils";
 import { Skeleton } from "@radix-ui/themes";
+import { AuthButton } from "./auth-button";
 
 const staticPages: MenuItem[] = [
   {
@@ -141,6 +143,13 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <AuthButton />
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }
