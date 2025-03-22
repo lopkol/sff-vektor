@@ -174,100 +174,98 @@ export async function updateBookList(
   genre: Genre,
   props: Partial<UpdateBookListProps>,
 ): Promise<BookListProps> {
-  return await connection.transaction<BookListProps>(async (trConnection) => {
-    if (emptyObject(props)) {
-      throw new InvalidArgumentException("No properties to update");
-    }
-    const bookListPropsToUpdate: Record<string, string> = {};
-    ([
-      "url",
-      "pendingUrl",
-    ] satisfies Partial<keyof UpdateBookListProps>[])
-      .forEach((key) => {
-        if (props[key] !== undefined) {
-          bookListPropsToUpdate[key] = props[key];
-        }
-      });
+  if (emptyObject(props)) {
+    throw new InvalidArgumentException("No properties to update");
+  }
+  const bookListPropsToUpdate: Record<string, string> = {};
+  ([
+    "url",
+    "pendingUrl",
+  ] satisfies Partial<keyof UpdateBookListProps>[])
+    .forEach((key) => {
+      if (props[key] !== undefined) {
+        bookListPropsToUpdate[key] = props[key];
+      }
+    });
 
-    return await trConnection.transaction<BookListProps>(
-      async (trConnection) => {
-        let bookListResult: QueryResult<z.infer<typeof bookListDb>>;
-        if (!emptyObject(bookListPropsToUpdate)) {
-          const updatedPropsFragment = updateFragmentFromProps(
-            bookListPropsToUpdate,
-          );
-          bookListResult = await trConnection.query(sql.typeAlias("bookList")`
+  return await connection.transaction<BookListProps>(
+    async (trConnection) => {
+      let bookListResult: QueryResult<z.infer<typeof bookListDb>>;
+      if (!emptyObject(bookListPropsToUpdate)) {
+        const updatedPropsFragment = updateFragmentFromProps(
+          bookListPropsToUpdate,
+        );
+        bookListResult = await trConnection.query(sql.typeAlias("bookList")`
           update book_list set ${updatedPropsFragment}
           where year = ${year} and genre = ${genre} returning *
         `);
-        } else {
-          bookListResult = await trConnection.query(sql.typeAlias("bookList")`
+      } else {
+        bookListResult = await trConnection.query(sql.typeAlias("bookList")`
           select * from book_list where year = ${year} and genre = ${genre}
         `);
-        }
+      }
 
-        if (!bookListResult.rowCount) {
-          throw new EntityNotFoundException("Book list not found", {
-            year,
-            genre,
-          });
-        }
+      if (!bookListResult.rowCount) {
+        throw new EntityNotFoundException("Book list not found", {
+          year,
+          genre,
+        });
+      }
 
-        const bookList = bookListResult.rows[0];
+      const bookList = bookListResult.rows[0];
 
-        let readers: string[] = [];
-        if (props.readers) {
-          try {
-            await trConnection.query(sql.typeAlias("void")`
+      let readers: string[] = [];
+      if (props.readers) {
+        try {
+          await trConnection.query(sql.typeAlias("void")`
               delete from book_list_reader
               where book_list_year = ${year} and book_list_genre = ${genre}
             `);
 
-            if (props.readers.length) {
-              const insertReadersSqlFragments = props.readers.map(
-                (readerId) => sql.fragment`(${year}, ${genre}, ${readerId})`,
-              );
-              await trConnection.query(sql.typeAlias("void")`
+          if (props.readers.length) {
+            const insertReadersSqlFragments = props.readers.map(
+              (readerId) => sql.fragment`(${year}, ${genre}, ${readerId})`,
+            );
+            await trConnection.query(sql.typeAlias("void")`
               insert into book_list_reader (book_list_year, book_list_genre, reader_id)
               values ${sql.join(insertReadersSqlFragments, sql.fragment`, `)}
             `);
-            }
-          } catch (error) {
-            if (isForeignKeyConstraintError(error)) {
-              throw new EntityNotFoundException(
-                "A reader with this id does not exist",
-                getForeignKeyConstraintErrorData,
-              );
-            }
-            if (isInvalidSyntaxError(error)) {
-              throw new InvalidArgumentException("Invalid reader id", {
-                readerId: getInvalidSyntaxErrorData(error),
-              });
-            }
-            throw error;
           }
+        } catch (error) {
+          if (isForeignKeyConstraintError(error)) {
+            throw new EntityNotFoundException(
+              "A reader with this id does not exist",
+              getForeignKeyConstraintErrorData,
+            );
+          }
+          if (isInvalidSyntaxError(error)) {
+            throw new InvalidArgumentException("Invalid reader id", {
+              readerId: getInvalidSyntaxErrorData(error),
+            });
+          }
+          throw error;
+        }
 
-          readers = props.readers;
-        } else {
-          const readerResult = await trConnection.query(sql.typeAlias("id")`
+        readers = props.readers;
+      } else {
+        const readerResult = await trConnection.query(sql.typeAlias("id")`
           select reader_id as id from book_list_reader
           where book_list_year = ${year} and book_list_genre = ${genre}
         `);
-          readers = readerResult.rows.map((reader) => reader.id);
-        }
+        readers = readerResult.rows.map((reader) => reader.id);
+      }
 
-        return {
-          year: bookList.year,
-          genre: enumFromString<Genre>(Genre, bookList.genre) ?? Genre.Fantasy,
-          url: bookList.url,
-          pendingUrl: bookList.pending_url,
-          readers,
-          createdAt: bookList.created_at,
-          updatedAt: bookList.updated_at,
-        };
-      },
-    );
-  });
+      return {
+        year: bookList.year,
+        genre: enumFromString<Genre>(Genre, bookList.genre) ?? Genre.Fantasy,
+        url: bookList.url,
+        pendingUrl: bookList.pending_url,
+        readers,
+        createdAt: bookList.created_at,
+        updatedAt: bookList.updated_at,
+      };
+    },
+  );
 }
 
 export async function deleteBookList(
