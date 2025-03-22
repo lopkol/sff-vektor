@@ -9,13 +9,13 @@ import {
   getUserByEmail,
   getUserById,
   InvalidArgumentException,
-  sql,
   UniqueConstraintException,
   UserRole,
   updateUser,
 } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
+import { sql } from "slonik";
 
 describe("user db functions", () => {
   beforeAll(async () => {

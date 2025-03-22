@@ -9,9 +9,10 @@ import {
 } from "@std/testing/bdd";
 import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
-import { getOrCreateDatabasePool, sql } from "@sffvektor/lib";
+import { getOrCreateDatabasePool } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
+import { sql } from "slonik";
 
 describe("clear database", () => {
   beforeAll(async () => {

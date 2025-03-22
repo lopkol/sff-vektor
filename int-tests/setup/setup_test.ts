@@ -2,12 +2,12 @@ import { afterAll, beforeAll, describe, it } from "@std/testing/bdd";
 import {
   getOrCreateDatabasePool,
   isDatabasePoolStarted,
-  sql,
 } from "@sffvektor/lib";
 import { assertEquals } from "@std/assert/equals";
 import { z } from "zod";
 import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
+import { sql } from "slonik";
 
 describe("Without setup", () => {
   it("doesn't create a database connection pool nor connect to the database", () => {
