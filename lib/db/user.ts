@@ -65,7 +65,7 @@ const selectUserFragment = sql.fragment`
  */
 export async function createUser(
   connection: DatabasePoolConnection,
-  props: CreateUserProps
+  props: CreateUserProps,
 ): Promise<UserProps> {
   const emailHash = await hashEmail(props.email);
   const emailEncrypted = await encrypt(props.email);
@@ -119,7 +119,7 @@ export async function createUser(
       if (isUniqueConstraintError(error)) {
         throw new UniqueConstraintException(
           "A user with this email already exists",
-          { email: props.email }
+          { email: props.email },
         );
       }
       throw error;
@@ -129,7 +129,7 @@ export async function createUser(
 
 export async function getUserById(
   connection: DatabasePoolConnection,
-  id: string
+  id: string,
 ): Promise<UserProps> {
   const userResult = await connection.query(sql.typeAlias("user")`
     ${selectUserFragment}
@@ -154,9 +154,22 @@ export async function getUserById(
   };
 }
 
+export async function userWithEmailExists(
+  connection: DatabasePoolConnection,
+  email: string,
+): Promise<boolean> {
+  const hashedEmail = await hashEmail(email);
+  const userResult = await connection.query(sql.typeAlias("id")`
+    SELECT id FROM "user"
+    where email_hash = ${hashedEmail};
+  `);
+  const rawUser = userResult.rows[0];
+  return !!rawUser;
+}
+
 export async function getUserByEmail(
   connection: DatabasePoolConnection,
-  email: string
+  email: string,
 ): Promise<UserProps> {
   const hashedEmail = await hashEmail(email);
   const userResult = await connection.query(sql.typeAlias("user")`
@@ -185,7 +198,7 @@ export async function getUserByEmail(
 export async function updateUser(
   connection: DatabasePoolConnection,
   id: string,
-  props: Partial<CreateUserProps>
+  props: Partial<CreateUserProps>,
 ): Promise<UserProps> {
   if (emptyObject(props)) {
     throw new InvalidArgumentException("No properties to update");
@@ -217,8 +230,9 @@ export async function updateUser(
     try {
       if (Object.keys(readerPropsToUpdate).length) {
         // if user already has a reader, update it
-        const updatedPropsFragment =
-          updateFragmentFromProps(readerPropsToUpdate);
+        const updatedPropsFragment = updateFragmentFromProps(
+          readerPropsToUpdate,
+        );
         // deno-fmt-ignore
         const readerResult = await trConnection.query(sql.typeAlias("id")`
           update reader
@@ -234,7 +248,7 @@ export async function updateUser(
             insert into reader (moly_username, moly_url)
             values (${props.molyUsername || null}, ${props.molyUrl || null})
             returning id;
-          `
+          `,
           );
           userPropsToUpdate["readerId"] = readerInsertResult.rows[0].id;
         }
@@ -280,7 +294,7 @@ export async function updateUser(
       ) {
         throw new UniqueConstraintException(
           "A user with this email already exists",
-          { email: props.email }
+          { email: props.email },
         );
       }
       throw error;

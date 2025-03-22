@@ -13,15 +13,15 @@ async function createDatabasePoolAndConnect() {
     typeParsers: [
       {
         name: "date",
-        parse: (value) => value,
+        parse: (value: unknown) => value,
       },
       {
         name: "timestamp",
-        parse: (value) => value,
+        parse: (value: unknown) => value,
       },
       {
         name: "timestamptz",
-        parse: (value) => value,
+        parse: (value: unknown) => value,
       },
     ],
   }));

@@ -15,11 +15,15 @@
 At the root of the repository:
 1. Run `docker compose up -d` to start local backend services
 2. Run `deno install` to resolve Deno dependencies
-3. Run `deno task api:dev` to serve the API in watch mode
-4. Run `deno task scheduler:dev` to run the scheduler in watch mode
-5. Run `deno task all:test` to run all the tests
-6. Run `deno task cleanup` to format and lint the code
-7. Run `deno task migration [OPTIONS] [COMMAND]` to run migrations
+3. Create a new file `api/.env.local`
+    - add required env variables: `DEFAULT_ADMIN_EMAIL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+4. Create a new file `frontend/.env.local`
+    - add required env variables: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (same as the one in `api`)
+5. Run `deno task api:dev` to serve the API in watch mode
+6. Run `deno task scheduler:dev` to run the scheduler in watch mode
+7. Run `deno task all:test` to run all the tests
+8. Run `deno task cleanup` to format and lint the code
+9. Run `deno task migration [OPTIONS] [COMMAND]` to run migrations
   - `deno task migration new [label]`: create a new timestamped migration file under `api/migrations/`
   - `deno task migration up`: run the migration (API also runs migration automatically on startup if `DATABASE_RUN_MIGRATIONS=true`, enabled by default)
   - `deno task migration down`: revert the last migration
