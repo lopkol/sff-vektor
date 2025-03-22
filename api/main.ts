@@ -1,4 +1,5 @@
 import { getOrCreateDatabasePool, loadEnv, runDbmate } from "@sffvektor/lib";
+import { initDefaultAdminUser } from "@/config/init-users.ts";
 
 await loadEnv();
 console.log("env loaded");
@@ -18,5 +19,7 @@ if (
 
 await import("@/routes/index.ts");
 console.log("routes loaded");
+
+await initDefaultAdminUser();
 
 Deno.serve({ port: +(Deno.env.get("PORT") ?? 3000) }, app.fetch);
