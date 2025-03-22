@@ -1,6 +1,6 @@
 import z from "zod";
 import { app } from "@/config/application.ts";
-import { createFormValidator } from "@/helpers/validator.ts";
+import { createFormValidator } from "@/middlewares/validator.ts";
 import {
   createBookList,
   deleteBookList,
