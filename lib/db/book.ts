@@ -1,5 +1,5 @@
 import z from "zod";
-import { createSqlTag, type DatabasePoolConnection, QueryResult } from "slonik";
+import { createSqlTag, type DatabasePoolConnection, type QueryResult } from "slonik";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject, enumFromString } from "@/helpers/type.ts";
 import { updateFragmentFromProps } from "@/helpers/slonik.ts";
@@ -183,21 +183,23 @@ export async function updateBook(
 
     let alternatives: BookAlternativeProps[] = [];
 
-    if (props.alternatives && props.alternatives.length) {
+    if (props.alternatives) {
       await trConnection.query(sql.typeAlias("void")`
         delete from "book_alternative" where "book_id" = ${id}
       `);
 
+      if (props.alternatives.length) {
       // deno-fmt-ignore
       const insertAlternativesSqlFragments = props.alternatives.map(
         (alternative) =>
           sql.fragment`(${id}, ${alternative.name}, ${sql.jsonb(alternative.urls)})`,
       );
 
-      await trConnection.query(sql.typeAlias("void")`
-        insert into "book_alternative" ("book_id", "name", "urls") 
-        values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
-      `);
+        await trConnection.query(sql.typeAlias("void")`
+          insert into "book_alternative" ("book_id", "name", "urls")
+          values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
+        `);
+      }
 
       alternatives = props.alternatives;
     } else {
