@@ -17,7 +17,6 @@ create table if not exists "book_alternative" (
     "name"       varchar(256)             not null,
     "urls"       jsonb                    not null default '[]'::jsonb,
     "created_at" timestamp with time zone not null default now(),
-    "updated_at" timestamp with time zone not null default now(),
     primary key (book_id, name)
 );
 
@@ -53,11 +52,22 @@ create table if not exists "book_author" (
     "book_id"    uuid                     not null references "book"("id") on delete cascade,
     "author_id"  uuid                     not null references "author"("id") on delete cascade,
     "created_at" timestamp with time zone not null default now(),
-    "updated_at" timestamp with time zone not null default now(),
     primary key(book_id, author_id)
 );
 
+create table if not exists "book_list_reader" (
+    "book_list_year"  integer                  not null,
+    "book_list_genre" varchar(256)             not null,
+    "reader_id"       uuid                     not null references "reader"("id") on delete cascade,
+    "created_at"      timestamp with time zone not null default now(),
+    primary key(book_list_year, book_list_genre, reader_id),
+    foreign key(book_list_year, book_list_genre) references "book_list"("year", "genre") on delete cascade
+);
+
+create index "book_list_reader_reader_id_idx" on "book_list_reader"("reader_id");
+
 -- migrate:down
+drop table if exists "book_list_reader";
 drop table if exists "book_author";
 drop table if exists "author";
 drop table if exists "book_list";
