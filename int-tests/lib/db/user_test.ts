@@ -10,8 +10,9 @@ import {
   getUserById,
   InvalidArgumentException,
   UniqueConstraintException,
-  UserRole,
   updateUser,
+  UserRole,
+  userWithEmailExists,
 } from "@sffvektor/lib";
 import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
@@ -55,6 +56,27 @@ describe("user db functions", () => {
       assertEquals(fetchedUser.email, "test@test.com");
       assertEquals(fetchedUser.role, UserRole.Admin);
       assertEquals(fetchedUser.isActive, true);
+    });
+  });
+
+  describe("userWithEmailExists", () => {
+    it("returns false if the user does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+
+      const exists = await userWithEmailExists(pool, "test@test.com");
+      assertEquals(exists, false);
+    });
+
+    it("returns true if the user exists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createUser(pool, {
+        email: "test@test.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+
+      const exists = await userWithEmailExists(pool, "test@test.com");
+      assertEquals(exists, true);
     });
   });
 
@@ -234,15 +256,21 @@ describe("user db functions", () => {
       });
 
       await assertRejects(
-        async () => await updateUser(pool, user.id, { email: "luke@skywalker.com" }),
+        async () =>
+          await updateUser(pool, user.id, { email: "luke@skywalker.com" }),
         UniqueConstraintException,
       );
     });
-    
+
     it("throws an error if the user does not exist", async () => {
       const pool = await getOrCreateDatabasePool();
       await assertRejects(
-        async () => await updateUser(pool, "01958c19-c7c9-79f3-a1bf-44de302ee617", { email: "vader@sith.com", role: UserRole.Admin, isActive: true }),
+        async () =>
+          await updateUser(pool, "01958c19-c7c9-79f3-a1bf-44de302ee617", {
+            email: "vader@sith.com",
+            role: UserRole.Admin,
+            isActive: true,
+          }),
         EntityNotFoundException,
       );
     });
@@ -265,7 +293,7 @@ describe("user db functions", () => {
       const updatedUser = await getUserById(pool, user.id);
       assertEquals(updatedUser.molyUsername, "vader_new");
       assertEquals(updatedUser.molyUrl, "new-url");
-      });
+    });
 
     it("creates a reader if the user does not have one", async () => {
       const pool = await getOrCreateDatabasePool();
