@@ -9,7 +9,7 @@ import {
   InvalidArgumentException,
   updateAuthor,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/helpers/validator.ts";
+import { createFormValidator } from "@/middlewares/validator.ts";
 
 const createAuthorSchema = z.object({
   displayName: z.string(),

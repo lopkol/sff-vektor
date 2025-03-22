@@ -225,6 +225,32 @@ describe("book db functions", () => {
       ]);
     });
 
+    it("deletes book alternatives", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const book = await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "original",
+            urls: ["https://example.com"],
+          },
+        ],
+      });
+
+      await updateBook(pool, book.id, {
+        alternatives: [],
+      });
+
+      const bookInDb = await getBookById(pool, book.id);
+      assertEquals(bookInDb.alternatives.length, 0);
+    });
+
     it("throws an error if the book does not exist", async () => {
       const pool = await getOrCreateDatabasePool();
       await assertRejects(

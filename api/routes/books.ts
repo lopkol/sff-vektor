@@ -10,7 +10,7 @@ import {
   InvalidArgumentException,
   updateBook,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/helpers/validator.ts";
+import { createFormValidator } from "@/middlewares/validator.ts";
 
 const createBookSchema = z.object({
   title: z.string(),

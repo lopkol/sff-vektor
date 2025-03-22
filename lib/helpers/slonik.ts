@@ -27,6 +27,7 @@ interface PostgresError {
   table?: string;
   column?: string;
   constraint?: string;
+  detail?: string;
 }
 
 interface DatabaseError {
@@ -42,4 +43,49 @@ export function isUniqueConstraintError(error: unknown): boolean {
     }
   }
   return false;
+}
+
+export function isForeignKeyConstraintError(error: unknown): boolean {
+  if (error !== null && typeof error === "object" && "cause" in error) {
+    const dbError = error as DatabaseError;
+
+    if (dbError.cause?.code === "23503") {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function getForeignKeyConstraintErrorData(
+  error: unknown,
+): Record<string, string> | null {
+  if (isForeignKeyConstraintError(error)) {
+    const dbError = error as DatabaseError;
+    if (dbError.cause?.detail) {
+      const match = dbError.cause.detail.match(/\(([^)]+)\)/g)?.map((str) =>
+        str.slice(1, -1)
+      );
+      if (match) {
+        return { [match[0]]: match[1] };
+      }
+    }
+  }
+  return null;
+}
+
+export function isInvalidSyntaxError(error: unknown): boolean {
+  if (
+    error !== null && typeof error === "object" && "message" in error &&
+    error.message!.toString().includes("invalid input syntax")
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function getInvalidSyntaxErrorData(error: unknown): string | null {
+  if (isInvalidSyntaxError(error)) {
+    return (error as Error).message.split(":")[1].trim();
+  }
+  return null;
 }

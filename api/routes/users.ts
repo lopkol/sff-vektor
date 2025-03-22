@@ -11,7 +11,7 @@ import {
   updateUser,
   UserRole,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/helpers/validator.ts";
+import { createFormValidator } from "@/middlewares/validator.ts";
 
 const createUserSchema = z.object({
   email: z.string(),
