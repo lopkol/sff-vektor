@@ -15,8 +15,10 @@
 At the root of the repository:
 1. Run `docker compose up -d` to start local backend services
 2. Run `deno install` to resolve Deno dependencies
-3. Create a new file `api/.env.local` and add required env variable: `DEFAULT_ADMIN_EMAIL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
-4. Create a new file `frontend/.env.local` and add required env variable: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (same as the one in `api`)
+3. Create a new file `api/.env.local`
+    - add required env variables: `DEFAULT_ADMIN_EMAIL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`
+4. Create a new file `frontend/.env.local`
+    - add required env variables: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (same as the one in `api`)
 5. Run `deno task api:dev` to serve the API in watch mode
 6. Run `deno task scheduler:dev` to run the scheduler in watch mode
 7. Run `deno task all:test` to run all the tests
