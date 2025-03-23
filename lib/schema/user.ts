@@ -11,6 +11,7 @@ export const userSchema = z.object({
   name: z.string().nullable().optional(),
   role: z.nativeEnum(UserRole),
   isActive: z.boolean(),
+  readerId: z.string().nullable().optional(),
   molyUsername: z.string().nullable().optional(),
   molyUrl: z.string().nullable().optional(),
   createdAt: z.string(),
