@@ -5,19 +5,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export default function Page() {
+  const t = useTranslations("Admin.Page");
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Admin</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint
-          cillum sint consectetur cupidatat.
-        </p>
+        <p>{t("content")}</p>
       </CardContent>
     </Card>
   );

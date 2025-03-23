@@ -1,5 +1,6 @@
 import { AppContent } from "@/components/app-content";
 import { AppNavbar } from "@/components/app-navbar";
+import { useTranslations } from "next-intl";
 
 export default function Layout({
   children,
@@ -9,6 +10,7 @@ export default function Layout({
   params: { year: string; genre: string };
 }) {
   const { year } = params;
+  const t = useTranslations();
 
   return (
     <>
@@ -20,7 +22,7 @@ export default function Layout({
             url: "#",
           },
           {
-            title: "Books",
+            title: t("Sidebar.books"),
             url: "/admin",
           },
         ]}

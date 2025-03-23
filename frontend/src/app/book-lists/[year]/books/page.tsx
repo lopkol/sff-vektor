@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -5,19 +7,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
+import { useBookListYear } from "../book-list-year-provider";
 
 export default function Page() {
+  const t = useTranslations("BookList.Books");
+  const { year } = useBookListYear();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Books</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle>{t("title", { year })}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint
-          cillum sint consectetur cupidatat.
-        </p>
+        <p>{t("content")}</p>
       </CardContent>
     </Card>
   );
