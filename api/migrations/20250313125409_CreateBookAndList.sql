@@ -1,70 +1,70 @@
 -- migrate:up
 create table if not exists "book" (
-    "id"            uuid                     not null default uuid_generate_v7() primary key,
-    "title"         varchar(1024)            not null,
-    "year"          integer                  not null,
-    "genre"         varchar(256),
-    "series"        varchar(1024),
-    "series_number" varchar(256),
-    "is_approved"   boolean                  not null default false,
-    "is_pending"    boolean                  not null default true,
-    "created_at"    timestamp with time zone not null default now(),
-    "updated_at"    timestamp with time zone not null default now()
+    "id"           uuid                     not null default uuid_generate_v7() primary key,
+    "title"        varchar(1024)            not null,
+    "year"         integer                  not null,
+    "genre"        varchar(256),
+    "series"       varchar(1024),
+    "seriesNumber" varchar(256),
+    "isApproved"   boolean                  not null default false,
+    "isPending"    boolean                  not null default true,
+    "createdAt"    timestamp with time zone not null default now(),
+    "updatedAt"    timestamp with time zone not null default now()
 );
 
 create table if not exists "book_alternative" (
-    "book_id"    uuid                     not null references "book"("id") on delete cascade,
+    "bookId"     uuid                     not null references "book"("id") on delete cascade,
     "name"       varchar(256)             not null,
     "urls"       jsonb                    not null default '[]'::jsonb,
-    "created_at" timestamp with time zone not null default now(),
-    primary key (book_id, name)
+    "createdAt"  timestamp with time zone not null default now(),
+    primary key ("bookId", "name")
 );
 
 create table if not exists "reading_plan" (
-    "reader_id"  uuid                     not null references "reader"("id") on delete cascade,
-    "book_id"    uuid                     not null references "book"("id") on delete cascade, 
+    "readerId"   uuid                     not null references "reader"("id") on delete cascade,
+    "bookId"     uuid                     not null references "book"("id") on delete cascade, 
     "status"     varchar(255)             not null,
-    "created_at" timestamp with time zone not null default now(),
-    "updated_at" timestamp with time zone not null default now(),
-    primary key(reader_id, book_id)
+    "createdAt"  timestamp with time zone not null default now(),
+    "updatedAt"  timestamp with time zone not null default now(),
+    primary key("readerId", "bookId")
 );
 
 create table if not exists "book_list" (
-    "year"        integer                  not null,
-    "genre"       varchar(256)             not null,
-    "url"         varchar(2048)            not null,
-    "pending_url" varchar(2048),
-    "created_at"  timestamp with time zone not null default now(),
-    "updated_at"  timestamp with time zone not null default now(),
+    "year"       integer                  not null,
+    "genre"      varchar(256)             not null,
+    "url"        varchar(2048)            not null,
+    "pendingUrl" varchar(2048),
+    "createdAt"  timestamp with time zone not null default now(),
+    "updatedAt"  timestamp with time zone not null default now(),
     primary key("year", "genre")
 );
 
 create table if not exists "author" (
-    "id"           uuid                     not null default uuid_generate_v7() primary key,
-    "display_name" varchar(1024)            not null,
-    "sort_name"    varchar(1024)            not null,
-    "is_approved"  boolean                  not null default false,
-    "created_at"   timestamp with time zone not null default now(),
-    "updated_at"   timestamp with time zone not null default now()
+    "id"          uuid                     not null default uuid_generate_v7() primary key,
+    "displayName" varchar(1024)            not null,
+    "sortName"    varchar(1024)            not null,
+    "isApproved"  boolean                  not null default false,
+    "createdAt"   timestamp with time zone not null default now(),
+    "updatedAt"   timestamp with time zone not null default now()
 );
 
 create table if not exists "book_author" (
-    "book_id"    uuid                     not null references "book"("id") on delete cascade,
-    "author_id"  uuid                     not null references "author"("id") on delete cascade,
-    "created_at" timestamp with time zone not null default now(),
-    primary key(book_id, author_id)
+    "bookId"    uuid                     not null references "book"("id") on delete cascade,
+    "authorId"  uuid                     not null references "author"("id") on delete cascade,
+    "createdAt" timestamp with time zone not null default now(),
+    primary key("bookId", "authorId")
 );
 
 create table if not exists "book_list_reader" (
-    "book_list_year"  integer                  not null,
-    "book_list_genre" varchar(256)             not null,
-    "reader_id"       uuid                     not null references "reader"("id") on delete cascade,
-    "created_at"      timestamp with time zone not null default now(),
-    primary key(book_list_year, book_list_genre, reader_id),
-    foreign key(book_list_year, book_list_genre) references "book_list"("year", "genre") on delete cascade
+    "bookListYear"  integer                  not null,
+    "bookListGenre" varchar(256)             not null,
+    "readerId"      uuid                     not null references "reader"("id") on delete cascade,
+    "createdAt"     timestamp with time zone not null default now(),
+    primary key("bookListYear", "bookListGenre", "readerId"),
+    foreign key("bookListYear", "bookListGenre") references "book_list"("year", "genre") on delete cascade
 );
 
-create index "book_list_reader_reader_id_idx" on "book_list_reader"("reader_id");
+create index "book_list_reader_reader_id_idx" on "book_list_reader"("readerId");
 
 -- migrate:down
 drop table if exists "book_list_reader";

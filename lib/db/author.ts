@@ -4,58 +4,36 @@ import { InvalidArgumentException } from "@/exceptions/invalid-argument.exceptio
 import { emptyObject } from "@/helpers/type.ts";
 import { updateFragmentFromProps } from "@/helpers/slonik.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
-
-export interface CreateAuthorProps {
-  displayName: string;
-  sortName: string;
-  isApproved: boolean;
-}
-
-export interface AuthorProps extends CreateAuthorProps {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export const authorDb = z.object({
-  id: z.string(),
-  display_name: z.string(),
-  sort_name: z.string(),
-  is_approved: z.boolean(),
-  created_at: z.string(),
-  updated_at: z.string(),
-});
+import {
+  type Author,
+  authorSchema,
+  type CreateAuthor,
+  type UpdateAuthor,
+} from "@/schema/author.ts";
 
 const sql = createSqlTag({
   typeAliases: {
-    author: authorDb,
+    author: authorSchema,
     void: z.void(),
   },
 });
 
 export async function createAuthor(
   connection: DatabasePoolConnection,
-  props: CreateAuthorProps,
-): Promise<AuthorProps> {
+  props: CreateAuthor,
+): Promise<Author> {
   const result = await connection.query(sql.typeAlias("author")`
-    insert into "author" ("display_name", "sort_name", "is_approved") values (${props.displayName}, ${props.sortName}, ${props.isApproved}) returning *
+    insert into "author" ("displayName", "sortName", "isApproved")
+    values (${props.displayName}, ${props.sortName}, ${props.isApproved}) returning *
   `);
-  const author = result.rows[0];
 
-  return {
-    id: author.id,
-    displayName: author.display_name,
-    sortName: author.sort_name,
-    isApproved: author.is_approved,
-    createdAt: author.created_at,
-    updatedAt: author.updated_at,
-  };
+  return result.rows[0];
 }
 
 export async function getAuthorById(
   connection: DatabasePoolConnection,
   id: string,
-): Promise<AuthorProps> {
+): Promise<Author> {
   const result = await connection.query(sql.typeAlias("author")`
     select * from "author" where "id" = ${id}
   `);
@@ -63,23 +41,14 @@ export async function getAuthorById(
     throw new EntityNotFoundException("Author not found", { id });
   }
 
-  const author = result.rows[0];
-
-  return {
-    id: author.id,
-    displayName: author.display_name,
-    sortName: author.sort_name,
-    isApproved: author.is_approved,
-    createdAt: author.created_at,
-    updatedAt: author.updated_at,
-  };
+  return result.rows[0];
 }
 
 export async function updateAuthor(
   connection: DatabasePoolConnection,
   id: string,
-  props: Partial<CreateAuthorProps>,
-): Promise<AuthorProps> {
+  props: UpdateAuthor,
+): Promise<Author> {
   if (emptyObject(props)) {
     throw new InvalidArgumentException("No properties to update");
   }
@@ -87,22 +56,13 @@ export async function updateAuthor(
   const updatedPropsFragment = updateFragmentFromProps(props);
 
   const result = await connection.query(sql.typeAlias("author")`
-    update "author" set ${updatedPropsFragment}, updated_at = now() where "id" = ${id} returning *
+    update "author" set ${updatedPropsFragment}, "updatedAt" = now() where "id" = ${id} returning *
   `);
   if (!result.rowCount) {
     throw new EntityNotFoundException("Author not found", { id });
   }
 
-  const author = result.rows[0];
-
-  return {
-    id: author.id,
-    displayName: author.display_name,
-    sortName: author.sort_name,
-    isApproved: author.is_approved,
-    createdAt: author.created_at,
-    updatedAt: author.updated_at,
-  };
+  return result.rows[0];
 }
 
 export async function deleteAuthor(

@@ -11,6 +11,9 @@ export * from "@/exceptions/entity-not-found.exception.ts";
 export * from "@/exceptions/invalid-argument.exception.ts";
 export * from "@/exceptions/unique-constraint.exception.ts";
 
+export * from "@/schema/author.ts";
+export * from "@/schema/book-list.ts";
+export * from "@/schema/book.ts";
 export * from "@/schema/reader.ts";
 export * from "@/schema/user.ts";
 

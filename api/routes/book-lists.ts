@@ -1,8 +1,8 @@
-import z from "zod";
 import { app } from "@/config/application.ts";
 import { createFormValidator } from "@/middlewares/validator.ts";
 import {
   createBookList,
+  createBookListSchema,
   deleteBookList,
   EntityNotFoundException,
   enumFromString,
@@ -13,30 +13,12 @@ import {
   InvalidArgumentException,
   UniqueConstraintException,
   updateBookList,
+  updateBookListSchema,
 } from "@sffvektor/lib";
-import { isUuidv7 } from "@/helpers/validators.ts";
 
-const createBookListSchema = z.object({
-  year: z.number(),
-  genre: z.nativeEnum(Genre),
-  url: z.string(),
-  pendingUrl: z.string().optional(),
-  readers: z.array(
-    z.string().refine((readerId: string) => isUuidv7(readerId), {
-      message: "Invalid reader id",
-    }),
-  ),
-});
+const createBookListApiSchema = createBookListSchema.strict();
 
-const updateBookListSchema = z.object({
-  url: z.string().optional(),
-  pendingUrl: z.string().optional(),
-  readers: z.array(
-    z.string().refine((readerId: string) => isUuidv7(readerId), {
-      message: "Invalid reader id",
-    }),
-  ).optional(),
-});
+const updateBookListApiSchema = updateBookListSchema.strict();
 
 app.get("/api/book-lists", async (c) => {
   const pool = await getOrCreateDatabasePool();
@@ -68,7 +50,7 @@ app.get("/api/book-lists/:year/:genre", async (c) => {
 
 app.post(
   "/api/book-lists",
-  createFormValidator(createBookListSchema),
+  createFormValidator(createBookListApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -91,7 +73,7 @@ app.post(
 
 app.patch(
   "/api/book-lists/:year/:genre",
-  createFormValidator(updateBookListSchema),
+  createFormValidator(updateBookListApiSchema),
   async (c) => {
     const genreString = c.req.param("genre");
     const genre = enumFromString<Genre>(Genre, genreString);

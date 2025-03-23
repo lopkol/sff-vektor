@@ -1,44 +1,20 @@
-import z from "zod";
 import { app } from "@/config/application.ts";
 import {
   createBook,
+  createBookSchema,
   deleteBook,
   EntityNotFoundException,
-  Genre,
   getBookById,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateBook,
+  updateBookSchema,
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
 
-const createBookSchema = z.object({
-  title: z.string(),
-  year: z.number(),
-  genre: z.nativeEnum(Genre),
-  series: z.string().optional(),
-  seriesNumber: z.string().optional(),
-  isApproved: z.boolean(),
-  isPending: z.boolean(),
-  alternatives: z.array(z.object({
-    name: z.string(),
-    urls: z.array(z.string()),
-  })).nonempty(),
-});
+const createBookApiSchema = createBookSchema.strict();
 
-const updateBookSchema = z.object({
-  title: z.string().optional(),
-  year: z.number().optional(),
-  genre: z.nativeEnum(Genre).optional(),
-  series: z.string().optional(),
-  seriesNumber: z.string().optional(),
-  isApproved: z.boolean().optional(),
-  isPending: z.boolean().optional(),
-  alternatives: z.array(z.object({
-    name: z.string(),
-    urls: z.array(z.string()),
-  })).nonempty().optional(),
-});
+const updateBookApiSchema = updateBookSchema.strict();
 
 app.get("/api/books/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
@@ -56,7 +32,7 @@ app.get("/api/books/:id", async (c) => {
 
 app.post(
   "/api/books",
-  createFormValidator(createBookSchema),
+  createFormValidator(createBookApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -73,7 +49,7 @@ app.post(
 
 app.patch(
   "/api/books/:id",
-  createFormValidator(updateBookSchema),
+  createFormValidator(updateBookApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {

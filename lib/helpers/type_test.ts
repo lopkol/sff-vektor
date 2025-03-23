@@ -3,6 +3,7 @@ import {
   camelToSnakeCase,
   emptyObject,
   enumFromString,
+  isUuidv7,
 } from "@/helpers/type.ts";
 import { describe, it } from "@std/testing/bdd";
 
@@ -64,5 +65,15 @@ describe("enumFromString", () => {
 
   it("returns undefined if the enum value does not exist", () => {
     assertEquals(enumFromString(TestEnum, "baz"), undefined);
+  });
+});
+
+describe("isUuidv7", () => {
+  it("returns true if the uuid is a valid uuidv7", () => {
+    assertEquals(isUuidv7("0195c33a-c12c-72ad-b00f-2b95428a458a"), true);
+  });
+
+  it("returns false if the uuid is not a valid uuidv7", () => {
+    assertEquals(isUuidv7("eb955231-38d5-425f-5577-639042651a42"), false);
   });
 });

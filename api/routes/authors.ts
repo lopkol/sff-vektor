@@ -1,27 +1,20 @@
-import z from "zod";
 import { app } from "@/config/application.ts";
 import {
   createAuthor,
+  createAuthorSchema,
   deleteAuthor,
   EntityNotFoundException,
   getAuthorById,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateAuthor,
+  updateAuthorSchema,
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
 
-const createAuthorSchema = z.object({
-  displayName: z.string(),
-  sortName: z.string(),
-  isApproved: z.boolean(),
-});
+const createAuthorApiSchema = createAuthorSchema.strict();
 
-const updateAuthorSchema = z.object({
-  displayName: z.string().optional(),
-  sortName: z.string().optional(),
-  isApproved: z.boolean().optional(),
-});
+const updateAuthorApiSchema = updateAuthorSchema.strict();
 
 app.get("/api/authors/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
@@ -38,7 +31,7 @@ app.get("/api/authors/:id", async (c) => {
 
 app.post(
   "/api/authors",
-  createFormValidator(createAuthorSchema),
+  createFormValidator(createAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -53,7 +46,7 @@ app.post(
 
 app.patch(
   "/api/authors/:id",
-  createFormValidator(updateAuthorSchema),
+  createFormValidator(updateAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
