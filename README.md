@@ -63,3 +63,11 @@ Hono and Slonik are both using Zod, respectfully for validation and typing.
 * React Query (API call wrapper for React): https://tanstack.com/query/latest/docs/framework/react/quick-start
 * Radix UI (UI components library): https://www.radix-ui.com/themes/docs/overview/getting-started
   * For extra components, you can use ShadCN website to get ready to go components: https://ui.shadcn.com/ (it uses Radix UI)
+
+
+### Infrastructure
+
+#### Getting started
+
+1. Install Pulumi CLI: https://www.pulumi.com/docs/iac/download-install/
+2. Run `pulumi login` to login to Pulumi
