@@ -7,8 +7,8 @@ import "./globals.css";
 // next
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { getLocale } from 'next-intl/server';
-import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 // Theming
 import ReactQueryProvider from "@/components/react-query-provider";
