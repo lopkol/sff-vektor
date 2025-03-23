@@ -1,5 +1,4 @@
 import { sql, type ValueExpression } from "slonik";
-import { camelToSnakeCase } from "./type.ts";
 
 /**
  * @param props record of { field: value } pairs
@@ -12,7 +11,7 @@ export function updateFragmentFromProps(
     Object.entries(props).reduce((acc, [key, value]) => {
       if (value !== undefined) {
         acc.push(
-          sql.fragment`${sql.identifier([camelToSnakeCase(key)])} = ${value}`,
+          sql.fragment`${sql.identifier([key])} = ${value}`,
         );
       }
       return acc;

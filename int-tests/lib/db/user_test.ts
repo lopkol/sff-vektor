@@ -3,9 +3,11 @@ import { afterAll, afterEach, beforeAll, describe, it } from "@std/testing/bdd";
 import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
 import {
+  createReader,
   createUser,
   EntityNotFoundException,
   getOrCreateDatabasePool,
+  getReaderById,
   getUserByEmail,
   getUserById,
   InvalidArgumentException,
@@ -14,9 +16,7 @@ import {
   UserRole,
   userWithEmailExists,
 } from "@sffvektor/lib";
-import { z } from "zod";
 import { clearDatabase } from "@/setup/clear_database.ts";
-import { sql } from "slonik";
 
 describe("user db functions", () => {
   beforeAll(async () => {
@@ -168,14 +168,10 @@ describe("user db functions", () => {
 
     it("creates a user and assigns an existing reader to it if the molyUsername already exists", async () => {
       const pool = await getOrCreateDatabasePool();
-      const readerResult = await pool.query(
-        sql.type(z.object({ id: z.string() }))`
-        insert into reader (moly_username, moly_url)
-        values ('vader', 'url')
-        returning id;
-      `,
-      );
-      const readerId = readerResult.rows[0].id;
+      const reader = await createReader(pool, {
+        molyUsername: "vader",
+        molyUrl: "url",
+      });
 
       const user = await createUser(pool, {
         email: "vader@sith.com",
@@ -190,20 +186,10 @@ describe("user db functions", () => {
       assertEquals(createdUser.email, "vader@sith.com");
       assertEquals(createdUser.molyUsername, "vader");
       assertEquals(createdUser.molyUrl, "new-url");
-      const readerInDb = await pool.query(
-        sql.type(
-          z.object({
-            id: z.string(),
-            moly_username: z.string(),
-            moly_url: z.string(),
-          }),
-        )`
-        select id, moly_username, moly_url from reader where moly_username = 'vader';
-        `,
-      );
-      assertEquals(readerInDb.rows[0].id, readerId);
-      assertEquals(readerInDb.rows[0].moly_username, "vader");
-      assertEquals(readerInDb.rows[0].moly_url, "new-url");
+      const readerInDb = await getReaderById(pool, reader.id);
+      assertEquals(readerInDb.id, reader.id);
+      assertEquals(readerInDb.molyUsername, "vader");
+      assertEquals(readerInDb.molyUrl, "new-url");
     });
   });
 

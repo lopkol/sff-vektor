@@ -25,24 +25,24 @@ end
 $$ language plpgsql volatile;
 
 create table if not exists "reader" (
-    id             uuid                     not null default uuid_generate_v7() primary key,
-    moly_username  varchar(1024)            default null,
-    moly_url       varchar(2048)            default null,
-    created_at     timestamp with time zone not null default now(),
-    updated_at     timestamp with time zone not null default now()
+    "id"           uuid                     not null default uuid_generate_v7() primary key,
+    "molyUsername" varchar(1024)            default null,
+    "molyUrl"      varchar(2048)            default null,
+    "createdAt"    timestamp with time zone not null default now(),
+    "updatedAt"    timestamp with time zone not null default now()
 );
 
 create table if not exists "user" (
-    id              uuid                     not null default uuid_generate_v7() primary key,
-    email_hash      varchar(1024)            not null,
-    email_encrypted varchar(1024)            not null,
-    name            varchar(1024)            default null,
-    role            varchar(256)             not null default 'user',
-    is_active       boolean                  not null default true,
-    created_at      timestamp with time zone not null default now(),
-    updated_at      timestamp with time zone not null default now(),
-    reader_id       uuid                     default null references "reader" (id),
-    constraint unique_user_email unique (email_hash)
+    "id"              uuid                     not null default uuid_generate_v7() primary key,
+    "emailHash"       varchar(1024)            not null,
+    "emailEncrypted"  varchar(1024)            not null,
+    "name"            varchar(1024)            default null,
+    "role"            varchar(256)             not null default 'user',
+    "isActive"        boolean                  not null default true,
+    "createdAt"       timestamp with time zone not null default now(),
+    "updatedAt"       timestamp with time zone not null default now(),
+    "readerId"        uuid                     default null references "reader" (id),
+    constraint unique_user_email unique ("emailHash")
 );
 
 

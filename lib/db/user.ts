@@ -9,43 +9,29 @@ import { UniqueConstraintException } from "@/exceptions/unique-constraint.except
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject } from "@/helpers/type.ts";
+import {
+  type CreateUser,
+  type UpdateUser,
+  type User,
+  userSchema,
+} from "@/schema/user.ts";
 
-export enum UserRole {
-  Admin = "admin",
-  User = "user",
-}
+const userDbSchema = userSchema.omit({
+  email: true,
+}).extend({
+  emailHash: z.string(),
+  emailEncrypted: z.string(),
+});
 
-export interface CreateUserProps {
-  email: string;
-  name?: string | null;
-  role: UserRole;
-  isActive: boolean;
-  molyUsername?: string | null;
-  molyUrl?: string | null;
-}
-
-export interface UserProps extends CreateUserProps {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export const userDb = z.object({
-  id: z.string(),
-  email_hash: z.string(),
-  email_encrypted: z.string(),
-  name: z.string().nullable(),
-  role: z.nativeEnum(UserRole),
-  is_active: z.boolean(),
-  moly_username: z.string().nullable(),
-  moly_url: z.string().nullable(),
-  created_at: z.string(),
-  updated_at: z.string(),
+const userWithoutReaderDbSchema = userDbSchema.omit({
+  molyUsername: true,
+  molyUrl: true,
 });
 
 const sql = createSqlTag({
   typeAliases: {
-    user: userDb,
+    user: userDbSchema,
+    userWithoutReader: userWithoutReaderDbSchema,
     void: z.void(),
     id: z.object({
       id: z.string(),
@@ -54,9 +40,9 @@ const sql = createSqlTag({
 });
 
 const selectUserFragment = sql.fragment`
-  select u.*, r.moly_username, r.moly_url
+  select u.*, r."molyUsername", r."molyUrl"
     from "user" u
-    left join reader r on u.reader_id = r.id
+    left join "reader" r on u."readerId" = r."id"
   `;
 
 /**
@@ -65,41 +51,37 @@ const selectUserFragment = sql.fragment`
  */
 export async function createUser(
   connection: DatabasePoolConnection,
-  props: CreateUserProps,
-): Promise<UserProps> {
+  props: CreateUser,
+): Promise<User> {
   const emailHash = await hashEmail(props.email);
   const emailEncrypted = await encrypt(props.email);
 
-  return connection.transaction<UserProps>(async (trConnection) => {
+  return connection.transaction<User>(async (trConnection) => {
     try {
       let readerId: string | null = null;
       if (props.molyUsername && props.molyUrl) {
         // deno-fmt-ignore
-        const existingReaderResult = await trConnection.query(sql.typeAlias(
-          "id"
-        )`
-          select id from reader where moly_username = ${props.molyUsername};
+        const existingReaderResult = await trConnection.query(sql.typeAlias("id")`
+          select "id" from "reader" where "molyUsername" = ${props.molyUsername};
         `);
         if (existingReaderResult.rowCount > 0) {
           readerId = existingReaderResult.rows[0].id;
           await trConnection.query(sql.typeAlias("void")`
-            update reader set moly_url = ${props.molyUrl}, updated_at = now() where id = ${readerId};
+            update "reader" set "molyUrl" = ${props.molyUrl}, "updatedAt" = now() where "id" = ${readerId};
           `);
         } else {
           const readerResult = await trConnection.query(sql.typeAlias("id")`
-            insert into reader (moly_username, moly_url)
+            insert into "reader" ("molyUsername", "molyUrl")
             values (${props.molyUsername}, ${props.molyUrl})
-            returning id;
+            returning "id";
           `);
           readerId = readerResult.rows[0].id;
         }
       }
       // deno-fmt-ignore
-      const userResult = await trConnection.query(sql.typeAlias("user")`
-        insert into "user" (email_hash, email_encrypted, name, role, is_active, reader_id)
-        values (${emailHash}, ${emailEncrypted}, ${props.name || null}, ${
-        props.role
-      }, ${props.isActive}, ${readerId})
+      const userResult = await trConnection.query(sql.typeAlias("userWithoutReader")`
+        insert into "user" ("emailHash", "emailEncrypted", "name", "role", "isActive", "readerId")
+        values (${emailHash}, ${emailEncrypted}, ${props.name || null}, ${props.role}, ${props.isActive}, ${readerId})
         returning *;
       `);
       const rawUser = userResult.rows[0];
@@ -112,8 +94,8 @@ export async function createUser(
         isActive: props.isActive,
         molyUsername: props.molyUsername,
         molyUrl: props.molyUrl,
-        createdAt: rawUser.created_at,
-        updatedAt: rawUser.updated_at,
+        createdAt: rawUser.createdAt,
+        updatedAt: rawUser.updatedAt,
       };
     } catch (error) {
       if (isUniqueConstraintError(error)) {
@@ -130,10 +112,10 @@ export async function createUser(
 export async function getUserById(
   connection: DatabasePoolConnection,
   id: string,
-): Promise<UserProps> {
+): Promise<User> {
   const userResult = await connection.query(sql.typeAlias("user")`
     ${selectUserFragment}
-    where u.id = ${id};
+    where u."id" = ${id};
   `);
   const rawUser = userResult.rows[0];
 
@@ -143,14 +125,14 @@ export async function getUserById(
 
   return {
     id: rawUser.id,
-    email: await decrypt(rawUser.email_encrypted),
+    email: await decrypt(rawUser.emailEncrypted),
     name: rawUser.name,
     role: rawUser.role,
-    isActive: rawUser.is_active,
-    molyUsername: rawUser.moly_username,
-    molyUrl: rawUser.moly_url,
-    createdAt: rawUser.created_at,
-    updatedAt: rawUser.updated_at,
+    isActive: rawUser.isActive,
+    molyUsername: rawUser.molyUsername,
+    molyUrl: rawUser.molyUrl,
+    createdAt: rawUser.createdAt,
+    updatedAt: rawUser.updatedAt,
   };
 }
 
@@ -161,7 +143,7 @@ export async function userWithEmailExists(
   const hashedEmail = await hashEmail(email);
   const userResult = await connection.query(sql.typeAlias("id")`
     SELECT id FROM "user"
-    where email_hash = ${hashedEmail};
+    where "emailHash" = ${hashedEmail};
   `);
   const rawUser = userResult.rows[0];
   return !!rawUser;
@@ -170,11 +152,11 @@ export async function userWithEmailExists(
 export async function getUserByEmail(
   connection: DatabasePoolConnection,
   email: string,
-): Promise<UserProps> {
+): Promise<User> {
   const hashedEmail = await hashEmail(email);
   const userResult = await connection.query(sql.typeAlias("user")`
     ${selectUserFragment}
-    where u.email_hash = ${hashedEmail};
+    where u."emailHash" = ${hashedEmail};
   `);
   const rawUser = userResult.rows[0];
 
@@ -184,33 +166,33 @@ export async function getUserByEmail(
 
   return {
     id: rawUser.id,
-    email: await decrypt(rawUser.email_encrypted),
+    email: await decrypt(rawUser.emailEncrypted),
     name: rawUser.name,
     role: rawUser.role,
-    isActive: rawUser.is_active,
-    molyUsername: rawUser.moly_username,
-    molyUrl: rawUser.moly_url,
-    createdAt: rawUser.created_at,
-    updatedAt: rawUser.updated_at,
+    isActive: rawUser.isActive,
+    molyUsername: rawUser.molyUsername,
+    molyUrl: rawUser.molyUrl,
+    createdAt: rawUser.createdAt,
+    updatedAt: rawUser.updatedAt,
   };
 }
 
 export async function updateUser(
   connection: DatabasePoolConnection,
   id: string,
-  props: Partial<CreateUserProps>,
-): Promise<UserProps> {
+  props: UpdateUser,
+): Promise<User> {
   if (emptyObject(props)) {
     throw new InvalidArgumentException("No properties to update");
   }
 
   const userPropsToUpdate: Record<string, string | boolean | null> = {};
   if (props.email) {
-    userPropsToUpdate["email_hash"] = await hashEmail(props.email);
-    userPropsToUpdate["email_encrypted"] = await encrypt(props.email);
+    userPropsToUpdate["emailHash"] = await hashEmail(props.email);
+    userPropsToUpdate["emailEncrypted"] = await encrypt(props.email);
   }
   (
-    ["name", "role", "isActive"] satisfies Partial<keyof CreateUserProps>[]
+    ["name", "role", "isActive"] satisfies Partial<keyof UpdateUser>[]
   ).forEach((key) => {
     if (props[key] !== undefined) {
       userPropsToUpdate[key] = props[key];
@@ -219,14 +201,14 @@ export async function updateUser(
 
   const readerPropsToUpdate: Record<string, string | null> = {};
   (
-    ["molyUsername", "molyUrl"] satisfies Partial<keyof CreateUserProps>[]
+    ["molyUsername", "molyUrl"] satisfies Partial<keyof UpdateUser>[]
   ).forEach((key) => {
     if (props[key] !== undefined) {
       readerPropsToUpdate[key] = props[key];
     }
   });
 
-  return connection.transaction<UserProps>(async (trConnection) => {
+  return connection.transaction<User>(async (trConnection) => {
     try {
       if (Object.keys(readerPropsToUpdate).length) {
         // if user already has a reader, update it
@@ -236,18 +218,18 @@ export async function updateUser(
         // deno-fmt-ignore
         const readerResult = await trConnection.query(sql.typeAlias("id")`
           update reader
-            set ${updatedPropsFragment}, updated_at = now()
-          where id = (select reader_id from "user" where id = ${id})
-          returning id;
+            set ${updatedPropsFragment}, "updatedAt" = now()
+          where "id" = (select "readerId" from "user" where "user"."id" = ${id})
+          returning "id";
         `);
 
         // if user doesn't have a reader, create it
         if (!readerResult.rowCount) {
           const readerInsertResult = await trConnection.query(
             sql.typeAlias("id")`
-            insert into reader (moly_username, moly_url)
+            insert into reader ("molyUsername", "molyUrl")
             values (${props.molyUsername || null}, ${props.molyUrl || null})
-            returning id;
+            returning "id";
           `,
           );
           userPropsToUpdate["readerId"] = readerInsertResult.rows[0].id;
@@ -261,9 +243,9 @@ export async function updateUser(
         // deno-fmt-ignore
         const userResult = await trConnection.query(sql.typeAlias("id")`
           update "user"
-            set ${updatedPropsFragment}, updated_at = now()
-          where id = ${id}
-          returning id;
+            set ${updatedPropsFragment}, "updatedAt" = now()
+          where "id" = ${id}
+          returning "id";
         `);
         if (!userResult.rowCount) {
           throw new EntityNotFoundException("User not found", { id });
@@ -272,20 +254,20 @@ export async function updateUser(
 
       const userResult = await trConnection.query(sql.typeAlias("user")`
         ${selectUserFragment}
-        where u.id = ${id};
+        where u."id" = ${id};
       `);
       const rawUser = userResult.rows[0];
 
       return {
         id: rawUser.id,
-        email: await decrypt(rawUser.email_encrypted),
+        email: await decrypt(rawUser.emailEncrypted),
         name: rawUser.name,
         role: rawUser.role,
-        isActive: rawUser.is_active,
-        molyUsername: rawUser.moly_username,
-        molyUrl: rawUser.moly_url,
-        createdAt: rawUser.created_at,
-        updatedAt: rawUser.updated_at,
+        isActive: rawUser.isActive,
+        molyUsername: rawUser.molyUsername,
+        molyUrl: rawUser.molyUrl,
+        createdAt: rawUser.createdAt,
+        updatedAt: rawUser.updatedAt,
       };
     } catch (error) {
       if (
