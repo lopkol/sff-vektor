@@ -1,16 +1,18 @@
-import { BookListLayout } from "./book-list-layout";
-import { BookListProvider } from "./book-list-provider";
+import { BookListLayout } from "./book-list-genre-layout";
+import { BookListGenreProvider } from "./book-list-genre-provider";
 
-export default function GenreLayout({
+export default async function GenreLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { year: string; genre: string };
+  params: Promise<{ year: string; genre: string }>;
 }) {
+  const { genre } = await params;
+
   return (
-    <BookListProvider year={params.year} genre={params.genre}>
+    <BookListGenreProvider genre={genre}>
       <BookListLayout>{children}</BookListLayout>
-    </BookListProvider>
+    </BookListGenreProvider>
   );
 }

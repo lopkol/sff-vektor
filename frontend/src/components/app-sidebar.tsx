@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Wand, Orbit, BookCopy, ShieldUser, ChevronRight } from "lucide-react";
+import { BookCopy, ChevronRight, Orbit, ShieldUser, Wand } from "lucide-react";
 
 import {
   Sidebar,
@@ -24,7 +24,7 @@ import {
   CollapsibleTrigger,
 } from "./ui/collapsible";
 import { usePathname } from "next/navigation";
-import { MenuItem } from "@/lib/menu-item";
+import type { MenuItem } from "@/lib/menu-item";
 import Link from "next/link";
 import { getBookLists } from "@/services/book-lists";
 import { useQuery } from "@tanstack/react-query";
@@ -32,14 +32,9 @@ import { useMemo } from "react";
 import { capitalize } from "@/lib/utils";
 import { Skeleton } from "@radix-ui/themes";
 import { AuthButton } from "./auth-button";
-
-const staticPages: MenuItem[] = [
-  {
-    title: "Admin",
-    url: "/admin",
-    icon: ShieldUser,
-  },
-];
+import { DarkLightModeSelector } from "./dark-light-mode-selector";
+import { LocaleSelector } from "./locale-selector";
+import { useTranslations } from "next-intl";
 
 const iconByGenre = {
   "sci-fi": Orbit,
@@ -47,11 +42,20 @@ const iconByGenre = {
 };
 
 export function AppSidebar() {
+  const t = useTranslations("Sidebar");
   const activePage = usePathname();
   const { data: rawBookLists, isLoading: isBookListsLoading } = useQuery({
     queryKey: ["book-lists"],
     queryFn: getBookLists,
   });
+
+  const staticPages: MenuItem[] = [
+    {
+      title: t("admin"),
+      url: "/admin",
+      icon: ShieldUser,
+    },
+  ];
 
   const bookListMenu = useMemo(() => {
     const sortedYears: string[] = [];
@@ -77,13 +81,13 @@ export function AppSidebar() {
     return sortedYears.map((year) => {
       const bookList = unorderedBookListByYear[year];
       bookList.children!.push({
-        title: "Books",
+        title: t("books"),
         url: `/book-lists/${year}/books`,
         icon: BookCopy,
       });
       return bookList;
     });
-  }, [rawBookLists]);
+  }, [t, rawBookLists]);
 
   return (
     <Sidebar>
@@ -102,7 +106,7 @@ export function AppSidebar() {
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">SFFVektor</span>
-                  <span className="text-xs">Dashboard</span>
+                  <span className="text-xs">{t("dashboard")}</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -111,13 +115,13 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("settings")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <NestableMenuItem activePage={activePage} items={staticPages} />
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Book lists</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("bookLists")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <NestableMenuItem activePage={activePage} items={bookListMenu} />
             {isBookListsLoading && (
@@ -145,7 +149,9 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="flex justify-center gap-2">
+            <DarkLightModeSelector className="shrink-0" />
+            <LocaleSelector className="shrink-0" />
             <AuthButton />
           </SidebarMenuItem>
         </SidebarMenu>

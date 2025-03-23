@@ -9,15 +9,18 @@ import {
   Heading,
   Text,
 } from "@radix-ui/themes";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
+  const t = useTranslations("HomePage");
+
   return (
     <>
       <AppNavbar
         rootUrl="/"
         rootPages={[
           {
-            title: "Home",
+            title: t("home"),
             url: "/admin",
           },
         ]}
@@ -33,14 +36,13 @@ export default function Home() {
           <Container py={"6"}>
             <Flex direction={"column"}>
               <Heading as="h1" mb={"4"} size={"7"}>
-                Lorem ipsum dolor sit amet, qui minim labore adipisicing minim
-                sint cillum sint consectetur cupidatat.
+                {t("title")}
               </Heading>
               <Text as="p" size={"4"}>
-                Qui minim labore adipisicing minim sint
+                {t("content")}
               </Text>
               <Box mt={"6"}>
-                <Button size={"3"}>Learn More</Button>
+                <Button size={"3"}>{t("button")}</Button>
               </Box>
             </Flex>
           </Container>

@@ -10,7 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { DarkLightModeSelector } from "@/components/dark-light-mode-selector";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -19,7 +18,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-import { MenuItem } from "@/lib/menu-item";
+import type { MenuItem } from "@/lib/menu-item";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Fragment } from "react";
@@ -100,10 +99,6 @@ export function AppNavbar({ rootPages, subPages, rootUrl }: AppNavbarProps) {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-        </div>
-
-        <div className="flex justify-end grow gap-2 px-4">
-          <DarkLightModeSelector />
         </div>
       </div>
       {isMobile && (

@@ -2,25 +2,28 @@
 
 import { AppNavbar } from "@/components/app-navbar";
 import { Book, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function AdminNav() {
+  const t = useTranslations("Admin.Nav");
+
   return (
     <AppNavbar
       rootUrl="/admin"
       rootPages={[
         {
-          title: "Admin",
+          title: t("admin"),
           url: "/admin",
         },
       ]}
       subPages={[
         {
-          title: "Users",
+          title: t("users"),
           url: "/users",
           icon: Users,
         },
         {
-          title: "Candidate list",
+          title: t("candidates"),
           url: "/candidates",
           icon: Book,
         },

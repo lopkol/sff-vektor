@@ -1,0 +1,66 @@
+{
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "settings": "Settings",
+    "bookLists": "Book lists",
+    "books": "Books"
+  },
+  "LocaleSelector": {
+    "title": "Do you want to change the language?",
+    "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "HomePage": {
+    "title": "Hello world!",
+    "home": "Home",
+    "content": "Qui minim labore adipisicing minim sint",
+    "button": "Learn More"
+  },
+  "Admin": {
+    "Nav": {
+      "admin": "Admin",
+      "users": "Users",
+      "candidates": "Candidate list"
+    },
+    "Page": {
+      "title": "Admin",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    }
+  },
+  "BookList": {
+    "Nav": {
+      "list": "List",
+      "reading": "Reading",
+      "table": "Table",
+      "admin": "Admin"
+    },
+    "Books": {
+      "title": "Books available in {year}",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "Table": {
+      "title": "Table of {genreName} books",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "Reading": {
+      "title": "Reading of {genreName} books",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "List": {
+      "title": "List of {genreName} books",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "Admin": {
+      "title": "Admin of {genreName} books",
+      "description": "Card Description",
+      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    }
+  }
+}

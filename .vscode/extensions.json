@@ -3,6 +3,9 @@
     "denoland.vscode-deno",
     "wayou.vscode-todo-highlight",
     "thebearingedge.vscode-sql-lit",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "YoavBls.pretty-ts-errors",
+    "mikestead.dotenv"
   ]
 }

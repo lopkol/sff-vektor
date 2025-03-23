@@ -4,41 +4,45 @@ import { AppNavbar } from "@/components/app-navbar";
 import { AppContent } from "@/components/app-content";
 import { BookOpen, List, Settings, Table } from "lucide-react";
 import { capitalize } from "@/lib/utils";
-import { useBookList } from "./book-list-provider";
+import { useBookListGenre } from "./book-list-genre-provider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "next/navigation";
-import { MenuItem } from "@/lib/menu-item";
-
-const subPages: MenuItem[] = [
-  {
-    title: "List",
-    url: "/list",
-    icon: List,
-  },
-  {
-    title: "Reading",
-    url: "/reading",
-    icon: BookOpen,
-  },
-  {
-    title: "Table",
-    url: "/table",
-    icon: Table,
-  },
-  {
-    title: "Admin",
-    url: "/admin",
-    icon: Settings,
-  },
-];
+import type { MenuItem } from "@/lib/menu-item";
+import { useTranslations } from "next-intl";
+import { useBookListYear } from "../book-list-year-provider";
 
 export function BookListLayout({ children }: { children: React.ReactNode }) {
-  const { year, genre } = useBookList();
+  const { year } = useBookListYear();
+  const { genre } = useBookListGenre();
   const pathname = usePathname();
   const isMobile = useIsMobile();
+  const t = useTranslations("BookList.Nav");
 
   const rootUrl = `/book-lists/${year}/${genre}`;
   const currentPage = pathname.split("/").pop();
+
+  const subPages: MenuItem[] = [
+    {
+      title: t("list"),
+      url: "/list",
+      icon: List,
+    },
+    {
+      title: t("reading"),
+      url: "/reading",
+      icon: BookOpen,
+    },
+    {
+      title: t("table"),
+      url: "/table",
+      icon: Table,
+    },
+    {
+      title: t("admin"),
+      url: "/admin",
+      icon: Settings,
+    },
+  ];
 
   const rootPages: MenuItem[] = [
     {

@@ -7,9 +7,11 @@ import "./globals.css";
 // next
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 // Theming
-import ReactQueryProvider from "../components/react-query-provider";
+import ReactQueryProvider from "@/components/react-query-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -32,33 +34,37 @@ export const metadata: Metadata = {
   robots: "noindex",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ReactQueryProvider>
-            <AuthProvider>
-              <UserProvider>
-                <SidebarProvider>
-                  <AppSidebar />
-                  <SidebarInset>{children}</SidebarInset>
-                </SidebarProvider>
-              </UserProvider>
-            </AuthProvider>
-          </ReactQueryProvider>
-        </ThemeProvider>
+        <NextIntlClientProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ReactQueryProvider>
+              <AuthProvider>
+                <UserProvider>
+                  <SidebarProvider>
+                    <AppSidebar />
+                    <SidebarInset>{children}</SidebarInset>
+                  </SidebarProvider>
+                </UserProvider>
+              </AuthProvider>
+            </ReactQueryProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
