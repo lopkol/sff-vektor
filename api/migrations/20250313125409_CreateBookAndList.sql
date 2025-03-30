@@ -43,6 +43,7 @@ create table if not exists "author" (
     "id"          uuid                     not null default uuid_generate_v7() primary key,
     "displayName" varchar(1024)            not null,
     "sortName"    varchar(1024)            not null,
+    "url"         varchar(2048)            default null,
     "isApproved"  boolean                  not null default false,
     "createdAt"   timestamp with time zone not null default now(),
     "updatedAt"   timestamp with time zone not null default now()

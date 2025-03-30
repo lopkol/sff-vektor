@@ -4,6 +4,7 @@ export const authorSchema = z.object({
   id: z.string(),
   displayName: z.string(),
   sortName: z.string(),
+  url: z.string().nullable().optional(),
   isApproved: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),

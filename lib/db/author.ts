@@ -22,9 +22,10 @@ export async function createAuthor(
   connection: DatabasePoolConnection,
   props: CreateAuthor,
 ): Promise<Author> {
+  // deno-fmt-ignore
   const result = await connection.query(sql.typeAlias("author")`
-    insert into "author" ("displayName", "sortName", "isApproved")
-    values (${props.displayName}, ${props.sortName}, ${props.isApproved}) returning *
+    insert into "author" ("displayName", "sortName", "url", "isApproved")
+    values (${props.displayName}, ${props.sortName}, ${props.url || null}, ${props.isApproved}) returning *
   `);
 
   return result.rows[0];
@@ -41,6 +42,19 @@ export async function getAuthorById(
     throw new EntityNotFoundException("Author not found", { id });
   }
 
+  return result.rows[0];
+}
+
+export async function getAuthorByName(
+  connection: DatabasePoolConnection,
+  name: string,
+): Promise<Author | null> {
+  const result = await connection.query(sql.typeAlias("author")`
+    select * from "author" where "displayName" = ${name}
+  `);
+  if (!result.rowCount) {
+    return null;
+  }
   return result.rows[0];
 }
 

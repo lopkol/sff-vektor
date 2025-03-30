@@ -8,6 +8,7 @@ import {
   deleteAuthor,
   EntityNotFoundException,
   getAuthorById,
+  getAuthorByName,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateAuthor,
@@ -33,6 +34,7 @@ describe("author db functions", () => {
       const author = await createAuthor(pool, {
         displayName: "John Doe",
         sortName: "Doe, John",
+        url: "https://example.com",
         isApproved: true,
       });
 
@@ -40,6 +42,7 @@ describe("author db functions", () => {
       assertEquals(authorInDb.id, author.id);
       assertEquals(authorInDb.displayName, author.displayName);
       assertEquals(authorInDb.sortName, author.sortName);
+      assertEquals(authorInDb.url, author.url);
       assertEquals(authorInDb.isApproved, author.isApproved);
     });
   });
@@ -50,6 +53,7 @@ describe("author db functions", () => {
       const author = await createAuthor(pool, {
         displayName: "John Doe",
         sortName: "Doe, John",
+        url: "https://example.com",
         isApproved: true,
       });
 
@@ -58,6 +62,7 @@ describe("author db functions", () => {
       assertEquals(fetchedAuthor.id, author.id);
       assertEquals(fetchedAuthor.displayName, author.displayName);
       assertEquals(fetchedAuthor.sortName, author.sortName);
+      assertEquals(fetchedAuthor.url, author.url);
       assertEquals(fetchedAuthor.isApproved, author.isApproved);
     });
 
@@ -72,8 +77,8 @@ describe("author db functions", () => {
     });
   });
 
-  describe("updateAuthor", () => {
-    it("updates an author", async () => {
+  describe("getAuthorByName", () => {
+    it("returns an author", async () => {
       const pool = await getOrCreateDatabasePool();
       const author = await createAuthor(pool, {
         displayName: "John Doe",
@@ -81,9 +86,37 @@ describe("author db functions", () => {
         isApproved: true,
       });
 
+      const fetchedAuthor = await getAuthorByName(pool, "John Doe");
+
+      assertEquals(fetchedAuthor?.id, author.id);
+      assertEquals(fetchedAuthor?.displayName, "John Doe");
+      assertEquals(fetchedAuthor?.sortName, "Doe, John");
+      assertEquals(fetchedAuthor?.isApproved, true);
+    });
+
+    it("returns null if the author does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+
+      const author = await getAuthorByName(pool, "John Doe");
+
+      assertEquals(author, null);
+    });
+  });
+
+  describe("updateAuthor", () => {
+    it("updates an author", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "John Doe",
+        sortName: "Doe, John",
+        url: "https://example.com",
+        isApproved: true,
+      });
+
       await updateAuthor(pool, author.id, {
         displayName: "Jane Doe",
         sortName: "Doe, Jane",
+        url: "https://example.com/jane",
         isApproved: false,
       });
 
@@ -91,6 +124,7 @@ describe("author db functions", () => {
       assertEquals(authorInDb.id, author.id);
       assertEquals(authorInDb.displayName, "Jane Doe");
       assertEquals(authorInDb.sortName, "Doe, Jane");
+      assertEquals(authorInDb.url, "https://example.com/jane");
       assertEquals(authorInDb.isApproved, false);
     });
 
