@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isUuidv7 } from "@/helpers/type.ts";
 
 export enum Genre {
   Fantasy = "fantasy",
@@ -12,9 +13,10 @@ export const bookAlternativeSchema = z.object({
 
 export type BookAlternative = z.infer<typeof bookAlternativeSchema>;
 
-// TODO: add author ids
 export const bookSchema = z.object({
-  id: z.string(),
+  id: z.string().refine((id: string) => isUuidv7(id), {
+    message: "Invalid book id",
+  }),
   title: z.string(),
   year: z.number(),
   genre: z.nativeEnum(Genre).nullable().optional(),
@@ -25,6 +27,11 @@ export const bookSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   alternatives: z.array(bookAlternativeSchema),
+  authors: z.array(
+    z.string().refine((id: string) => isUuidv7(id), {
+      message: "Invalid author id",
+    }),
+  ),
 });
 
 export type Book = z.infer<typeof bookSchema>;

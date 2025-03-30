@@ -3,7 +3,9 @@ import { Genre } from "@/schema/book.ts";
 import { isUuidv7 } from "@/helpers/type.ts";
 
 export const bookListSchema = z.object({
-  id: z.string(),
+  id: z.string().refine((id: string) => isUuidv7(id), {
+    message: "Invalid book list id",
+  }),
   year: z.number(),
   genre: z.nativeEnum(Genre),
   url: z.string(),

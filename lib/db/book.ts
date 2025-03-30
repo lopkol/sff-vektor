@@ -6,7 +6,13 @@ import {
 } from "slonik";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject } from "@/helpers/type.ts";
-import { updateFragmentFromProps } from "@/helpers/slonik.ts";
+import {
+  getForeignKeyConstraintErrorData,
+  getInvalidSyntaxErrorData,
+  isForeignKeyConstraintError,
+  isInvalidSyntaxError,
+  updateFragmentFromProps,
+} from "@/helpers/slonik.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import {
   type Book,
@@ -19,6 +25,7 @@ import {
 
 const bookDbSchema = bookSchema.omit({
   alternatives: true,
+  authors: true,
 });
 
 const sql = createSqlTag({
@@ -37,29 +44,56 @@ export async function createBook(
   props: CreateBook,
 ): Promise<Book> {
   return await connection.transaction<Book>(async (trConnection) => {
-    // deno-fmt-ignore
-    const bookResult = await trConnection.query(sql.typeAlias("book")`
-      insert into "book" ("title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending") 
-      values (${props.title}, ${props.year}, ${props.genre || null}, ${props.series || null}, ${props.seriesNumber || null}, ${props.isApproved}, ${props.isPending}) returning *
-    `);
-    const book = bookResult.rows[0];
-
-    if (props.alternatives && props.alternatives.length) {
+    try {
       // deno-fmt-ignore
-      const insertAlternativesSqlFragments = props.alternatives.map(
-        (alternative) =>
-          sql.fragment`(${book.id}, ${alternative.name}, ${sql.jsonb(alternative.urls)})`
-      );
-      await trConnection.query(sql.typeAlias("void")`
-        insert into "book_alternative" ("bookId", "name", "urls") 
-        values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
+      const bookResult = await trConnection.query(sql.typeAlias("book")`
+        insert into "book" ("title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
+        values (${props.title}, ${props.year}, ${props.genre || null}, ${props.series || null}, ${props.seriesNumber || null}, ${props.isApproved}, ${props.isPending}) returning *
       `);
-    }
+      const book = bookResult.rows[0];
 
-    return {
-      ...book,
-      alternatives: props.alternatives,
-    };
+      if (props.alternatives && props.alternatives.length) {
+        // deno-fmt-ignore
+        const insertAlternativesSqlFragments = props.alternatives.map(
+          (alternative) =>
+            sql.fragment`(${book.id}, ${alternative.name}, ${sql.jsonb(alternative.urls)})`
+        );
+        await trConnection.query(sql.typeAlias("void")`
+          insert into "book_alternative" ("bookId", "name", "urls")
+          values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
+        `);
+      }
+
+      if (props.authors && props.authors.length) {
+        const insertAuthorsSqlFragments = props.authors.map(
+          (authorId) => sql.fragment`(${book.id}, ${authorId})`,
+        );
+        await trConnection.query(sql.typeAlias("void")`
+          insert into "book_author" ("bookId", "authorId")
+          values ${sql.join(insertAuthorsSqlFragments, sql.fragment`, `)}
+        `);
+      }
+
+      return {
+        ...book,
+        alternatives: props.alternatives,
+        authors: props.authors,
+      };
+    } catch (error) {
+      if (isForeignKeyConstraintError(error)) {
+        throw new EntityNotFoundException(
+          "An author with this id does not exist",
+          getForeignKeyConstraintErrorData(error),
+        );
+      }
+      if (isInvalidSyntaxError(error)) {
+        throw new InvalidArgumentException(
+          "Invalid author id",
+          getInvalidSyntaxErrorData(error),
+        );
+      }
+      throw error;
+    }
   });
 }
 
@@ -74,16 +108,20 @@ export async function getBookById(
     throw new EntityNotFoundException("Book not found", { id });
   }
   const alternativeResult = await connection.query(
-    sql.typeAlias("bookAlternative")`
-    select "name", "urls" from "book_alternative" where "bookId" = ${id}
-  `,
+    sql.typeAlias(
+      "bookAlternative",
+    )`select "name", "urls" from "book_alternative" where "bookId" = ${id}`,
+  );
+  const authorResult = await connection.query(
+    sql.typeAlias(
+      "id",
+    )`select "authorId" as id from "book_author" where "bookId" = ${id}`,
   );
 
-  const book = bookResult.rows[0];
-
   return {
-    ...book,
+    ...bookResult.rows[0],
     alternatives: [...alternativeResult.rows],
+    authors: authorResult.rows.map((row) => row.id),
   };
 }
 
@@ -114,56 +152,101 @@ export async function updateBook(
     });
 
   return await connection.transaction<Book>(async (trConnection) => {
-    let bookResult: QueryResult<z.infer<typeof bookDbSchema>>;
-    if (!emptyObject(bookPropsToUpdate)) {
-      const updatedPropsFragment = updateFragmentFromProps(bookPropsToUpdate);
-      bookResult = await trConnection.query(sql.typeAlias("book")`
-        update "book" set ${updatedPropsFragment} where "id" = ${id} returning *
-      `);
-    } else {
-      bookResult = await trConnection.query(sql.typeAlias("book")`
-        select * from "book" where "id" = ${id}
-      `);
-    }
-
-    if (!bookResult.rowCount) {
-      throw new EntityNotFoundException("Book not found", { id });
-    }
-
-    let alternatives: BookAlternative[] = [];
-
-    if (props.alternatives) {
-      await trConnection.query(sql.typeAlias("void")`
-        delete from "book_alternative" where "bookId" = ${id}
-      `);
-
-      if (props.alternatives.length) {
-        // deno-fmt-ignore
-        const insertAlternativesSqlFragments = props.alternatives.map((alternative) =>
-          sql.fragment`(${id}, ${alternative.name}, ${sql.jsonb(alternative.urls)})`,
-        );
-
-        await trConnection.query(sql.typeAlias("void")`
-          insert into "book_alternative" ("bookId", "name", "urls")
-          values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
+    try {
+      let bookResult: QueryResult<z.infer<typeof bookDbSchema>>;
+      if (!emptyObject(bookPropsToUpdate)) {
+        const updatedPropsFragment = updateFragmentFromProps(bookPropsToUpdate);
+        bookResult = await trConnection.query(sql.typeAlias("book")`
+          update "book" set ${updatedPropsFragment} where "id" = ${id} returning *
+        `);
+      } else {
+        bookResult = await trConnection.query(sql.typeAlias("book")`
+          select * from "book" where "id" = ${id}
         `);
       }
 
-      alternatives = props.alternatives;
-    } else {
-      const alternativeResult = await trConnection.query(
-        sql.typeAlias("bookAlternative")`
-        select "name", "urls" from "book_alternative" where "bookId" = ${id}
-      `,
-      );
+      if (!bookResult.rowCount) {
+        throw new EntityNotFoundException("Book not found", { id });
+      }
 
-      alternatives = [...alternativeResult.rows];
+      let alternatives: BookAlternative[] = [];
+
+      if (props.alternatives) {
+        await trConnection.query(sql.typeAlias("void")`
+          delete from "book_alternative" where "bookId" = ${id}
+        `);
+
+        if (props.alternatives.length) {
+          // deno-fmt-ignore
+          const insertAlternativesSqlFragments = props.alternatives.map((alternative) =>
+            sql.fragment`(${id}, ${alternative.name}, ${sql.jsonb(alternative.urls)})`,
+          );
+
+          await trConnection.query(sql.typeAlias("void")`
+            insert into "book_alternative" ("bookId", "name", "urls")
+            values ${sql.join(insertAlternativesSqlFragments, sql.fragment`, `)}
+          `);
+        }
+
+        alternatives = props.alternatives;
+      } else {
+        const alternativeResult = await trConnection.query(
+          sql.typeAlias("bookAlternative")`
+          select "name", "urls" from "book_alternative" where "bookId" = ${id}
+        `,
+        );
+
+        alternatives = [...alternativeResult.rows];
+      }
+
+      let authors: string[] = [];
+
+      if (props.authors) {
+        await trConnection.query(sql.typeAlias("void")`
+          delete from "book_author" where "bookId" = ${id}
+        `);
+
+        if (props.authors.length) {
+          const insertAuthorsSqlFragments = props.authors.map(
+            (authorId) => sql.fragment`(${id}, ${authorId})`,
+          );
+
+          await trConnection.query(sql.typeAlias("void")`
+            insert into "book_author" ("bookId", "authorId")
+            values ${sql.join(insertAuthorsSqlFragments, sql.fragment`, `)}
+          `);
+        }
+
+        authors = props.authors;
+      } else {
+        const authorResult = await trConnection.query(
+          sql.typeAlias(
+            "id",
+          )`select "authorId" as id from "book_author" where "bookId" = ${id}`,
+        );
+        authors = authorResult.rows.map((row) => row.id);
+      }
+
+      return {
+        ...bookResult.rows[0],
+        alternatives,
+        authors,
+      };
+    } catch (error) {
+      if (isForeignKeyConstraintError(error)) {
+        throw new EntityNotFoundException(
+          "An author with this id does not exist",
+          getForeignKeyConstraintErrorData(error),
+        );
+      }
+      if (isInvalidSyntaxError(error)) {
+        throw new InvalidArgumentException(
+          "Invalid author id",
+          getInvalidSyntaxErrorData(error),
+        );
+      }
+      throw error;
     }
-
-    return {
-      ...bookResult.rows[0],
-      alternatives,
-    };
   });
 }
 

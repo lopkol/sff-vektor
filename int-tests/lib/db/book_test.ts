@@ -4,6 +4,7 @@ import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
 import { clearDatabase } from "@/setup/clear_database.ts";
 import {
+  createAuthor,
   createBook,
   deleteBook,
   EntityNotFoundException,
@@ -28,7 +29,7 @@ describe("book db functions", () => {
   });
 
   describe("createBook", () => {
-    it("creates a book (without alternatives)", async () => {
+    it("creates a book (without alternatives and authors)", async () => {
       const pool = await getOrCreateDatabasePool();
 
       const book = await createBook(pool, {
@@ -40,6 +41,7 @@ describe("book db functions", () => {
         isApproved: true,
         isPending: false,
         alternatives: [],
+        authors: [],
       });
 
       const bookInDb = await getBookById(pool, book.id);
@@ -77,6 +79,7 @@ describe("book db functions", () => {
             urls: ["https://example.com/audiobook"],
           },
         ],
+        authors: [],
       });
 
       const bookInDb = await getBookById(pool, book.id);
@@ -95,11 +98,80 @@ describe("book db functions", () => {
       assertExists(audiobook);
       assertEquals(audiobook.urls, ["https://example.com/audiobook"]);
     });
+
+    it("links authors to the book", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "J.R.R. Tolkien",
+        sortName: "Tolkien, J.R.R.",
+        isApproved: true,
+      });
+
+      const book = await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [author.id],
+      });
+
+      const bookInDb = await getBookById(pool, book.id);
+      assertEquals(bookInDb.authors.length, 1);
+      assertEquals(bookInDb.authors[0], author.id);
+    });
+
+    it("throws an error if the author id is invalid", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await assertRejects(
+        async () =>
+          await createBook(pool, {
+            title: "The Hobbit",
+            year: 1937,
+            genre: Genre.Fantasy,
+            series: "The Hobbit",
+            seriesNumber: "1",
+            isApproved: true,
+            isPending: false,
+            alternatives: [],
+            authors: ["invalid-author-id"],
+          }),
+        InvalidArgumentException,
+      );
+    });
+
+    it("throws an error if the author does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+
+      await assertRejects(
+        async () =>
+          await createBook(pool, {
+            title: "The Hobbit",
+            year: 1937,
+            genre: Genre.Fantasy,
+            series: "The Hobbit",
+            seriesNumber: "1",
+            isApproved: true,
+            isPending: false,
+            alternatives: [],
+            authors: ["01959eb7-34e3-7868-8c24-c6fa64188453"],
+          }),
+        EntityNotFoundException,
+      );
+    });
   });
 
   describe("getBookById", () => {
     it("returns a book", async () => {
       const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "J.R.R. Tolkien",
+        sortName: "Tolkien, J.R.R.",
+        isApproved: true,
+      });
       const book = await createBook(pool, {
         title: "The Hobbit",
         year: 1937,
@@ -114,6 +186,7 @@ describe("book db functions", () => {
             urls: ["https://example.com", "https://example.com/original2"],
           },
         ],
+        authors: [author.id],
       });
 
       const fetchedBook = await getBookById(pool, book.id);
@@ -131,6 +204,8 @@ describe("book db functions", () => {
         "https://example.com",
         "https://example.com/original2",
       ]);
+      assertEquals(fetchedBook.authors.length, 1);
+      assertEquals(fetchedBook.authors[0], author.id);
     });
 
     it("throws an error if the book does not exist", async () => {
@@ -144,7 +219,7 @@ describe("book db functions", () => {
   });
 
   describe("updateBook", () => {
-    it("updates a book (without alternatives)", async () => {
+    it("updates a book (without alternatives or authors)", async () => {
       const pool = await getOrCreateDatabasePool();
       const book = await createBook(pool, {
         title: "The Hobbit",
@@ -155,6 +230,7 @@ describe("book db functions", () => {
         isApproved: true,
         isPending: false,
         alternatives: [],
+        authors: [],
       });
 
       await updateBook(pool, book.id, {
@@ -190,6 +266,7 @@ describe("book db functions", () => {
             urls: ["https://example.com"],
           },
         ],
+        authors: [],
       });
 
       await updateBook(pool, book.id, {
@@ -241,6 +318,7 @@ describe("book db functions", () => {
             urls: ["https://example.com"],
           },
         ],
+        authors: [],
       });
 
       await updateBook(pool, book.id, {
@@ -249,6 +327,39 @@ describe("book db functions", () => {
 
       const bookInDb = await getBookById(pool, book.id);
       assertEquals(bookInDb.alternatives.length, 0);
+    });
+
+    it("updates book authors", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "J.R.R. Tolkien",
+        sortName: "Tolkien, J.R.R.",
+        isApproved: true,
+      });
+      const book = await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [author.id],
+      });
+      const newAuthor = await createAuthor(pool, {
+        displayName: "J.K. Rowling",
+        sortName: "Rowling, J.K.",
+        isApproved: true,
+      });
+
+      await updateBook(pool, book.id, {
+        authors: [newAuthor.id],
+      });
+
+      const bookInDb = await getBookById(pool, book.id);
+      assertEquals(bookInDb.authors.length, 1);
+      assertEquals(bookInDb.authors[0], newAuthor.id);
     });
 
     it("throws an error if the book does not exist", async () => {
@@ -270,6 +381,52 @@ describe("book db functions", () => {
         InvalidArgumentException,
       );
     });
+
+    it("throws an error if an author id is invalid", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const book = await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+
+      await assertRejects(
+        async () =>
+          await updateBook(pool, book.id, {
+            authors: ["invalid-author-id"],
+          }),
+        InvalidArgumentException,
+      );
+    });
+
+    it("throws an error if an author does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const book = await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+
+      await assertRejects(
+        async () =>
+          await updateBook(pool, book.id, {
+            authors: ["01959eb7-34e3-7868-8c24-c6fa64188453"],
+          }),
+        EntityNotFoundException,
+      );
+    });
   });
 
   describe("deleteBook", () => {
@@ -284,6 +441,7 @@ describe("book db functions", () => {
         isApproved: true,
         isPending: false,
         alternatives: [],
+        authors: [],
       });
 
       await deleteBook(pool, book.id);
