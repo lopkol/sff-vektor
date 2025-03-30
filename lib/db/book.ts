@@ -125,6 +125,37 @@ export async function getBookById(
   };
 }
 
+export async function getBookByUrl(
+  connection: DatabasePoolConnection,
+  url: string,
+): Promise<Book | null> {
+  const bookResult = await connection.query(sql.typeAlias("book")`
+    select b.* from "book" b
+    join "book_alternative" ba on ba."bookId" = b."id"
+    where ba."urls" @> ${sql.jsonb([url])}
+  `);
+  if (!bookResult.rowCount) {
+    return null;
+  }
+  const book = bookResult.rows[0];
+  const alternativeResult = await connection.query(
+    sql.typeAlias(
+      "bookAlternative",
+    )`select "name", "urls" from "book_alternative" where "bookId" = ${book.id}`,
+  );
+  const authorResult = await connection.query(
+    sql.typeAlias(
+      "id",
+    )`select "authorId" as id from "book_author" where "bookId" = ${book.id}`,
+  );
+
+  return {
+    ...bookResult.rows[0],
+    alternatives: [...alternativeResult.rows],
+    authors: authorResult.rows.map((row) => row.id),
+  };
+}
+
 export async function updateBook(
   connection: DatabasePoolConnection,
   id: string,

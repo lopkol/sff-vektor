@@ -10,6 +10,7 @@ import {
   EntityNotFoundException,
   Genre,
   getBookById,
+  getBookByUrl,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateBook,
@@ -215,6 +216,75 @@ describe("book db functions", () => {
           await getBookById(pool, "01959eb7-34e3-7868-8c24-c6fa64188453"),
         EntityNotFoundException,
       );
+    });
+  });
+
+  describe("getBookByUrl", () => {
+    it("returns a book", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "J.R.R. Tolkien",
+        sortName: "Tolkien, J.R.R.",
+        isApproved: true,
+      });
+      await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "original",
+            urls: ["https://example.com", "https://example.com/original2"],
+          },
+          {
+            name: "audiobook",
+            urls: ["https://example.com/audiobook"],
+          },
+        ],
+        authors: [author.id],
+      });
+
+      const fetchedBook = await getBookByUrl(
+        pool,
+        "https://example.com/original2",
+      );
+
+      assertEquals(fetchedBook?.title, "The Hobbit");
+    });
+
+    it("returns null if the book does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createBook(pool, {
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "original",
+            urls: ["https://example.com", "https://example.com/original2"],
+          },
+          {
+            name: "audiobook",
+            urls: ["https://example.com/audiobook"],
+          },
+        ],
+        authors: [],
+      });
+
+      const fetchedBook = await getBookByUrl(
+        pool,
+        "https://example.com/nonexistent",
+      );
+
+      assertEquals(fetchedBook, null);
     });
   });
 
