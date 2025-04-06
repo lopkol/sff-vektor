@@ -21,12 +21,12 @@ export const bookListSchema = z.object({
 
 export type BookList = z.infer<typeof bookListSchema>;
 
-export const shortBookListSchema = bookListSchema.pick({
+export const bookListRefSchema = bookListSchema.pick({
   year: true,
   genre: true,
 });
 
-export type ShortBookList = z.infer<typeof shortBookListSchema>;
+export type BookListRef = z.infer<typeof bookListRefSchema>;
 
 export const createBookListSchema = bookListSchema.omit({
   id: true,

@@ -1,7 +1,9 @@
 import { app } from "@/config/application.ts";
 import {
+  bookListRefSchema,
   createBook,
   createBookSchema,
+  createOrUpdateBooksOfListFromMoly,
   deleteBook,
   EntityNotFoundException,
   getBookById,
@@ -80,3 +82,21 @@ app.delete("/api/books/:id", async (c) => {
     throw error;
   }
 });
+
+app.post(
+  "/api/books/update-from-moly",
+  createFormValidator(bookListRefSchema),
+  async (c) => {
+    try {
+      const { year, genre } = c.req.valid("form");
+      await createOrUpdateBooksOfListFromMoly(year, genre);
+      return c.json({ message: "Books updated" }, 200);
+    } catch (error) {
+      if (error instanceof EntityNotFoundException) {
+        return c.json({ message: error.message, details: error.details }, 404);
+      }
+      console.error(error);
+      throw error;
+    }
+  },
+);

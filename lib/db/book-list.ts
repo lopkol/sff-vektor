@@ -19,10 +19,10 @@ import { UniqueConstraintException } from "@/exceptions/unique-constraint.except
 import type { Genre } from "@/schema/book.ts";
 import {
   type BookList,
+  type BookListRef,
+  bookListRefSchema,
   bookListSchema,
   type CreateBookList,
-  type ShortBookList,
-  shortBookListSchema,
   type UpdateBookList,
 } from "@/schema/book-list.ts";
 
@@ -33,7 +33,7 @@ const bookListDbSchema = bookListSchema.omit({
 const sql = createSqlTag({
   typeAliases: {
     bookList: bookListDbSchema,
-    shortBookList: shortBookListSchema,
+    shortBookList: bookListRefSchema,
     bookListWithReaders: bookListSchema,
     void: z.void(),
     id: z.object({
@@ -119,7 +119,7 @@ export async function getBookList(
 
 export async function getAllBookLists(
   connection: DatabasePoolConnection,
-): Promise<ShortBookList[]> {
+): Promise<BookListRef[]> {
   const bookListsResult = await connection.query(sql.typeAlias("shortBookList")`
     select "year", "genre"
     from "book_list"
