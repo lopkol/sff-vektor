@@ -17,6 +17,7 @@ export const bookSchema = z.object({
   id: z.string().refine((id: string) => isUuidv7(id), {
     message: "Invalid book id",
   }),
+  molyId: z.string().nullable().optional(),
   title: z.string(),
   year: z.number(),
   genre: z.nativeEnum(Genre).nullable().optional(),
@@ -44,6 +45,8 @@ export const createBookSchema = bookSchema.omit({
 
 export type CreateBook = z.infer<typeof createBookSchema>;
 
-export const updateBookSchema = createBookSchema.partial();
+export const updateBookSchema = createBookSchema.omit({
+  molyId: true,
+}).partial();
 
 export type UpdateBook = z.infer<typeof updateBookSchema>;

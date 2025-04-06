@@ -1,6 +1,7 @@
 -- migrate:up
 create table if not exists "book" (
     "id"           uuid                     not null default uuid_generate_v7() primary key,
+    "molyId"       varchar(256)             default null,
     "title"        varchar(1024)            not null,
     "year"         integer                  not null,
     "genre"        varchar(256),
