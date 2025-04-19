@@ -1,5 +1,5 @@
 {
-  "workspace": ["lib", "api", "scheduler", "int-tests"],
+  "workspace": ["lib", "api", "scheduler", "int-tests", "slonik-pg-driver"],
   "tasks": {
     "all:test": "deno task --recursive test",
     "migration": "deno task --filter @sffvektor/api migration",

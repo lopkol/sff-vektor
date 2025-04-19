@@ -7,6 +7,7 @@
   },
   "imports": {
     "@/": "./",
+    "@sffvektor/slonik-pg-driver": "jsr:@sffvektor/slonik-pg-driver",
     "dbmate": "npm:dbmate@2.26.0"
   }
 }

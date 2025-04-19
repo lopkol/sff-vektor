@@ -4,7 +4,8 @@
 		"./api",
 		"./lib",
 		"./scheduler",
-		"./int-tests"
+		"./int-tests",
+		"./slonik-pg-driver"
 	],
 	"editor.inlayHints.enabled": "off",
 	"editor.tabSize": 2,
