@@ -2,6 +2,7 @@
   "workspace": ["lib", "api", "scheduler", "int-tests", "slonik-pg-driver"],
   "tasks": {
     "all:test": "deno task --recursive test",
+    "all:cache": "deno task --recursive cache",
     "migration": "deno task --filter @sffvektor/api migration",
     "api:dev": "deno task --filter @sffvektor/api dev",
     "api:prod": "deno task --filter @sffvektor/api prod",
