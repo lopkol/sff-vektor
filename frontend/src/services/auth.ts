@@ -17,11 +17,11 @@ export async function getAuthMe(token?: string) {
     "/auth/me",
     token
       ? {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      : undefined
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      : undefined,
   );
   return data;
 }
