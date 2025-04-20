@@ -1,7 +1,10 @@
+// @ts-types="npm:@types/jsdom"
 import { JSDOM } from "jsdom";
-import axios from "axios";
-import * as rax from "retry-axios";
-import { molyBaseUrl, raxConfig } from "@/services//moly/constants.ts";
+import {
+  getMolyAxiosInstance,
+  molyBaseUrl,
+  raxConfig,
+} from "@/config/moly-axios.ts";
 import {
   type BookFromList,
   type BookFromShelf,
@@ -15,10 +18,9 @@ import { getBookList } from "@/db/book-list.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { createOrUpdateBookFromMoly } from "@/services/moly/book.ts";
 
-rax.attach();
-
 async function getBooksFromList(url: string): Promise<BookFromList[]> {
   try {
+    const axios = getMolyAxiosInstance();
     const res = await axios.get(url, { raxConfig });
     const { document } = new JSDOM(res.data).window;
 
@@ -44,6 +46,7 @@ async function getBooksFromList(url: string): Promise<BookFromList[]> {
 
 async function getBooksFromPendingShelf(url: string): Promise<BookFromShelf[]> {
   try {
+    const axios = getMolyAxiosInstance();
     const res = await axios.get(url, { raxConfig });
     const { document } = new JSDOM(res.data).window;
 

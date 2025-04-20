@@ -1,8 +1,10 @@
 // @ts-types="npm:@types/jsdom"
 import { JSDOM } from "jsdom";
-import axios from "axios";
-import * as rax from "retry-axios";
-import { molyBaseUrl, raxConfig } from "@/services//moly/constants.ts";
+import {
+  getMolyAxiosInstance,
+  molyBaseUrl,
+  raxConfig,
+} from "@/config/moly-axios.ts";
 import {
   getAuthorsFromBookPage,
   getOriginalVersionUrlFromBookPage,
@@ -19,8 +21,6 @@ import {
   getBookByUrl,
   updateBook,
 } from "@/db/book.ts";
-
-rax.attach();
 
 async function getOrCreateAuthor(
   connection: DatabasePoolConnection,
@@ -76,6 +76,7 @@ export async function createOrUpdateBookFromMoly(
 ): Promise<void> {
   try {
     // fetch book page from moly
+    const axios = getMolyAxiosInstance();
     const res = await axios.get(url, { raxConfig });
     const { document } = new JSDOM(res.data).window;
 
