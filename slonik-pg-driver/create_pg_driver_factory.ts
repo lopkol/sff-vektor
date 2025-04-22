@@ -3,7 +3,7 @@
 /**
  * This file is a fork of the slonik pg driver factory
  * @see https://github.com/gajus/slonik/blob/main/packages/pg-driver/src/factories/createPgDriverFactory.ts
- * 
+ *
  * It fixes an issue with Deno and node-postgres (pg) library
  * @see https://github.com/brianc/node-postgres/issues/3420
  */
@@ -198,8 +198,10 @@ const queryTypeOverrides = async (
  */
 async function endClientConnection(client: PgClient) {
   if (client.ssl) {
-    (client as PgClientWithConnection).connection.stream.on('end', () => {
-      (client as PgClientWithConnection).connection.emit('end');
+    // @ts-expect-error: connection is not exposed by `pg` type definitions
+    const { connection } = client;
+    connection.stream.on("end", () => {
+      connection.emit("end");
     });
   }
   await client.end();
@@ -368,14 +370,17 @@ export const createPgDriverFactory = (): DriverFactory => {
             // `rowDescription` will not fire if the query produces a syntax error.
             // Also, `rowDescription` won't fire until client starts consuming the stream.
             // This is why we cannot simply await for `rowDescription` event before starting to pipe the stream.
-            (client as PgClientWithConnection).connection.once("rowDescription", (rowDescription: { fields: readonly pg.FieldDef[] }) => {
-              fields = rowDescription.fields.map((field) => {
-                return {
-                  dataTypeId: field.dataTypeID,
-                  name: field.name,
-                };
-              });
-            });
+            (client as PgClientWithConnection).connection.once(
+              "rowDescription",
+              (rowDescription: { fields: readonly pg.FieldDef[] }) => {
+                fields = rowDescription.fields.map((field) => {
+                  return {
+                    dataTypeId: field.dataTypeID,
+                    name: field.name,
+                  };
+                });
+              },
+            );
 
             const transform = new Transform({
               objectMode: true,
