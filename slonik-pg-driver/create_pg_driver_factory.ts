@@ -1,5 +1,3 @@
-// @ts-types="npm:@types/pg"
-
 /**
  * This file is a fork of the slonik pg driver factory
  * @see https://github.com/gajus/slonik/blob/main/packages/pg-driver/src/factories/createPgDriverFactory.ts
@@ -198,7 +196,6 @@ const queryTypeOverrides = async (
  */
 async function endClientConnection(client: PgClient) {
   if (client.ssl) {
-    // @ts-expect-error: connection is not exposed by `pg` type definitions
     const { connection } = client;
     connection.stream.on("end", () => {
       connection.emit("end");

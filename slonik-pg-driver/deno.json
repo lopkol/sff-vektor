@@ -12,5 +12,8 @@
     "pg-query-stream": "npm:pg-query-stream@4.7.1",
     "pg-types": "npm:pg-types@4.0.2",
     "postgres-array": "npm:postgres-array@3.0.2"
+  },
+  "compilerOptions": {
+    "types": ["./pg-type-override.d.ts"]
   }
 }
