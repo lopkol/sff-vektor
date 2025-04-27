@@ -86,7 +86,7 @@ export async function createOrUpdateBooksOfListFromMoly(
   const { url, pendingUrl } = bookList;
 
   const booksFromList = await getBooksFromList(url);
-  booksFromList.forEach(async (book) => {
+  await Promise.all(booksFromList.map(async (book) => {
     await createOrUpdateBookFromMoly(
       molyBaseUrl + book.relativeUrl,
       year,
@@ -94,12 +94,12 @@ export async function createOrUpdateBooksOfListFromMoly(
       book.id,
       false,
     );
-  });
+  }));
 
   if (pendingUrl) {
     const pendingBooks = await getBooksFromPendingShelf(pendingUrl);
-    pendingBooks.forEach(async (book) => {
-      if (book.note && book.note.includes(genre)) {
+    await Promise.all(pendingBooks.map(async (book) => {
+      if (book.note && book.note.toLowerCase().includes(genre)) {
         await createOrUpdateBookFromMoly(
           molyBaseUrl + book.relativeUrl,
           year,
@@ -108,7 +108,7 @@ export async function createOrUpdateBooksOfListFromMoly(
           true,
         );
       }
-    });
+    }));
   }
 
   // TODO: logging
