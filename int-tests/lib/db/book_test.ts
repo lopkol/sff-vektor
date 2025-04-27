@@ -10,6 +10,7 @@ import {
   EntityNotFoundException,
   Genre,
   getBookById,
+  getBookByMolyId,
   getBookByUrl,
   getOrCreateDatabasePool,
   InvalidArgumentException,
@@ -34,6 +35,7 @@ describe("book db functions", () => {
       const pool = await getOrCreateDatabasePool();
 
       const book = await createBook(pool, {
+        molyId: "123",
         title: "The Hobbit",
         year: 1937,
         genre: Genre.Fantasy,
@@ -46,6 +48,7 @@ describe("book db functions", () => {
       });
 
       const bookInDb = await getBookById(pool, book.id);
+      assertEquals(bookInDb.molyId, "123");
       assertEquals(bookInDb.title, "The Hobbit");
       assertEquals(bookInDb.year, 1937);
       assertEquals(bookInDb.genre, Genre.Fantasy);
@@ -216,6 +219,69 @@ describe("book db functions", () => {
           await getBookById(pool, "01959eb7-34e3-7868-8c24-c6fa64188453"),
         EntityNotFoundException,
       );
+    });
+  });
+
+  describe("getBookByMolyId", () => {
+    it("returns a book", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "J.R.R. Tolkien",
+        sortName: "Tolkien, J.R.R.",
+        isApproved: true,
+      });
+      await createBook(pool, {
+        molyId: "333",
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "original",
+            urls: ["https://example.com", "https://example.com/original2"],
+          },
+        ],
+        authors: [author.id],
+      });
+
+      const fetchedBook = await getBookByMolyId(
+        pool,
+        "333",
+      );
+
+      assertEquals(fetchedBook?.title, "The Hobbit");
+    });
+
+    it("returns null if the book does not exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createBook(pool, {
+        molyId: "333",
+        title: "The Hobbit",
+        year: 1937,
+        genre: Genre.Fantasy,
+        series: "The Hobbit",
+        seriesNumber: "1",
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "original",
+            urls: ["https://example.com", "https://example.com/original2"],
+          },
+        ],
+        authors: [],
+      });
+
+      const fetchedBook = await getBookByMolyId(
+        pool,
+        "555",
+      );
+
+      assertEquals(fetchedBook, null);
     });
   });
 

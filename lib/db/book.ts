@@ -45,10 +45,19 @@ export async function createBook(
 ): Promise<Book> {
   return await connection.transaction<Book>(async (trConnection) => {
     try {
-      // deno-fmt-ignore
       const bookResult = await trConnection.query(sql.typeAlias("book")`
-        insert into "book" ("title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
-        values (${props.title}, ${props.year}, ${props.genre || null}, ${props.series || null}, ${props.seriesNumber || null}, ${props.isApproved}, ${props.isPending}) returning *
+        insert into "book" ("molyId", "title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
+        values (
+          ${props.molyId || null},
+          ${props.title},
+          ${props.year},
+          ${props.genre || null},
+          ${props.series || null},
+          ${props.seriesNumber || null},
+          ${props.isApproved},
+          ${props.isPending}
+          )
+        returning *
       `);
       const book = bookResult.rows[0];
 
@@ -116,6 +125,36 @@ export async function getBookById(
     sql.typeAlias(
       "id",
     )`select "authorId" as id from "book_author" where "bookId" = ${id}`,
+  );
+
+  return {
+    ...bookResult.rows[0],
+    alternatives: [...alternativeResult.rows],
+    authors: authorResult.rows.map((row) => row.id),
+  };
+}
+
+export async function getBookByMolyId(
+  connection: DatabasePoolConnection,
+  molyId: string,
+): Promise<Book | null> {
+  const bookResult = await connection.query(sql.typeAlias("book")`
+    select * from "book"
+    where "molyId" = ${molyId}
+  `);
+  if (!bookResult.rowCount) {
+    return null;
+  }
+  const book = bookResult.rows[0];
+  const alternativeResult = await connection.query(
+    sql.typeAlias(
+      "bookAlternative",
+    )`select "name", "urls" from "book_alternative" where "bookId" = ${book.id}`,
+  );
+  const authorResult = await connection.query(
+    sql.typeAlias(
+      "id",
+    )`select "authorId" as id from "book_author" where "bookId" = ${book.id}`,
   );
 
   return {

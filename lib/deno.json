@@ -7,6 +7,10 @@
   },
   "imports": {
     "@/": "./",
-    "dbmate": "npm:dbmate@2.26.0"
+    "@types/jsdom": "npm:@types/jsdom@^21.1.7",
+    "axios": "npm:axios@^1.8.4",
+    "dbmate": "npm:dbmate@2.26.0",
+    "jsdom": "npm:jsdom@^26.0.0",
+    "retry-axios": "npm:retry-axios@^3.1.3"
   }
 }
