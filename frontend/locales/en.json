@@ -22,12 +22,28 @@
     "Nav": {
       "admin": "Admin",
       "users": "Users",
-      "candidates": "Candidate list"
+      "bookLists": "Book lists"
     },
     "Page": {
       "title": "Admin",
       "description": "Card Description",
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "BookLists": {
+      "title": "Book lists",
+      "year": "Year",
+      "genre": "Genre",
+      "url": "List URL",
+      "pendingUrl": "Pending shelf URL",
+      "create": "Add new",
+      "createTitle": "Add new book list",
+      "editTitle": "Edit book list",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete book list",
+      "deleteConfirmMessage": "Are you sure you want to delete this book list?"
     }
   },
   "BookList": {
