@@ -28,6 +28,15 @@ export const bookListRefSchema = bookListSchema.pick({
 
 export type BookListRef = z.infer<typeof bookListRefSchema>;
 
+export const shortBookListSchema = bookListSchema.pick({
+  year: true,
+  genre: true,
+  url: true,
+  pendingUrl: true,
+});
+
+export type ShortBookList = z.infer<typeof shortBookListSchema>;
+
 export const createBookListSchema = bookListSchema.omit({
   id: true,
   createdAt: true,
