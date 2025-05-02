@@ -40,10 +40,25 @@
       "editTitle": "Edit book list",
       "save": "Save",
       "saving": "Saving...",
+      "createSuccess": "Book list created",
+      "createError": "Failed to create book list",
+      "updateSuccess": "Book list updated",
+      "updateError": "Failed to update book list",
       "cancel": "Cancel",
       "delete": "Delete",
       "deleteConfirmTitle": "Delete book list",
-      "deleteConfirmMessage": "Are you sure you want to delete this book list?"
+      "deleteConfirmMessage": "Are you sure you want to delete this book list?",
+      "deleteSuccess": "Book list deleted",
+      "deleteError": "Failed to delete book list",
+      "error": {
+        "year": "Year is required",
+        "yearMin": "Year must be greater than 1900",
+        "url": "Invalid URL",
+        "pendingUrl": "Invalid URL",
+        "UNIQUE_CONSTRAINT_VIOLATION": "A book list with this year and genre already exists",
+        "ENTITY_NOT_FOUND": "A book list with this year and genre does not exist",
+        "unknown": "An unknown error occurred"
+      }
     }
   },
   "BookList": {

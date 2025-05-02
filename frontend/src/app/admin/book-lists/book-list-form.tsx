@@ -12,14 +12,6 @@ import { z } from "zod"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 
-const schema = z.object({
-  year: z.number(),
-  genre: z.enum(['sci-fi', 'fantasy']),
-  url: z.string().url(),
-  pendingUrl: z.string().nullable(),
-  readers: z.array(z.string()),
-}) satisfies z.ZodSchema<BookList>;
-
 interface BookListFormProps {
   bookList?: BookList;
   isSaving: boolean;
@@ -30,6 +22,17 @@ interface BookListFormProps {
 
 export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDelete }: BookListFormProps) {
   const t = useTranslations('Admin.BookLists');
+
+  const schema = z.object({
+    year: z
+      .number({ message: t('error.year') })
+      .min(1900, { message: t('error.yearMin') }),
+    genre: z.enum(['sci-fi', 'fantasy']),
+    url: z.string().url({ message: t('error.url') }),
+    pendingUrl: z.string().url({ message: t('error.pendingUrl') }).or(z.literal('').nullable()),
+    readers: z.array(z.string()),
+  }) satisfies z.ZodSchema<BookList>;
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
@@ -141,11 +144,6 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
               </Button>
               {isDeleteDialogOpen && (
                 <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
-                  <AlertDialogTrigger asChild>
-                    <Button type="button" variant="destructive" disabled={isSaving}>
-                      {t('delete')}
-                    </Button>
-                  </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>{t('deleteConfirmTitle')}</AlertDialogTitle>

@@ -5,6 +5,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BookList, createBookList, deleteBookList, getBookList, updateBookList } from '@/services/book-lists';
 import { useTranslations } from 'next-intl';
 import { BookListForm } from './book-list-form';
+import { useToast } from '@/hooks/use-toast';
+import { AxiosError } from 'axios';
 
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -15,6 +17,7 @@ interface BookListDialogProps {
 export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProps) {
   const t = useTranslations('Admin.BookLists');
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const { data: bookList, isLoading } = useQuery({
     queryKey: ['book-list', year, genre],
     queryFn: () => getBookList(year!, genre!),
@@ -26,8 +29,21 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
     mutationFn: (formData: BookList) => bookList ? updateBookList(formData) : createBookList(formData),
     onSuccess: (updatedBookList) => {
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
-      queryClient.setQueryData(['book-list', year, genre], updatedBookList);
+      queryClient.setQueryData(['book-list', updatedBookList.year, updatedBookList.genre], updatedBookList);
+      toast({
+        title: bookList ? t('updateSuccess') : t('createSuccess'),
+        variant: 'success',
+      });
       onOpenChange(false);
+    },
+    onError: (error: AxiosError<{ code: string }>) => {
+      toast({
+        title: bookList ? t('updateError') : t('createError'),
+        description: t.has('error.' + error.response?.data.code as any)
+          ? t('error.' + error.response?.data.code as any)
+          : t('error.unknown'),
+        variant: 'destructive',
+      });
     },
   });
 
@@ -36,7 +52,20 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.removeQueries({ queryKey: ['book-list', year, genre] });
+      toast({
+        title: t('deleteSuccess'),
+        variant: 'success',
+      });
       onOpenChange(false);
+    },
+    onError: (error: AxiosError<{ code: string }>) => {
+      toast({
+        title: t('deleteError'),
+        description: t.has('error.' + error.response?.data.code as any)
+          ? t('error.' + error.response?.data.code as any)
+          : t('error.unknown'),
+        variant: 'destructive',
+      });
     },
   });
 

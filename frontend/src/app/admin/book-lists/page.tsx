@@ -89,8 +89,7 @@ export default function BookListsPage() {
       </CardContent>
 
       {isDialogOpen && (
-        <BookListDialog 
-          // key={`${selectedBookList?.year}-${selectedBookList?.genre}`}
+        <BookListDialog
           onOpenChange={setIsDialogOpen}
           year={selectedBookList?.year}
           genre={selectedBookList?.genre}
