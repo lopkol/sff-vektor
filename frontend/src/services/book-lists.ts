@@ -1,9 +1,11 @@
 import { AxiosResponse } from "axios";
 import http from "./http";
 
+export type BookListGenre = "sci-fi" | "fantasy";
+
 export type ShortBookList = {
   year: number;
-  genre: "sci-fi" | "fantasy";
+  genre: BookListGenre;
   url: string;
   pendingUrl: string | null;
 };
@@ -20,7 +22,7 @@ export async function getBookLists(): Promise<ShortBookList[]> {
   return response.data;
 }
 
-export async function getBookList(year: number, genre: string): Promise<BookList> {
+export async function getBookList(year: number, genre: BookListGenre): Promise<BookList> {
   const response = await http.get<BookList>(`/book-lists/${year}/${genre}`);
   return {
     year: response.data.year,
@@ -51,6 +53,6 @@ export async function updateBookList(bookList: BookList): Promise<BookList> {
   return response.data;
 }
 
-export async function deleteBookList(year: number, genre: 'sci-fi' | 'fantasy'): Promise<void> {
+export async function deleteBookList(year: number, genre: BookListGenre): Promise<void> {
   await http.delete(`/book-lists/${year}/${genre}`);
 }

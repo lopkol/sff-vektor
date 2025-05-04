@@ -35,6 +35,10 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "BookLists": {
+      "genres": {
+        "sciFi": "Sci-Fi",
+        "fantasy": "Fantasy"
+      },
       "props": {
         "year": "Year",
         "genre": "Genre",
