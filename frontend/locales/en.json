@@ -2,7 +2,7 @@
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "settings": "Settings",
+    "global": "Global",
     "bookLists": "Book lists",
     "books": "Books"
   },

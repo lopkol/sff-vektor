@@ -1,8 +1,61 @@
 {
-  "HomePage": {
-    "title": "Szia világ!",
-    "home": "Főoldal",
-    "content": "Qui minim labore adipisicing minim sint",
-    "button": "Tovább"
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "global": "Általános",
+    "bookLists": "Könyvlisták",
+    "books": "Könyvek"
+  },
+  "LocaleSelector": {
+    "title": "Szeretnél nyelvet váltani?",
+    "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?",
+    "cancel": "Mégsem",
+    "confirm": "Igen"
+  },
+  "Admin": {
+    "Nav": {
+      "admin": "Admin",
+      "users": "Felhasználók",
+      "bookLists": "Könyvlisták"
+    },
+    "BookLists": {
+      "props": {
+        "year": "Év",
+        "genre": "Műfaj",
+        "url": "Lista linkje",
+        "pendingUrl": "Besorolásra váró lista linkje"
+      },
+      "table": {
+        "title": "Könyvlisták",
+        "addNew": "Új lista"
+      },
+      "dialog": {
+        "createTitle": "Új könyvlista",
+        "editTitle": "Könyvlista szerkesztése",
+        "save": "Mentés",
+        "cancel": "Mégsem",
+        "delete": "Törlés",
+        "deleteConfirmTitle": "Könyvlista törlése",
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?",
+        "saving": "Mentés..."
+      },
+      "toast": {
+        "createSuccess": "A könyvlista mentése sikeres volt",
+        "createError": "Nem sikerült elmenteni a könyvlistát",
+        "updateSuccess": "A könyvlista módosítása sikeres volt",
+        "updateError": "Nem sikerült módosítani a könyvlistát",
+        "deleteSuccess": "A könyvlista törlése sikeres volt",
+        "deleteError": "Nem sikerült törölni a könyvlistát"
+      },
+      "error": {
+        "year": "Év megadása szükséges",
+        "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
+        "url": "Érvénytelen link",
+        "pendingUrl": "Érvénytelen link",
+        "UNIQUE_CONSTRAINT_VIOLATION": "Már létezik könyvlista ezzel az évvel és műfajjal",
+        "ENTITY_NOT_FOUND": "Nincs könyvlista ezzel az évvel és műfajjal",
+        "unknown": "Hiba történt, próbáld újra később"
+      }
+    }
   }
 }
