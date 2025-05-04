@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { FormErrorMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -71,7 +72,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
                   disabled={!!bookList}
                   onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : '')}
                 />
-                <p className="text-red-500">{errors.year?.message}</p>
+                <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
             </>
           )}
         />
@@ -96,7 +97,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
                   <SelectItem value="fantasy">Fantasy</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-red-500">{errors.genre?.message}</p>
+              <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>
             </>
           )}
         />
@@ -112,7 +113,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
                   id="url"
                   {...field}
                 />
-                <p className="text-red-500">{errors.url?.message}</p>
+                <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
             </>
           )}
         />
@@ -130,7 +131,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
                   value={field.value ?? ''}
                   onChange={(pendingUrl) => field.onChange(pendingUrl || null)}
                 />
-                <p className="text-red-500">{errors.pendingUrl?.message}</p>
+                <FormErrorMessage>{errors.pendingUrl?.message}</FormErrorMessage>
             </>
           )}
         />
