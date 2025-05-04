@@ -31,14 +31,14 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.setQueryData(['book-list', updatedBookList.year, updatedBookList.genre], updatedBookList);
       toast({
-        title: bookList ? t('updateSuccess') : t('createSuccess'),
+        title: bookList ? t('toast.updateSuccess') : t('toast.createSuccess'),
         variant: 'success',
       });
       onOpenChange(false);
     },
     onError: (error: AxiosError<{ code: string }>) => {
       toast({
-        title: bookList ? t('updateError') : t('createError'),
+        title: bookList ? t('toast.updateError') : t('toast.createError'),
         description: t.has('error.' + error.response?.data.code as any)
           ? t('error.' + error.response?.data.code as any)
           : t('error.unknown'),
@@ -53,14 +53,14 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.removeQueries({ queryKey: ['book-list', year, genre] });
       toast({
-        title: t('deleteSuccess'),
+        title: t('toast.deleteSuccess'),
         variant: 'success',
       });
       onOpenChange(false);
     },
     onError: (error: AxiosError<{ code: string }>) => {
       toast({
-        title: t('deleteError'),
+        title: t('toast.deleteError'),
         description: t.has('error.' + error.response?.data.code as any)
           ? t('error.' + error.response?.data.code as any)
           : t('error.unknown'),
@@ -83,7 +83,7 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
     <Dialog open={true} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{bookList ? t('editTitle') : t('createTitle')}</DialogTitle>
+          <DialogTitle>{bookList ? t('dialog.editTitle') : t('dialog.createTitle')}</DialogTitle>
         </DialogHeader>
         {isLoading ? (
           <div className="flex justify-center p-4">

@@ -63,7 +63,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="year">{t('year')}</Label>
+                <Label htmlFor="year">{t('props.year')}</Label>
                 <Input
                   id="year"
                   {...field}
@@ -82,14 +82,14 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
           control={control}
           render={({ field }) => (
             <>
-              <Label htmlFor="genre">{t('genre')}</Label>
+              <Label htmlFor="genre">{t('props.genre')}</Label>
               <Select
                 {...field}
                 disabled={!!bookList}
                 onValueChange={(value) => field.onChange(value as 'sci-fi' | 'fantasy')}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={t('genre')} />
+                  <SelectValue placeholder={t('props.genre')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="sci-fi">Sci-Fi</SelectItem>
@@ -107,7 +107,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="url">{t('url')}</Label>
+                <Label htmlFor="url">{t('props.url')}</Label>
                 <Input
                   id="url"
                   {...field}
@@ -123,7 +123,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="pendingUrl">{t('pendingUrl')}</Label>
+                <Label htmlFor="pendingUrl">{t('props.pendingUrl')}</Label>
                 <Input
                   id="pendingUrl"
                   {...field}
@@ -140,21 +140,21 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
           {bookList && (
             <>
               <Button type="button" variant="destructive" disabled={isSaving} onClick={() => setIsDeleteDialogOpen(true)}>
-                {t('delete')}
+                {t('dialog.delete')}
               </Button>
               {isDeleteDialogOpen && (
                 <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>{t('deleteConfirmTitle')}</AlertDialogTitle>
+                      <AlertDialogTitle>{t('dialog.deleteConfirmTitle')}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        {t('deleteConfirmMessage')}
+                        {t('dialog.deleteConfirmMessage')}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                      <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
                       <AlertDialogAction onClick={handleDelete}>
-                        {t('delete')}
+                        {t('dialog.delete')}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -165,10 +165,10 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
         </div>
         <div className="flex space-x-2">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            {t('cancel')}
+            {t('dialog.cancel')}
           </Button>
           <Button type="submit" disabled={isSaving}>
-            {isSaving ? t('saving') : t('save')}
+            {isSaving ? t('dialog.saving') : t('dialog.save')}
           </Button>
         </div>
       </div>

@@ -47,18 +47,21 @@ export default function BookListsPage() {
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <Button onClick={handleCreateClick}>{t("create")}</Button>
+          <h1 className="text-2xl font-bold">{t("table.title")}</h1>
+          <Button onClick={handleCreateClick}>{t("table.addNew")}</Button>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("year")}</TableHead>
-              <TableHead>{t("genre")}</TableHead>
+              <TableHead>{t("props.year")}</TableHead>
+              <TableHead>{t("props.genre")}</TableHead>
+              <TableHead className="hidden sm:table-cell">
+                {t("props.url")}
+              </TableHead>
               <TableHead className="hidden md:table-cell">
-                {t("url")}
+                {t("props.pendingUrl")}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -71,7 +74,7 @@ export default function BookListsPage() {
               >
                 <TableCell>{bookList.year}</TableCell>
                 <TableCell>{bookList.genre}</TableCell>
-                <TableCell className="hidden md:table-cell">
+                <TableCell className="hidden sm:table-cell">
                   <a 
                     href={bookList.url} 
                     target="_blank" 
@@ -81,6 +84,19 @@ export default function BookListsPage() {
                   >
                     {bookList.url}
                   </a>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {bookList.pendingUrl && (
+                    <a
+                      href={bookList.pendingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className="text-blue-600 hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {bookList.pendingUrl}
+                    </a>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
