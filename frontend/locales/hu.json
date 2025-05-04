@@ -6,6 +6,11 @@
     "bookLists": "Könyvlisták",
     "books": "Könyvek"
   },
+  "ThemeSelector": {
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
+  },
   "LocaleSelector": {
     "title": "Szeretnél nyelvet váltani?",
     "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?",

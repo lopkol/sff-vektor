@@ -6,6 +6,11 @@
     "bookLists": "Book lists",
     "books": "Books"
   },
+  "ThemeSelector": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "LocaleSelector": {
     "title": "Do you want to change the language?",
     "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?",
