@@ -6,6 +6,7 @@ import {
   createReader,
   createUser,
   EntityNotFoundException,
+  getAllUsers,
   getOrCreateDatabasePool,
   getReaderById,
   getUserByEmail,
@@ -29,6 +30,42 @@ describe("user db functions", () => {
 
   afterEach(async () => {
     await clearDatabase();
+  });
+
+  describe("getAllUsers", () => {
+    it("returns empty array if there are no users", async () => {
+      const pool = await getOrCreateDatabasePool();
+
+      const users = await getAllUsers(pool);
+
+      assertEquals(users.length, 0);
+    });
+
+    it("returns all users", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createUser(pool, {
+        email: "test@test.com",
+        role: UserRole.Admin,
+        isActive: true,
+      });
+      await createUser(pool, {
+        email: "test2@test.com",
+        role: UserRole.User,
+        isActive: false,
+      });
+      await createUser(pool, {
+        email: "test3@test.com",
+        role: UserRole.User,
+        name: "Test User 3",
+        molyUsername: "test3",
+        molyUrl: "https://test3.com",
+        isActive: true,
+      });
+
+      const users = await getAllUsers(pool);
+
+      assertEquals(users.length, 3);
+    });
   });
 
   describe("getUserById", () => {

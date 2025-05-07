@@ -3,6 +3,7 @@ import {
   createUser,
   createUserSchema,
   EntityNotFoundException,
+  getAllUsers,
   getOrCreateDatabasePool,
   getUserByEmail,
   getUserById,
@@ -18,11 +19,11 @@ const createUserApiSchema = createUserSchema.strict();
 const updateUserApiSchema = updateUserSchema.strict();
 
 app.get("/api/users", async (c) => {
+  const pool = await getOrCreateDatabasePool();
   const email = c.req.query("email");
   if (!email) {
-    return c.text("Email missing!", 400);
+    return c.json(await getAllUsers(pool), 200);
   }
-  const pool = await getOrCreateDatabasePool();
   try {
     return c.json(await getUserByEmail(pool, email), 200);
   } catch (error) {
