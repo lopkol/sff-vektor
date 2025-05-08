@@ -76,22 +76,8 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
         {isLoading
           ? (
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[100px]" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[100px]" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[100px]" />
-                <Skeleton className="h-10 w-full" />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Skeleton className="h-10 w-[100px]" />
-                <Skeleton className="h-10 w-[100px]" />
-              </div>
+              <Skeleton className="h-4 w-[100px]" />
+              <Skeleton className="h-8 w-full" />
             </div>
           )
           : (

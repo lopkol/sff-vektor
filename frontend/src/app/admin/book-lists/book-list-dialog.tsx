@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types/api-error";
 import { CreateBookList } from "@/types/book-list";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -113,8 +114,9 @@ export function BookListDialog(
         </DialogHeader>
         {isLoading
           ? (
-            <div className="flex justify-center p-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+            <div className="space-y-4">
+              <Skeleton className="h-4 w-[100px]" />
+              <Skeleton className="h-8 w-full" />
             </div>
           )
           : (
