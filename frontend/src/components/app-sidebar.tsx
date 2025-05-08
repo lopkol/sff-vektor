@@ -115,7 +115,7 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t("settings")}</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("global")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <NestableMenuItem activePage={activePage} items={staticPages} />
           </SidebarGroupContent>

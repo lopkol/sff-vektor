@@ -184,42 +184,58 @@ describe("book list db functions", () => {
       await createBookList(pool, {
         year: 2022,
         genre: Genre.Fantasy,
-        url: "https://example.com/book-list",
-        pendingUrl: "https://example.com/book-list-pending",
+        url: "https://example.com/book-list1",
+        pendingUrl: "https://example.com/book-list-pending1",
         readers: [],
       });
       await createBookList(pool, {
         year: 2023,
         genre: Genre.Fantasy,
-        url: "https://example.com/book-list",
-        pendingUrl: "https://example.com/book-list-pending",
+        url: "https://example.com/book-list2",
+        pendingUrl: "https://example.com/book-list-pending2",
         readers: [],
       });
       await createBookList(pool, {
         year: 2023,
         genre: Genre.SciFi,
-        url: "https://example.com/book-list",
-        pendingUrl: "https://example.com/book-list-pending",
+        url: "https://example.com/book-list3",
+        pendingUrl: "https://example.com/book-list-pending3",
         readers: [],
       });
       await createBookList(pool, {
         year: 2024,
         genre: Genre.SciFi,
-        url: "https://example.com/book-list",
-        pendingUrl: "https://example.com/book-list-pending",
+        url: "https://example.com/book-list4",
+        pendingUrl: "https://example.com/book-list-pending4",
         readers: [],
       });
 
       const result = await getAllBookLists(pool);
       assertEquals(result.length, 4);
-      assertEquals(result[0].year, 2024);
-      assertEquals(result[0].genre, Genre.SciFi);
-      assertEquals(result[1].year, 2023);
-      assertEquals(result[1].genre, Genre.SciFi);
-      assertEquals(result[2].year, 2023);
-      assertEquals(result[2].genre, Genre.Fantasy);
-      assertEquals(result[3].year, 2022);
-      assertEquals(result[3].genre, Genre.Fantasy);
+      assertEquals(result[0], {
+        year: 2024,
+        genre: Genre.SciFi,
+        url: "https://example.com/book-list4",
+        pendingUrl: "https://example.com/book-list-pending4",
+      });
+      assertEquals(result[1], {
+        year: 2023,
+        genre: Genre.SciFi,
+        url: "https://example.com/book-list3",
+        pendingUrl: "https://example.com/book-list-pending3",
+      });
+      assertEquals(result[2], {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/book-list2",
+        pendingUrl: "https://example.com/book-list-pending2",
+      });
+      assertEquals(result[3], {
+        year: 2022,
+        genre: Genre.Fantasy,
+        url: "https://example.com/book-list1",
+        pendingUrl: "https://example.com/book-list-pending1",
+      });
     });
   });
 
