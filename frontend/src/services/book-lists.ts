@@ -15,7 +15,7 @@ export type BookList = ShortBookList & {
 };
 
 /**
- * @return a non-paginated book lists (sorted by year and genre, both in descending order)
+ * @return non-paginated book lists (sorted by year and genre, both in descending order)
  */
 export async function getBookLists(): Promise<ShortBookList[]> {
   const response = await http.get<ShortBookList[]>("/book-lists");
