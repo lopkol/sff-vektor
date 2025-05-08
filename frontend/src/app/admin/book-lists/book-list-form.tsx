@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface BookListFormProps {
   bookList?: BookList;
@@ -24,15 +24,19 @@ interface BookListFormProps {
 export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDelete }: BookListFormProps) {
   const t = useTranslations('Admin.BookLists');
 
-  const schema = z.object({
-    year: z
-      .number({ message: t('error.year') })
-      .min(1900, { message: t('error.yearMin') }),
-    genre: z.enum(['sci-fi', 'fantasy']),
-    url: z.string().url({ message: t('error.url') }),
-    pendingUrl: z.string().url({ message: t('error.pendingUrl') }).or(z.literal('').nullable()),
-    readers: z.array(z.string()),
-  }) satisfies z.ZodSchema<BookList>;
+  const schema = useMemo(
+    () =>
+      z.object({
+        year: z
+          .number({ message: t('error.year') })
+          .min(1900, { message: t('error.yearMin') }),
+        genre: z.enum(['sci-fi', 'fantasy']),
+        url: z.string().url({ message: t('error.url') }),
+        pendingUrl: z.string().url({ message: t('error.pendingUrl') }).or(z.literal('').nullable()),
+        readers: z.array(z.string()),
+      }) satisfies z.ZodSchema<BookList>,
+    []
+  );
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
