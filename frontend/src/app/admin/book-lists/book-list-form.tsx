@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { FormErrorMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useTranslations } from 'next-intl';
+import { Button } from "@/components/ui/button";
+import { FormErrorMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { useMemo, useState } from 'react';
-import { BookList, CreateBookList } from '@/types/book-list';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useMemo, useState } from "react";
+import { BookList, BookListGenre, CreateBookList } from "@/types/book-list";
 
 interface BookListFormProps {
   bookList?: BookList;
@@ -22,17 +22,18 @@ interface BookListFormProps {
 }
 
 export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDelete }: BookListFormProps) {
-  const t = useTranslations('Admin.BookLists');
+  const t = useTranslations("Admin.BookLists");
+  const tTools = useTranslations("Tools");
 
   const schema = useMemo(
     () =>
       z.object({
         year: z
-          .number({ message: t('error.year') })
-          .min(1900, { message: t('error.yearMin') }),
-        genre: z.enum(['sci-fi', 'fantasy']),
-        url: z.string().url({ message: t('error.url') }),
-        pendingUrl: z.string().url({ message: t('error.pendingUrl') }).or(z.literal('').nullable()),
+          .number({ message: t("error.year") })
+          .min(1900, { message: t("error.yearMin") }),
+        genre: z.enum(["sci-fi", "fantasy"]),
+        url: z.string().url({ message: t("error.url") }),
+        pendingUrl: z.string().url({ message: t("error.pendingUrl") }).or(z.literal("").nullable()),
         readers: z.array(z.string()),
       }) satisfies z.ZodSchema<CreateBookList>,
     []
@@ -48,9 +49,9 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
     resolver: zodResolver(schema),
     defaultValues: {
       year: bookList?.year ?? new Date().getFullYear(),
-      genre: bookList?.genre ?? 'sci-fi',
-      url: bookList?.url ?? '',
-      pendingUrl: bookList?.pendingUrl ?? '',
+      genre: bookList?.genre ?? "sci-fi",
+      url: bookList?.url ?? "",
+      pendingUrl: bookList?.pendingUrl ?? "",
       readers: bookList?.readers ?? [],
     },
   });
@@ -68,13 +69,13 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="year">{t('props.year')}</Label>
+                <Label htmlFor="year">{t("props.year")}</Label>
                 <Input
                   id="year"
                   {...field}
                   type="number"
                   disabled={!!bookList}
-                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : '')}
+                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : "")}
                 />
                 <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
             </>
@@ -87,18 +88,18 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
           control={control}
           render={({ field }) => (
             <>
-              <Label htmlFor="genre">{t('props.genre')}</Label>
+              <Label htmlFor="genre">{t("props.genre")}</Label>
               <Select
                 {...field}
                 disabled={!!bookList}
-                onValueChange={(value) => field.onChange(value as 'sci-fi' | 'fantasy')}
+                onValueChange={(value) => field.onChange(value as BookListGenre)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={t('props.genre')} />
+                  <SelectValue placeholder={t("props.genre")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sci-fi">{t('genres.sciFi')}</SelectItem>
-                  <SelectItem value="fantasy">{t('genres.fantasy')}</SelectItem>
+                  <SelectItem value="sci-fi">{t("genres.sciFi")}</SelectItem>
+                  <SelectItem value="fantasy">{t("genres.fantasy")}</SelectItem>
                 </SelectContent>
               </Select>
               <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>
@@ -112,7 +113,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="url">{t('props.url')}</Label>
+                <Label htmlFor="url">{t("props.url")}</Label>
                 <Input
                   id="url"
                   {...field}
@@ -128,11 +129,11 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
             control={control}
             render={({ field }) => (
               <>
-                <Label htmlFor="pendingUrl">{t('props.pendingUrl')}</Label>
+                <Label htmlFor="pendingUrl">{t("props.pendingUrl")}</Label>
                 <Input
                   id="pendingUrl"
                   {...field}
-                  value={field.value ?? ''}
+                  value={field.value ?? ""}
                   onChange={(pendingUrl) => field.onChange(pendingUrl || null)}
                 />
                 <FormErrorMessage>{errors.pendingUrl?.message}</FormErrorMessage>
@@ -145,21 +146,21 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
           {bookList && (
             <>
               <Button type="button" variant="destructive" disabled={isSaving} onClick={() => setIsDeleteDialogOpen(true)}>
-                {t('dialog.delete')}
+                {tTools("delete")}
               </Button>
               {isDeleteDialogOpen && (
                 <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>{t('dialog.deleteConfirmTitle')}</AlertDialogTitle>
+                      <AlertDialogTitle>{t("dialog.deleteConfirmTitle")}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        {t('dialog.deleteConfirmMessage')}
+                        {t("dialog.deleteConfirmMessage")}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>{t('dialog.cancel')}</AlertDialogCancel>
+                      <AlertDialogCancel>{tTools("cancel")}</AlertDialogCancel>
                       <AlertDialogAction onClick={handleDelete}>
-                        {t('dialog.delete')}
+                        {tTools("delete")}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -170,10 +171,10 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
         </div>
         <div className="flex space-x-2">
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            {t('dialog.cancel')}
+            {tTools("cancel")}
           </Button>
           <Button type="submit" disabled={isSaving}>
-            {isSaving ? t('dialog.saving') : t('dialog.save')}
+            {isSaving ? tTools("saving") : tTools("save")}
           </Button>
         </div>
       </div>

@@ -22,6 +22,7 @@ import { User } from "@/types/user";
 
 export default function UsersPage() {
   const t = useTranslations("Admin.Users");
+  const tTools = useTranslations("Tools");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -37,13 +38,13 @@ export default function UsersPage() {
     onSuccess: (user: User) => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast({
-        title: user.isActive ? t("toast.activateSuccess") : t("toast.deactivateSuccess"),
+        title: tTools("updateSuccess"),
         variant: "success",
       });
     },
     onError: (user: User) => {
       toast({
-        title: user.isActive ? t("toast.activateError") : t("toast.deactivateError"),
+        title: tTools("updateError"),
         variant: "destructive",
       });
     },

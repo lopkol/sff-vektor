@@ -71,6 +71,7 @@ function ConfirmLocaleUpdate({
   onCancel,
 }: { onConfirm: () => void; onCancel: () => void }) {
   const t = useTranslations("LocaleSelector");
+  const tTools = useTranslations("Tools");
 
   return (
     <AlertDialog open={true}>
@@ -81,10 +82,10 @@ function ConfirmLocaleUpdate({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>
-            {t("cancel")}
+            {tTools("cancel")}
           </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>
-            {t("confirm")}
+            {tTools("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

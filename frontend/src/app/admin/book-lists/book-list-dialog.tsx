@@ -18,8 +18,10 @@ interface BookListDialogProps {
 
 export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProps) {
   const t = useTranslations('Admin.BookLists');
+  const tTools = useTranslations('Tools');
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  
   const { data: bookList, isLoading } = useQuery({
     queryKey: ['book-list', year, genre],
     queryFn: () => getBookList(year!, genre!),
@@ -33,17 +35,17 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.setQueryData(['book-list', updatedBookList.year, updatedBookList.genre], updatedBookList);
       toast({
-        title: bookList ? t('toast.updateSuccess') : t('toast.createSuccess'),
+        title: bookList ? tTools('updateSuccess') : tTools('saveSuccess'),
         variant: 'success',
       });
       onOpenChange(false);
     },
     onError: (error: AxiosError<ApiError>) => {
       toast({
-        title: bookList ? t('toast.updateError') : t('toast.createError'),
+        title: bookList ? tTools('updateError') : tTools('saveError'),
         description: t.has('error.' + error.response?.data.code as any)
           ? t('error.' + error.response?.data.code as any)
-          : t('error.unknown'),
+          : tTools('unknownError'),
         variant: 'destructive',
       });
     },
@@ -55,17 +57,17 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.removeQueries({ queryKey: ['book-list', year, genre] });
       toast({
-        title: t('toast.deleteSuccess'),
+        title: tTools('deleteSuccess'),
         variant: 'success',
       });
       onOpenChange(false);
     },
     onError: (error: AxiosError<ApiError>) => {
       toast({
-        title: t('toast.deleteError'),
+        title: tTools('deleteError'),
         description: t.has('error.' + error.response?.data.code as any)
           ? t('error.' + error.response?.data.code as any)
-          : t('error.unknown'),
+          : tTools('unknownError'),
         variant: 'destructive',
       });
     },

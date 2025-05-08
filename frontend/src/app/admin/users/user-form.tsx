@@ -21,6 +21,7 @@ interface UserFormProps {
 
 export function UserForm({ user, isSaving, onOpenChange, onSubmit }: UserFormProps) {
   const t = useTranslations("Admin.Users");
+  const tTools = useTranslations("Tools");
   
   const schema = useMemo(
     () =>
@@ -114,10 +115,10 @@ export function UserForm({ user, isSaving, onOpenChange, onSubmit }: UserFormPro
       </div>
       <div className="flex justify-end space-x-2">
         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-          {t('dialog.cancel')}
+          {tTools('cancel')}
         </Button>
         <Button type="submit" disabled={isSaving}>
-          {isSaving ? t('dialog.saving') : t('dialog.save')}
+          {isSaving ? tTools('saving') : tTools('save')}
         </Button>
       </div>
     </form>

@@ -19,6 +19,7 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const t = useTranslations("Admin.Users");
+  const tTools = useTranslations("Tools");
 
   // If editing, fetch the latest user data
   const { data: userData, isLoading } = useQuery({
@@ -36,16 +37,16 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast({
-        title: user ? t('toast.updateSuccess') : t('toast.createSuccess'),
-        variant: 'success',
+        title: user ? tTools("updateSuccess") : tTools("saveSuccess"),
+        variant: "success",
       });
       onOpenChange(false);
     },
     onError: (error: AxiosError<{ code: string }>) => {
       toast({
-        title: user ? t('toast.updateError') : t('toast.createError'),
+        title: user ? tTools("updateError") : tTools("saveError"),
         description: error.message,
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -58,7 +59,7 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     <Dialog open={true} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{user ? t('dialog.editTitle') : t('dialog.createTitle')}</DialogTitle>
+          <DialogTitle>{user ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
         </DialogHeader>
         {isLoading ? (
           <div className="space-y-4">

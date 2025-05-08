@@ -1,4 +1,18 @@
 {
+  "Tools": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "saving": "Saving...",
+    "saveSuccess": "Save successful",
+    "saveError": "Failed to save",
+    "updateSuccess": "Update successful",
+    "updateError": "Failed to update",
+    "deleteSuccess": "Delete successful",
+    "deleteError": "Failed to delete",
+    "unknownError": "An unknown error occurred"
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
@@ -13,9 +27,7 @@
   },
   "LocaleSelector": {
     "title": "Do you want to change the language?",
-    "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?",
-    "cancel": "Cancel",
-    "confirm": "Confirm"
+    "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?"
   },
   "HomePage": {
     "title": "Hello world!",
@@ -52,20 +64,8 @@
       "dialog": {
         "createTitle": "Add new book list",
         "editTitle": "Edit book list",
-        "save": "Save",
-        "cancel": "Cancel",
-        "delete": "Delete",
         "deleteConfirmTitle": "Delete book list",
-        "deleteConfirmMessage": "Are you sure you want to delete this book list?",
-        "saving": "Saving..."
-      },
-      "toast": {
-        "createSuccess": "Book list created",
-        "createError": "Failed to create book list",
-        "updateSuccess": "Book list updated",
-        "updateError": "Failed to update book list",
-        "deleteSuccess": "Book list deleted",
-        "deleteError": "Failed to delete book list"
+        "deleteConfirmMessage": "Are you sure you want to delete this book list?"
       },
       "error": {
         "year": "Year is required",
@@ -73,8 +73,7 @@
         "url": "Invalid URL",
         "pendingUrl": "Invalid URL",
         "UNIQUE_CONSTRAINT_VIOLATION": "A book list with this year and genre already exists",
-        "ENTITY_NOT_FOUND": "A book list with this year and genre does not exist",
-        "unknown": "An unknown error occurred"
+        "ENTITY_NOT_FOUND": "A book list with this year and genre does not exist"
       }
     },
     "Users": {
@@ -95,27 +94,13 @@
       },
       "dialog": {
         "createTitle": "Add new user",
-        "editTitle": "Edit user",
-        "save": "Save",
-        "cancel": "Cancel",
-        "saving": "Saving..."
-      },
-      "toast": {
-        "createSuccess": "User created",
-        "createError": "Failed to create user",
-        "updateSuccess": "User updated",
-        "updateError": "Failed to update user",
-        "activateSuccess": "User activated",
-        "activateError": "Failed to activate user",
-        "deactivateSuccess": "User deactivated",
-        "deactivateError": "Failed to deactivate user"
+        "editTitle": "Edit user"
       },
       "error": {
         "name": "Name is required",
         "email": "Invalid email",
         "role": "Role is required",
-        "molyUrl": "Invalid URL",
-        "unknown": "An unknown error occurred"
+        "molyUrl": "Invalid URL"
       }
     }
   },
