@@ -5,7 +5,6 @@ import {
   EntityNotFoundException,
   getAllUsers,
   getOrCreateDatabasePool,
-  getUserByEmail,
   getUserById,
   InvalidArgumentException,
   UniqueConstraintException,
@@ -20,16 +19,9 @@ const updateUserApiSchema = updateUserSchema.strict();
 
 app.get("/api/users", async (c) => {
   const pool = await getOrCreateDatabasePool();
-  const email = c.req.query("email");
-  if (!email) {
-    return c.json(await getAllUsers(pool), 200);
-  }
   try {
-    return c.json(await getUserByEmail(pool, email), 200);
+    return c.json(await getAllUsers(pool), 200);
   } catch (error) {
-    if (error instanceof EntityNotFoundException) {
-      return c.json({ message: error.message, details: error.details }, 404);
-    }
     console.error(error);
     throw error;
   }

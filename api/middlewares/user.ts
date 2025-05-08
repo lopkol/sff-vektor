@@ -2,7 +2,7 @@ import { createMiddleware } from "hono/factory";
 import {
   getOrCreateDatabasePool,
   getUserByEmail,
-  type UserProps,
+  type User,
 } from "@sffvektor/lib";
 
 /**
@@ -39,6 +39,6 @@ export const loadActiveUser = createMiddleware(async (c, next) => {
 
 declare module "hono" {
   interface ContextVariableMap {
-    user: UserProps;
+    user: User;
   }
 }
