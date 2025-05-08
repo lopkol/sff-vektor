@@ -5,19 +5,19 @@ import { FormErrorMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { BookList } from '@/services/book-lists';
 import { useTranslations } from 'next-intl';
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useMemo, useState } from 'react';
+import { BookList, CreateBookList } from '@/types/book-list';
 
 interface BookListFormProps {
   bookList?: BookList;
   isSaving: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: BookList) => void;
+  onSubmit: (data: CreateBookList) => void;
   onDelete: () => void;
 }
 
@@ -34,7 +34,7 @@ export function BookListForm({ bookList, isSaving, onOpenChange, onSubmit, onDel
         url: z.string().url({ message: t('error.url') }),
         pendingUrl: z.string().url({ message: t('error.pendingUrl') }).or(z.literal('').nullable()),
         readers: z.array(z.string()),
-      }) satisfies z.ZodSchema<BookList>,
+      }) satisfies z.ZodSchema<CreateBookList>,
     []
   );
 

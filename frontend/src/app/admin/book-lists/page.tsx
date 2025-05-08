@@ -13,10 +13,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { BookListDialog } from "./book-list-dialog";
-import { ShortBookList } from "@/services/book-lists";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ShortBookList } from "@/types/book-list";
+
 export default function BookListsPage() {
   const t = useTranslations("Admin.BookLists");
   const [selectedBookList, setSelectedBookList] = useState<ShortBookList | null>(

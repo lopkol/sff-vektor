@@ -2,12 +2,14 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BookList, createBookList, deleteBookList, getBookList, updateBookList } from '@/services/book-lists';
+import { createBookList, deleteBookList, getBookList, updateBookList } from '@/services/book-lists';
 import { useTranslations } from 'next-intl';
 import { BookListForm } from './book-list-form';
 import { useToast } from '@/hooks/use-toast';
 import { AxiosError } from 'axios';
 import { ApiError } from '@/types/api-error';
+import { CreateBookList } from '@/types/book-list';
+
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
   year?: number;
@@ -26,7 +28,7 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
   });
 
   const { mutate: createOrUpdateBooklist, isPending: isSavingPending } = useMutation({
-    mutationFn: (formData: BookList) => bookList ? updateBookList(formData) : createBookList(formData),
+    mutationFn: (formData: CreateBookList) => bookList ? updateBookList(formData) : createBookList(formData),
     onSuccess: (updatedBookList) => {
       queryClient.invalidateQueries({ queryKey: ['book-lists'] });
       queryClient.setQueryData(['book-list', updatedBookList.year, updatedBookList.genre], updatedBookList);
@@ -69,7 +71,7 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
     },
   });
 
-  const onSubmit = (data: BookList) => {
+  const onSubmit = (data: CreateBookList) => {
     createOrUpdateBooklist(data);
   };
 
