@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'user';
+export type UserRole = "admin" | "user";
 
 export type User = {
   id: string;
@@ -11,9 +11,12 @@ export type User = {
   molyUrl: string | null;
   createdAt: string;
   updatedAt: string;
-}
+};
 
-export type CreateUser = Pick<User, "email" | "name" | "molyUrl" | "molyUsername" | "role" | "isActive">;
+export type CreateUser = Pick<
+  User,
+  "email" | "name" | "molyUrl" | "molyUsername" | "role" | "isActive"
+>;
 
 export type UpdateUser = Partial<CreateUser>;
 

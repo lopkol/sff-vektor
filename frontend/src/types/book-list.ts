@@ -10,6 +10,9 @@ export type BookList = {
   updatedAt: string;
 };
 
-export type ShortBookList = Pick<BookList, "year" | "genre" | "url" | "pendingUrl">;
+export type ShortBookList = Pick<
+  BookList,
+  "year" | "genre" | "url" | "pendingUrl"
+>;
 
 export type CreateBookList = Omit<BookList, "createdAt" | "updatedAt">;

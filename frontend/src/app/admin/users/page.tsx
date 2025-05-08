@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUsers, updateUser } from "@/services/users";
 import {
   Table,
@@ -34,15 +34,16 @@ export default function UsersPage() {
   });
 
   const { mutate: toggleActive } = useMutation({
-    mutationFn: (user: User) => updateUser(user.id, { isActive: !user.isActive }),
-    onSuccess: (user: User) => {
+    mutationFn: (user: User) =>
+      updateUser(user.id, { isActive: !user.isActive }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast({
         title: tTools("updateSuccess"),
         variant: "success",
       });
     },
-    onError: (user: User) => {
+    onError: () => {
       toast({
         title: tTools("updateError"),
         variant: "destructive",
@@ -51,13 +52,13 @@ export default function UsersPage() {
   });
 
   const roleLabel = (role: string) => {
-    if (role === 'admin') return t('roles.admin');
-    if (role === 'user') return t('roles.user');
+    if (role === "admin") return t("roles.admin");
+    if (role === "user") return t("roles.user");
     return role;
   };
 
   if (isLoading) {
-    return <PageSkeleton/>
+    return <PageSkeleton />;
   }
 
   const handleRowClick = (user: User) => {
@@ -88,7 +89,9 @@ export default function UsersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>{t("props.name")}</TableHead>
-              <TableHead className="hidden md:table-cell">{t("props.email")}</TableHead>
+              <TableHead className="hidden md:table-cell">
+                {t("props.email")}
+              </TableHead>
               <TableHead>{t("props.role")}</TableHead>
               <TableHead>{t("props.active")}</TableHead>
             </TableRow>
@@ -101,14 +104,19 @@ export default function UsersPage() {
                 onClick={() => handleRowClick(user)}
               >
                 <TableCell>{user.name}</TableCell>
-                <TableCell className="hidden md:table-cell">{user.email}</TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {user.email}
+                </TableCell>
                 <TableCell>{roleLabel(user.role)}</TableCell>
                 <TableCell>
-                  <div className="px-4 py-3 -mx-3 -my-3 w-fit flex align-middle items-center" onClick={(e) => {
-                    handleActiveCheckboxClick(e, user);
-                    e.stopPropagation();
-                  }}>
-                    <Checkbox 
+                  <div
+                    className="px-4 py-3 -mx-3 -my-3 w-fit flex align-middle items-center"
+                    onClick={(e) => {
+                      handleActiveCheckboxClick(e, user);
+                      e.stopPropagation();
+                    }}
+                  >
+                    <Checkbox
                       checked={user.isActive}
                     />
                   </div>

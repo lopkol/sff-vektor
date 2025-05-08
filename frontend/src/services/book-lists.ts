@@ -1,6 +1,11 @@
 import { AxiosResponse } from "axios";
 import http from "./http";
-import { BookList, BookListGenre, CreateBookList, ShortBookList } from "@/types/book-list";
+import {
+  BookList,
+  BookListGenre,
+  CreateBookList,
+  ShortBookList,
+} from "@/types/book-list";
 
 /**
  * @return non-paginated book lists (sorted by year and genre, both in descending order)
@@ -10,12 +15,17 @@ export async function getBookLists(): Promise<ShortBookList[]> {
   return response.data;
 }
 
-export async function getBookList(year: number, genre: BookListGenre): Promise<BookList> {
+export async function getBookList(
+  year: number,
+  genre: BookListGenre,
+): Promise<BookList> {
   const response = await http.get<BookList>(`/book-lists/${year}/${genre}`);
   return response.data;
 }
 
-export async function createBookList(bookList: CreateBookList): Promise<BookList> {
+export async function createBookList(
+  bookList: CreateBookList,
+): Promise<BookList> {
   const response = await http.post<BookList, AxiosResponse<BookList>>(
     "/book-lists",
     bookList,
@@ -23,7 +33,9 @@ export async function createBookList(bookList: CreateBookList): Promise<BookList
   return response.data;
 }
 
-export async function updateBookList(bookList: CreateBookList): Promise<BookList> {
+export async function updateBookList(
+  bookList: CreateBookList,
+): Promise<BookList> {
   const response = await http.patch<BookList, AxiosResponse<BookList>>(
     `/book-lists/${bookList.year}/${bookList.genre}`,
     {
@@ -35,6 +47,9 @@ export async function updateBookList(bookList: CreateBookList): Promise<BookList
   return response.data;
 }
 
-export async function deleteBookList(year: number, genre: BookListGenre): Promise<void> {
+export async function deleteBookList(
+  year: number,
+  genre: BookListGenre,
+): Promise<void> {
   await http.delete(`/book-lists/${year}/${genre}`);
 }

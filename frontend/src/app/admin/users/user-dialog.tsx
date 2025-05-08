@@ -1,8 +1,13 @@
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUser, createUser, updateUser } from "@/services/users";
+import { createUser, getUser, updateUser } from "@/services/users";
 import { UserForm } from "./user-form";
 import { useToast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
@@ -29,27 +34,32 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     refetchOnMount: "always",
   });
 
-  const { mutate: createOrUpdateUser, isPending: isSavingPending } = useMutation({
-    mutationFn: (formData: UserFormType) =>
-      user
-        ? updateUser(user.id, { ...formData, molyUsername: formData.name })
-        : createUser({ ...formData, molyUsername: formData.name, isActive: true }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast({
-        title: user ? tTools("updateSuccess") : tTools("saveSuccess"),
-        variant: "success",
-      });
-      onOpenChange(false);
-    },
-    onError: (error: AxiosError<{ code: string }>) => {
-      toast({
-        title: user ? tTools("updateError") : tTools("saveError"),
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
+  const { mutate: createOrUpdateUser, isPending: isSavingPending } =
+    useMutation({
+      mutationFn: (formData: UserFormType) =>
+        user
+          ? updateUser(user.id, { ...formData, molyUsername: formData.name })
+          : createUser({
+            ...formData,
+            molyUsername: formData.name,
+            isActive: true,
+          }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+        toast({
+          title: user ? tTools("updateSuccess") : tTools("saveSuccess"),
+          variant: "success",
+        });
+        onOpenChange(false);
+      },
+      onError: (error: AxiosError<{ code: string }>) => {
+        toast({
+          title: user ? tTools("updateError") : tTools("saveError"),
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
 
   const onSubmit = (data: UserFormType) => {
     createOrUpdateUser(data);
@@ -59,35 +69,39 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     <Dialog open={true} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{user ? t("dialog.editTitle") : t("dialog.createTitle")}</DialogTitle>
+          <DialogTitle>
+            {user ? t("dialog.editTitle") : t("dialog.createTitle")}
+          </DialogTitle>
         </DialogHeader>
-        {isLoading ? (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-10 w-full" />
+        {isLoading
+          ? (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[100px]" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[100px]" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[100px]" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Skeleton className="h-10 w-[100px]" />
+                <Skeleton className="h-10 w-[100px]" />
+              </div>
             </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-            <div className="flex justify-end gap-2">
-              <Skeleton className="h-10 w-[100px]" />
-              <Skeleton className="h-10 w-[100px]" />
-            </div>
-          </div>
-        ) : (
-          <UserForm
-            user={userData || user || undefined}
-            isSaving={isSavingPending}
-            onOpenChange={onOpenChange}
-            onSubmit={onSubmit}
-          />
-        )}
+          )
+          : (
+            <UserForm
+              user={userData || user || undefined}
+              isSaving={isSavingPending}
+              onOpenChange={onOpenChange}
+              onSubmit={onSubmit}
+            />
+          )}
       </DialogContent>
     </Dialog>
   );

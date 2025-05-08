@@ -6,11 +6,11 @@ export async function getAuthMe(token?: string): Promise<User> {
     "/auth/me",
     token
       ? {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      : undefined
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+      : undefined,
   );
   return data;
 }

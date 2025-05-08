@@ -15,15 +15,18 @@ export async function getUser(id: string): Promise<User> {
 export async function createUser(createUser: CreateUser): Promise<User> {
   const response = await http.post<CreateUser, AxiosResponse<User>>(
     "/users",
-    createUser
+    createUser,
   );
   return response.data;
 }
 
-export async function updateUser(id: string, updateUser: UpdateUser): Promise<User> {
+export async function updateUser(
+  id: string,
+  updateUser: UpdateUser,
+): Promise<User> {
   const response = await http.patch<UpdateUser, AxiosResponse<User>>(
     `/users/${id}`,
-    updateUser
+    updateUser,
   );
   return response.data;
 }
