@@ -64,10 +64,19 @@ app.patch(
   "/api/users/:id",
   createFormValidator(updateUserApiSchema),
   async (c) => {
+    const userId = c.req.param("id");
+    const userParams = c.req.valid("form");
+
+    // Users cannot deactivate themselves
+    const currentUser = c.get("user");
+    if (currentUser.id === userId && userParams.isActive === false) {
+      return c.json({ message: "Cannot deactivate yourself" }, 400);
+    }
+
     const pool = await getOrCreateDatabasePool();
     try {
       return c.json(
-        await updateUser(pool, c.req.param("id"), c.req.valid("form")),
+        await updateUser(pool, userId, userParams),
         201,
       );
     } catch (error) {
