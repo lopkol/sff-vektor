@@ -16,3 +16,5 @@ export type User = {
 export type CreateUser = Pick<User, "email" | "name" | "molyUrl" | "molyUsername" | "role" | "isActive">;
 
 export type UpdateUser = Partial<CreateUser>;
+
+export type UserForm = Pick<User, "email" | "name" | "molyUrl" | "role">;

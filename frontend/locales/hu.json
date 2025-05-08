@@ -65,6 +65,47 @@
         "ENTITY_NOT_FOUND": "Nincs könyvlista ezzel az évvel és műfajjal",
         "unknown": "Hiba történt, próbáld újra később"
       }
+    },
+    "Users": {
+      "roles": {
+        "admin": "Admin",
+        "user": "Zsűri"
+      },
+      "props": {
+        "name": "Név",
+        "email": "Email",
+        "role": "Státusz",
+        "active": "Aktív",
+        "molyUrl": "Moly profil link"
+      },
+      "table": {
+        "title": "Felhasználók",
+        "addNew": "Új felhasználó"
+      },
+      "dialog": {
+        "createTitle": "Új felhasználó",
+        "editTitle": "Felhasználó szerkesztése",
+        "save": "Mentés",
+        "cancel": "Mégsem",
+        "saving": "Mentés..."
+      },
+      "toast": {
+        "createSuccess": "A felhasználó mentése sikeres volt",
+        "createError": "Nem sikerült elmenteni a felhasználót",
+        "updateSuccess": "A felhasználó módosítása sikeres volt",
+        "updateError": "Nem sikerült módosítani a felhasználót",
+        "activateSuccess": "Felhasználó sikeresen aktiválva",
+        "activateError": "Nem sikerült aktiválni a felhasználót",
+        "deactivateSuccess": "Felhasználó sikeresen deaktiválva",
+        "deactivateError": "Nem sikerült deaktiválni a felhasználót"
+      },
+      "error": {
+        "name": "Név megadása szükséges",
+        "email": "Érvénytelen email",
+        "role": "Státusz megadása szükséges",
+        "molyUrl": "Érvénytelen link",
+        "unknown": "Hiba történt, próbáld újra később"
+      }
     }
   }
 }

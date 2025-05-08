@@ -76,6 +76,47 @@
         "ENTITY_NOT_FOUND": "A book list with this year and genre does not exist",
         "unknown": "An unknown error occurred"
       }
+    },
+    "Users": {
+      "roles": {
+        "admin": "Admin",
+        "user": "Jury"
+      },
+      "props": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "active": "Active",
+        "molyUrl": "Moly URL"
+      },
+      "table": {
+        "title": "Users",
+        "addNew": "Add new"
+      },
+      "dialog": {
+        "createTitle": "Add new user",
+        "editTitle": "Edit user",
+        "save": "Save",
+        "cancel": "Cancel",
+        "saving": "Saving..."
+      },
+      "toast": {
+        "createSuccess": "User created",
+        "createError": "Failed to create user",
+        "updateSuccess": "User updated",
+        "updateError": "Failed to update user",
+        "activateSuccess": "User activated",
+        "activateError": "Failed to activate user",
+        "deactivateSuccess": "User deactivated",
+        "deactivateError": "Failed to deactivate user"
+      },
+      "error": {
+        "name": "Name is required",
+        "email": "Invalid email",
+        "role": "Role is required",
+        "molyUrl": "Invalid URL",
+        "unknown": "An unknown error occurred"
+      }
     }
   },
   "BookList": {
