@@ -16,7 +16,7 @@ import { BookListDialog } from "./book-list-dialog";
 import { ShortBookList } from "@/services/book-lists";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import { Skeleton } from "@/components/ui/skeleton";
 export default function BookListsPage() {
   const t = useTranslations("Admin.BookLists");
   const [selectedBookList, setSelectedBookList] = useState<ShortBookList | null>(
@@ -30,7 +30,18 @@ export default function BookListsPage() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Skeleton className="h-8 w-48" />
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-24 w-full" />
+        </CardContent>
+      </Card>
+    );
   }
 
   const handleRowClick = (bookList: ShortBookList) => {
