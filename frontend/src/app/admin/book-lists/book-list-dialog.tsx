@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { BookListForm } from './book-list-form';
 import { useToast } from '@/hooks/use-toast';
 import { AxiosError } from 'axios';
-
+import { ApiError } from '@/types/api-error';
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
   year?: number;
@@ -36,7 +36,7 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       });
       onOpenChange(false);
     },
-    onError: (error: AxiosError<{ code: string }>) => {
+    onError: (error: AxiosError<ApiError>) => {
       toast({
         title: bookList ? t('toast.updateError') : t('toast.createError'),
         description: t.has('error.' + error.response?.data.code as any)
@@ -58,7 +58,7 @@ export function BookListDialog({ onOpenChange, year, genre }: BookListDialogProp
       });
       onOpenChange(false);
     },
-    onError: (error: AxiosError<{ code: string }>) => {
+    onError: (error: AxiosError<ApiError>) => {
       toast({
         title: t('toast.deleteError'),
         description: t.has('error.' + error.response?.data.code as any)
