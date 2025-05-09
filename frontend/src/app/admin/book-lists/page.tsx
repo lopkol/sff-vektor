@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { getBookLists } from "@/services/book-lists";
@@ -13,13 +13,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { BookListDialog } from "./book-list-dialog";
-import { ShortBookList } from "@/services/book-lists";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ShortBookList } from "@/types/book-list";
+import { PageSkeleton } from "@/components/page-skeleton";
 
 export default function BookListsPage() {
   const t = useTranslations("Admin.BookLists");
-  const [selectedBookList, setSelectedBookList] = useState<ShortBookList | null>(
+  const [selectedBookList, setSelectedBookList] = useState<
+    ShortBookList | null
+  >(
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -30,7 +33,7 @@ export default function BookListsPage() {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageSkeleton />;
   }
 
   const handleRowClick = (bookList: ShortBookList) => {
@@ -67,7 +70,7 @@ export default function BookListsPage() {
           </TableHeader>
           <TableBody>
             {bookLists?.map((bookList, index) => (
-              <TableRow 
+              <TableRow
                 key={`${bookList.year}-${bookList.genre}-${index}`}
                 className="cursor-pointer"
                 onClick={() => handleRowClick(bookList)}
@@ -75,9 +78,9 @@ export default function BookListsPage() {
                 <TableCell>{bookList.year}</TableCell>
                 <TableCell>{bookList.genre}</TableCell>
                 <TableCell className="hidden sm:table-cell">
-                  <a 
-                    href={bookList.url} 
-                    target="_blank" 
+                  <a
+                    href={bookList.url}
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:underline"
                     onClick={(e) => e.stopPropagation()}
@@ -90,7 +93,7 @@ export default function BookListsPage() {
                     <a
                       href={bookList.pendingUrl}
                       target="_blank"
-                      rel="noopener noreferrer" 
+                      rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
                       onClick={(e) => e.stopPropagation()}
                     >

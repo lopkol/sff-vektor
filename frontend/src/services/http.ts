@@ -22,7 +22,7 @@ http.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Add response interceptor
@@ -34,7 +34,7 @@ http.interceptors.response.use(
     }
     // Handle common error cases here
     return Promise.reject(error);
-  }
+  },
 );
 
 export default http;

@@ -55,13 +55,13 @@ export function BookListLayout({ children }: { children: React.ReactNode }) {
     },
     ...(isMobile
       ? [
-          {
-            title:
-              subPages.find((page) => page.url === `/${currentPage}`)?.title ??
+        {
+          title:
+            subPages.find((page) => page.url === `/${currentPage}`)?.title ??
               "...",
-            url: `/book-lists/${year}/${genre}/${currentPage}`,
-          },
-        ]
+          url: `/book-lists/${year}/${genre}/${currentPage}`,
+        },
+      ]
       : []),
   ];
 

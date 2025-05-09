@@ -19,13 +19,5 @@
     "@std/path": "jsr:@std/path@1",
     "slonik": "npm:slonik@46.4.0",
     "zod": "npm:zod@3.24.2"
-  },
-  "fmt": {
-    "include": ["lib", "api", "scheduler", "int-tests"],
-    "exclude": ["frontend"]
-  },
-  "lint": {
-    "include": ["lib", "api", "scheduler", "int-tests"],
-    "exclude": ["frontend"]
   }
 }

@@ -1,4 +1,18 @@
 {
+  "Tools": {
+    "save": "Mentés",
+    "cancel": "Mégsem",
+    "confirm": "Igen",
+    "delete": "Törlés",
+    "saving": "Mentés...",
+    "saveSuccess": "Sikeresen elmentve",
+    "saveError": "Sikertelen mentés",
+    "updateSuccess": "Sikeresen módosítva",
+    "updateError": "Sikertelen módosítás",
+    "deleteSuccess": "Sikeresen törölve",
+    "deleteError": "Sikertelen törlés",
+    "unknownError": "Hiba történt, próbáld újra később"
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
@@ -13,9 +27,7 @@
   },
   "LocaleSelector": {
     "title": "Szeretnél nyelvet váltani?",
-    "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?",
-    "cancel": "Mégsem",
-    "confirm": "Igen"
+    "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?"
   },
   "Admin": {
     "Nav": {
@@ -41,20 +53,8 @@
       "dialog": {
         "createTitle": "Új könyvlista",
         "editTitle": "Könyvlista szerkesztése",
-        "save": "Mentés",
-        "cancel": "Mégsem",
-        "delete": "Törlés",
         "deleteConfirmTitle": "Könyvlista törlése",
-        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?",
-        "saving": "Mentés..."
-      },
-      "toast": {
-        "createSuccess": "A könyvlista mentése sikeres volt",
-        "createError": "Nem sikerült elmenteni a könyvlistát",
-        "updateSuccess": "A könyvlista módosítása sikeres volt",
-        "updateError": "Nem sikerült módosítani a könyvlistát",
-        "deleteSuccess": "A könyvlista törlése sikeres volt",
-        "deleteError": "Nem sikerült törölni a könyvlistát"
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?"
       },
       "error": {
         "year": "Év megadása szükséges",
@@ -62,8 +62,34 @@
         "url": "Érvénytelen link",
         "pendingUrl": "Érvénytelen link",
         "UNIQUE_CONSTRAINT_VIOLATION": "Már létezik könyvlista ezzel az évvel és műfajjal",
-        "ENTITY_NOT_FOUND": "Nincs könyvlista ezzel az évvel és műfajjal",
-        "unknown": "Hiba történt, próbáld újra később"
+        "ENTITY_NOT_FOUND": "Nincs könyvlista ezzel az évvel és műfajjal"
+      }
+    },
+    "Users": {
+      "roles": {
+        "admin": "Admin",
+        "user": "Zsűri"
+      },
+      "props": {
+        "name": "Név",
+        "email": "Email",
+        "role": "Státusz",
+        "active": "Aktív",
+        "molyUrl": "Moly profil link"
+      },
+      "table": {
+        "title": "Felhasználók",
+        "addNew": "Új felhasználó"
+      },
+      "dialog": {
+        "createTitle": "Új felhasználó",
+        "editTitle": "Felhasználó szerkesztése"
+      },
+      "error": {
+        "name": "Név megadása szükséges",
+        "email": "Érvénytelen email",
+        "role": "Státusz megadása szükséges",
+        "molyUrl": "Érvénytelen link"
       }
     }
   }
