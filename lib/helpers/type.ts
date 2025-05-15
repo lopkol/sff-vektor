@@ -30,3 +30,15 @@ export function isUuidv7(uuid: string): boolean {
   return /^[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
     .test(uuid);
 }
+
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+/**
+ * Helper function to tell the complier that the object is mutable.
+ * Example usage: to return `result.rows` of a slonik query
+ */
+export function mutable<T>(value: T): Mutable<T> {
+  return value as Mutable<T>;
+}
