@@ -46,6 +46,7 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
           }),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["users"] });
+        queryClient.invalidateQueries({ queryKey: ["readers"] });
         toast({
           title: user ? tTools("updateSuccess") : tTools("saveSuccess"),
           variant: "success",

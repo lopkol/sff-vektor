@@ -44,7 +44,12 @@
         "year": "Év",
         "genre": "Műfaj",
         "url": "Lista linkje",
-        "pendingUrl": "Besorolásra váró lista linkje"
+        "pendingUrl": "Besorolásra váró lista linkje",
+        "readers": "Zsűritagok"
+      },
+      "form": {
+        "selectReaders": "Válassz zsűritagokat",
+        "noResults": "Nincs találat"
       },
       "table": {
         "title": "Könyvlisták",
