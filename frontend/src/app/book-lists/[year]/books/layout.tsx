@@ -1,16 +1,16 @@
 import { AppContent } from "@/components/app-content";
 import { AppNavbar } from "@/components/app-navbar";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export default function Layout({
+export default async function Layout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { year: string; genre: string };
+  params: Promise<{ year: string }>;
 }) {
-  const { year } = params;
-  const t = useTranslations();
+  const { year } = await params;
+  const t = await getTranslations("Sidebar");
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function Layout({
             url: "#",
           },
           {
-            title: t("Sidebar.books"),
+            title: t("books"),
             url: "/admin",
           },
         ]}
