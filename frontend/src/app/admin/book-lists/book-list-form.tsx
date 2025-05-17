@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import MultipleSelector from "@/components/ui/multiple-selector";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +28,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useMemo, useState } from "react";
 import { BookList, BookListGenre, CreateBookList } from "@/types/book-list";
+import { useQuery } from "@tanstack/react-query";
+import { getReaders } from "@/services/readers";
+import { Reader } from "@/types/reader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookListFormProps {
   bookList?: BookList;
@@ -58,6 +63,18 @@ export function BookListForm(
     [],
   );
 
+  const { data: readers, isLoading } = useQuery({
+    queryKey: ["readers"],
+    queryFn: () => getReaders(),
+  });
+
+  const readersById = useMemo(() => {
+    return readers?.reduce((acc, reader) => {
+      acc[reader.id] = reader;
+      return acc;
+    }, {} as Record<string, Reader>);
+  }, [readers]);
+
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const {
@@ -79,6 +96,17 @@ export function BookListForm(
     setIsDeleteDialogOpen(false);
     onDelete();
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -160,6 +188,38 @@ export function BookListForm(
                 onChange={(pendingUrl) => field.onChange(pendingUrl || null)}
               />
               <FormErrorMessage>{errors.pendingUrl?.message}</FormErrorMessage>
+            </>
+          )}
+        />
+      </div>
+      <div className="space-y-2">
+        <Controller
+          name="readers"
+          control={control}
+          render={({ field }) => (
+            <>
+              <Label htmlFor="readers">{t("props.readers")}</Label>
+              <MultipleSelector
+                value={field.value.map((id: string) => ({
+                  label: readersById?.[id]?.molyUsername ?? "",
+                  value: id,
+                  key: id,
+                }))}
+                onChange={(value) => field.onChange(value.map((v) => v.value))}
+                options={readers?.map((reader: Reader) => ({
+                  label: reader.molyUsername,
+                  value: reader.id,
+                  key: reader.id,
+                })) || []}
+                hidePlaceholderWhenSelected
+                placeholder={t("form.selectReaders")}
+                emptyIndicator={
+                  <p className="text-center text-muted-foreground">
+                    {t("form.noResults")}
+                  </p>
+                }
+              />
+              <FormErrorMessage>{errors.readers?.message}</FormErrorMessage>
             </>
           )}
         />

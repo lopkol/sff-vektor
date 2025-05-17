@@ -55,7 +55,12 @@
         "year": "Year",
         "genre": "Genre",
         "url": "List URL",
-        "pendingUrl": "Pending shelf URL"
+        "pendingUrl": "Pending shelf URL",
+        "readers": "Jury members"
+      },
+      "form": {
+        "selectReaders": "Select jury members",
+        "noResults": "No results found"
       },
       "table": {
         "title": "Book lists",
