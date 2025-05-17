@@ -36,8 +36,11 @@ type Mutable<T> = {
 };
 
 /**
- * Helper function to tell the complier that the object is mutable.
- * Example usage: to return `result.rows` of a slonik query
+ * Helper function to tell the compiler that the object is mutable.
+ * This is a workaround: Slonik returns a list of items marked as readonly.
+ * @reference https://github.com/gajus/slonik/issues/218#issuecomment-2400447053
+ * @example
+ * mutable(connection.query(sql.type(z.unknown())`select * from "table_name"`));
  */
 export function mutable<T>(value: T): Mutable<T> {
   return value as Mutable<T>;
