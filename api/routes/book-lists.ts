@@ -14,6 +14,7 @@ import {
   updateBookList,
   updateBookListSchema,
 } from "@sffvektor/lib";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createBookListApiSchema = createBookListSchema.strict();
 
@@ -55,6 +56,7 @@ app.get("/api/book-lists/:year/:genre", async (c) => {
 
 app.post(
   "/api/book-lists",
+  isUserAdminMiddleware,
   createFormValidator(createBookListApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -86,6 +88,7 @@ app.post(
 
 app.patch(
   "/api/book-lists/:year/:genre",
+  isUserAdminMiddleware,
   createFormValidator(updateBookListApiSchema),
   async (c) => {
     const parsed = bookListRefSchema.safeParse({
@@ -127,6 +130,7 @@ app.patch(
 
 app.delete(
   "/api/book-lists/:year/:genre",
+  isUserAdminMiddleware,
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     const parsed = bookListRefSchema.safeParse({

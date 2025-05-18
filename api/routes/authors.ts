@@ -11,6 +11,7 @@ import {
   updateAuthorSchema,
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createAuthorApiSchema = createAuthorSchema.strict();
 
@@ -31,6 +32,7 @@ app.get("/api/authors/:id", async (c) => {
 
 app.post(
   "/api/authors",
+  isUserAdminMiddleware,
   createFormValidator(createAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -46,6 +48,7 @@ app.post(
 
 app.patch(
   "/api/authors/:id",
+  isUserAdminMiddleware,
   createFormValidator(updateAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -67,7 +70,7 @@ app.patch(
   },
 );
 
-app.delete("/api/authors/:id", async (c) => {
+app.delete("/api/authors/:id", isUserAdminMiddleware, async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
     await deleteAuthor(pool, c.req.param("id"));
