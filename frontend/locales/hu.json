@@ -13,6 +13,10 @@
     "deleteError": "Sikertelen törlés",
     "unknownError": "Hiba történt, próbáld újra később"
   },
+  "RoleCheck": {
+    "unauthorizedTitle": "Jogosulatlan hozzáférés",
+    "unauthorizedDescription": "Nincs megfelelő jogosultságod a szekció eléréséhez."
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
