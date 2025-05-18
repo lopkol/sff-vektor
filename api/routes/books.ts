@@ -14,9 +14,11 @@ import {
   updateBook,
   updateBookSchema,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody, validateQuery } from "@/middlewares/validator.ts";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 import { z } from "zod";
+import { HttpStatusCode } from "@/helpers/http-code.ts";
+import { mapExceptions } from "@/middlewares/map-exceptions.ts";
 
 const createBookApiSchema = createBookSchema.strict();
 
@@ -26,98 +28,73 @@ const bookFilterApiSchema = bookFilterSchema.extend({
   year: z.coerce.number(),
 }).strict();
 
-app.get("/api/books", async (c) => {
+app.get("/api/books", validateQuery(bookFilterApiSchema), async (c) => {
   const pool = await getOrCreateDatabasePool();
-  const parsed = bookFilterApiSchema.safeParse(c.req.query);
-  if (!parsed.success) {
-    return c.json(parsed.error, 400);
-  }
-  const books = await getBooks(pool, parsed.data);
-  return c.json(books);
+  const query = c.req.valid("query");
+  return c.json(await getBooks(pool, query));
 });
 
-app.get("/api/books/:id", async (c) => {
-  const pool = await getOrCreateDatabasePool();
-  try {
-    const book = await getBookById(pool, c.req.param("id"));
-    return c.json(book);
-  } catch (error) {
-    if (error instanceof EntityNotFoundException) {
-      return c.json({ message: error.message, details: error.details }, 404);
-    }
-    console.error(error);
-    throw error;
-  }
-});
+app.get(
+  "/api/books/:id",
+  mapExceptions(
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
+    return c.json(await getBookById(pool, c.req.param("id")));
+  },
+);
 
 app.post(
   "/api/books",
   isUserAdminMiddleware,
-  createFormValidator(createBookApiSchema),
+  validateBody(createBookApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
-    try {
-      return c.json(
-        await createBook(pool, c.req.valid("form")),
-        201,
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+    return c.json(await createBook(pool, c.req.valid("form")), 201);
   },
 );
 
 app.patch(
   "/api/books/:id",
   isUserAdminMiddleware,
-  createFormValidator(updateBookApiSchema),
+  validateBody(updateBookApiSchema),
+  mapExceptions(
+    [InvalidArgumentException, HttpStatusCode.BadRequest],
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
-    try {
-      return c.json(
-        await updateBook(pool, c.req.param("id"), c.req.valid("form")),
-        201,
-      );
-    } catch (error) {
-      if (error instanceof InvalidArgumentException) {
-        return c.json({ message: error.message, details: error.details }, 400);
-      }
-      if (error instanceof EntityNotFoundException) {
-        return c.json({ message: error.message, details: error.details }, 404);
-      }
-      console.error(error);
-      throw error;
-    }
+    return c.json(
+      await updateBook(
+        pool,
+        c.req.param("id"),
+        c.req.valid("form"),
+      ),
+    );
   },
 );
 
-app.delete("/api/books/:id", isUserAdminMiddleware, async (c) => {
-  const pool = await getOrCreateDatabasePool();
-  try {
+app.delete(
+  "/api/books/:id",
+  isUserAdminMiddleware,
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
     await deleteBook(pool, c.req.param("id"));
-    return c.json({ message: "Book deleted" }, 200);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-});
+    return c.json({ message: "Book deleted" });
+  },
+);
 
 app.post(
   "/api/books/update-from-moly",
   isUserAdminMiddleware,
-  createFormValidator(bookListRefSchema),
+  validateBody(bookListRefSchema),
+  mapExceptions(
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
   async (c) => {
-    try {
-      const { year, genre } = c.req.valid("form");
-      await createOrUpdateBooksOfListFromMoly(year, genre);
-      return c.json({ message: "Books updated" }, 200);
-    } catch (error) {
-      if (error instanceof EntityNotFoundException) {
-        return c.json({ message: error.message, details: error.details }, 404);
-      }
-      console.error(error);
-      throw error;
-    }
+    const { year, genre } = c.req.valid("form");
+    await createOrUpdateBooksOfListFromMoly(year, genre);
+    return c.json({ message: "Books updated" });
   },
 );

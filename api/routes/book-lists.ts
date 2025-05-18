@@ -1,5 +1,5 @@
 import { app } from "@/config/application.ts";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody, validateParams } from "@/middlewares/validator.ts";
 import {
   bookListRefSchema,
   createBookList,
@@ -10,15 +10,19 @@ import {
   getBookList,
   getOrCreateDatabasePool,
   InvalidArgumentException,
-  UniqueConstraintException,
   updateBookList,
   updateBookListSchema,
 } from "@sffvektor/lib";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
+import { HttpStatusCode } from "@/helpers/http-code.ts";
+import { mapExceptions } from "@/middlewares/map-exceptions.ts";
+import { z } from "zod";
 
 const createBookListApiSchema = createBookListSchema.strict();
-
 const updateBookListApiSchema = updateBookListSchema.strict();
+const bookListRefApiSchema = bookListRefSchema.extend({
+  year: z.coerce.number(),
+});
 
 app.get("/api/book-lists", async (c) => {
   const pool = await getOrCreateDatabasePool();
@@ -26,121 +30,70 @@ app.get("/api/book-lists", async (c) => {
   return c.json(bookLists);
 });
 
-app.get("/api/book-lists/:year/:genre", async (c) => {
-  const pool = await getOrCreateDatabasePool();
-  const parsed = bookListRefSchema.safeParse({
-    year: parseInt(c.req.param("year")),
-    genre: c.req.param("genre"),
-  });
-  if (!parsed.success) {
-    return c.json(parsed.error, 400);
-  }
-  try {
+app.get(
+  "/api/book-lists/:year/:genre",
+  validateParams(bookListRefApiSchema),
+  mapExceptions(
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
+    const { year, genre } = c.req.valid("param");
     const bookList = await getBookList(
       pool,
-      parsed.data.year,
-      parsed.data.genre,
+      year,
+      genre,
     );
     return c.json(bookList);
-  } catch (error) {
-    if (error instanceof EntityNotFoundException) {
-      return c.json({
-        message: error.message,
-        code: error.code,
-        details: error.details,
-      }, 404);
-    }
-    throw error;
-  }
-});
+  },
+);
 
 app.post(
   "/api/book-lists",
   isUserAdminMiddleware,
-  createFormValidator(createBookListApiSchema),
+  validateBody(createBookListApiSchema),
+  mapExceptions(
+    [InvalidArgumentException, HttpStatusCode.BadRequest],
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
-    try {
-      const bookList = await createBookList(pool, c.req.valid("form"));
-      return c.json(bookList);
-    } catch (error) {
-      if (
-        error instanceof UniqueConstraintException ||
-        error instanceof InvalidArgumentException
-      ) {
-        return c.json({
-          message: error.message,
-          code: error.code,
-          details: error.details,
-        }, 400);
-      }
-      if (error instanceof EntityNotFoundException) {
-        return c.json({
-          message: error.message,
-          code: error.code,
-          details: error.details,
-        }, 404);
-      }
-      throw error;
-    }
+    const bookList = await createBookList(pool, c.req.valid("form"));
+    return c.json(bookList, 201);
   },
 );
 
 app.patch(
   "/api/book-lists/:year/:genre",
   isUserAdminMiddleware,
-  createFormValidator(updateBookListApiSchema),
+  validateParams(bookListRefApiSchema),
+  validateBody(updateBookListApiSchema),
+  mapExceptions(
+    [InvalidArgumentException, HttpStatusCode.BadRequest],
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
   async (c) => {
-    const parsed = bookListRefSchema.safeParse({
-      year: parseInt(c.req.param("year")),
-      genre: c.req.param("genre"),
-    });
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-
+    const { year, genre } = c.req.valid("param");
     const pool = await getOrCreateDatabasePool();
-    try {
-      const bookList = await updateBookList(
+    return c.json(
+      await updateBookList(
         pool,
-        parsed.data.year,
-        parsed.data.genre,
+        year,
+        genre,
         c.req.valid("form"),
-      );
-      return c.json(bookList);
-    } catch (error) {
-      if (error instanceof EntityNotFoundException) {
-        return c.json({
-          message: error.message,
-          code: error.code,
-          details: error.details,
-        }, 404);
-      }
-      if (error instanceof InvalidArgumentException) {
-        return c.json({
-          message: error.message,
-          code: error.code,
-          details: error.details,
-        }, 400);
-      }
-      throw error;
-    }
+      ),
+    );
   },
 );
 
 app.delete(
   "/api/book-lists/:year/:genre",
   isUserAdminMiddleware,
+  validateParams(bookListRefApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
-    const parsed = bookListRefSchema.safeParse({
-      year: parseInt(c.req.param("year")),
-      genre: c.req.param("genre"),
-    });
-    if (!parsed.success) {
-      return c.json(parsed.error, 400);
-    }
-    await deleteBookList(pool, parsed.data.year, parsed.data.genre);
+    const { year, genre } = c.req.valid("param");
+    await deleteBookList(pool, year, genre);
     return c.json({ message: "Book list deleted" });
   },
 );
