@@ -18,10 +18,14 @@ import {
   type Book,
   type BookAlternative,
   bookAlternativeSchema,
+  type BookFilter,
   bookSchema,
+  type CompactBook,
+  compactBookSchema,
   type CreateBook,
   type UpdateBook,
 } from "@/schema/book.ts";
+import { mutable } from "@/helpers/type.ts";
 
 const bookDbSchema = bookSchema.omit({
   alternatives: true,
@@ -32,6 +36,7 @@ const sql = createSqlTag({
   typeAliases: {
     bookAlternative: bookAlternativeSchema,
     book: bookDbSchema,
+    compactBook: compactBookSchema,
     void: z.void(),
     id: z.object({
       id: z.string(),
@@ -104,6 +109,42 @@ export async function createBook(
       throw error;
     }
   });
+}
+
+export async function getBooks(
+  connection: DatabasePoolConnection,
+  filter: BookFilter,
+): Promise<CompactBook[]> {
+  const filterFragments = [
+    sql.fragment`b."year" = ${filter.year}`,
+  ];
+  if (filter.genre) {
+    filterFragments.push(sql.fragment`b."genre" = ${filter.genre}`);
+  }
+
+  const books = await connection.query(sql.typeAlias("compactBook")`
+    select
+      b."id",
+      b."title",
+      b."year",
+      b."genre",
+      b."series",
+      b."seriesNumber",
+      b."isApproved" and bool_and(a."isApproved") as "isApproved",
+      b."isPending",
+      ba."urls",
+      array_agg(a."displayName" order by a."sortName") as "authorNames",
+      array_agg(a."sortName" order by a."sortName") as "authorSortNames"
+    from "book" b
+    left join "book_alternative" ba on ba."bookId" = b."id" and ba."name" = 'magyar'
+    left join "book_author" ba2 on ba2."bookId" = b."id"
+    left join "author" a on a."id" = ba2."authorId"
+    where ${sql.join(filterFragments, sql.fragment` and `)}
+    group by b."id", ba."urls"
+    order by b."year", b."genre", "authorSortNames", b."title"
+  `);
+
+  return mutable(books.rows);
 }
 
 export async function getBookById(

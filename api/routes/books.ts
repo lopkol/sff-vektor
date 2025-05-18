@@ -1,5 +1,6 @@
 import { app } from "@/config/application.ts";
 import {
+  bookFilterSchema,
   bookListRefSchema,
   createBook,
   createBookSchema,
@@ -7,6 +8,7 @@ import {
   deleteBook,
   EntityNotFoundException,
   getBookById,
+  getBooks,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateBook,
@@ -14,10 +16,25 @@ import {
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
+import { z } from "zod";
 
 const createBookApiSchema = createBookSchema.strict();
 
 const updateBookApiSchema = updateBookSchema.strict();
+
+const bookFilterApiSchema = bookFilterSchema.extend({
+  year: z.coerce.number(),
+}).strict();
+
+app.get("/api/books", async (c) => {
+  const pool = await getOrCreateDatabasePool();
+  const parsed = bookFilterApiSchema.safeParse(c.req.query);
+  if (!parsed.success) {
+    return c.json(parsed.error, 400);
+  }
+  const books = await getBooks(pool, parsed.data);
+  return c.json(books);
+});
 
 app.get("/api/books/:id", async (c) => {
   const pool = await getOrCreateDatabasePool();
