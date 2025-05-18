@@ -1,68 +1,104 @@
-import crypto from "node:crypto";
-import { Buffer } from "node:buffer"
+const dataEncryptionAlgorithm = "AES-GCM";
+const dataEncryptionSalt = "7m1xTkRGV9zBF";
+const initializationVectorLength = 12; // GCM mode uses 12 bytes IV
 
-const dataEncryptionAlgorithm = 'aes256';
-const keyLengthInBytes = 16;
-const dataEncryptionSalt = '7m1xTkRGV9zBF';
-const initializationVectorLength = 16;
-const emailHashLength = 64;
+let dataEncryptionKey: CryptoKey;
 
-let dataEncryptionKey: string;
-
-function scrypt(val: string, salt:string, length: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    crypto.scrypt(val, salt, length, {}, (error, result) => {
-    if (error) {
-      return reject(error);
-    }
-    resolve(result.toString('hex'));
-    });
-  });
+async function getKeyMaterial(password: string): Promise<CryptoKey> {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits", "deriveKey"],
+  );
+  return keyMaterial;
 }
 
-async function getDataEncryptionKey(): Promise<string> {
-  if (!dataEncryptionKey) {
-    dataEncryptionKey = await scrypt(
-      Deno.env.get('DATA_ENCRYPTION_KEY') || '',
-      dataEncryptionSalt,
-      keyLengthInBytes
-    );
-  }
+async function deriveKey(
+  keyMaterial: CryptoKey,
+  salt: string,
+): Promise<CryptoKey> {
+  const encoder = new TextEncoder();
+  return await crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: encoder.encode(salt),
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    { name: dataEncryptionAlgorithm, length: 256 },
+    false,
+    ["encrypt", "decrypt"],
+  );
+}
 
+async function getDataEncryptionKey(): Promise<CryptoKey> {
+  if (!dataEncryptionKey) {
+    const keyMaterial = await getKeyMaterial(
+      Deno.env.get("DATA_ENCRYPTION_KEY") || "",
+    );
+    dataEncryptionKey = await deriveKey(keyMaterial, dataEncryptionSalt);
+  }
   return dataEncryptionKey;
 }
 
-export function hashEmail(email: string): Promise<string> {
-  return scrypt(email, Deno.env.get('EMAIL_SALT') || '', emailHashLength);
+export async function hashEmail(email: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(email + (Deno.env.get("EMAIL_SALT") || ""));
+  const hashBuffer = await crypto.subtle.digest("SHA-512", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export async function encrypt(data: string): Promise<string> {
-  const initializationVector = await crypto.randomBytes(initializationVectorLength);
-  const encryptionKey = await getDataEncryptionKey();
-  const cipher = crypto.createCipheriv(
-    dataEncryptionAlgorithm,
-    encryptionKey,
-    initializationVector
+  const encoder = new TextEncoder();
+  const iv = crypto.getRandomValues(new Uint8Array(initializationVectorLength));
+  const key = await getDataEncryptionKey();
+
+  const encryptedBuffer = await crypto.subtle.encrypt(
+    {
+      name: dataEncryptionAlgorithm,
+      iv: iv,
+    },
+    key,
+    encoder.encode(data),
   );
 
-  let encryptedData = cipher.update(data, 'utf8', 'hex');
-  encryptedData += cipher.final('hex');
+  const encryptedArray = new Uint8Array(encryptedBuffer);
+  const encryptedHex = Array.from(encryptedArray)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  const ivHex = Array.from(iv)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 
-  return `${encryptedData}_${initializationVector.toString('hex')}`;
+  return `${encryptedHex}_${ivHex}`;
 }
 
 export async function decrypt(encryptedData: string): Promise<string> {
-  const [cypherText, initializationVectorAsString] = encryptedData.split('_');
-  const initializationVector = Buffer.from(initializationVectorAsString, 'hex');
-  const encryptionKey = await getDataEncryptionKey();
-  const decipher = crypto.createDecipheriv(
-    dataEncryptionAlgorithm,
-    encryptionKey,
-    initializationVector
+  const [encryptedHex, ivHex] = encryptedData.split("_");
+
+  const encryptedArray = new Uint8Array(
+    encryptedHex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
+  );
+  const iv = new Uint8Array(
+    ivHex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
   );
 
-  let data = decipher.update(cypherText, 'hex', 'utf8');
-  data += decipher.final('utf8');
+  const key = await getDataEncryptionKey();
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    {
+      name: dataEncryptionAlgorithm,
+      iv: iv,
+    },
+    key,
+    encryptedArray,
+  );
 
-  return data;
+  const decoder = new TextDecoder();
+  return decoder.decode(decryptedBuffer);
 }
