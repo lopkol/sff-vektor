@@ -35,6 +35,8 @@ import { AuthButton } from "./auth-button";
 import { DarkLightModeSelector } from "./dark-light-mode-selector";
 import { LocaleSelector } from "./locale-selector";
 import { useTranslations } from "next-intl";
+import { RoleCheck } from "./role-check";
+import { UserRole } from "@/types/user";
 
 const iconByGenre = {
   "sci-fi": Orbit,
@@ -49,7 +51,7 @@ export function AppSidebar() {
     queryFn: getBookLists,
   });
 
-  const staticPages: MenuItem[] = [
+  const adminPages: MenuItem[] = [
     {
       title: t("admin"),
       url: "/admin",
@@ -114,12 +116,14 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>{t("global")}</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <NestableMenuItem activePage={activePage} items={staticPages} />
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <RoleCheck role={UserRole.Admin} hide>
+          <SidebarGroup>
+            <SidebarGroupLabel>{t("global")}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <NestableMenuItem activePage={activePage} items={adminPages} />
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </RoleCheck>
         <SidebarGroup>
           <SidebarGroupLabel>{t("bookLists")}</SidebarGroupLabel>
           <SidebarGroupContent>

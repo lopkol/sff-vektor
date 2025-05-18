@@ -13,6 +13,10 @@
     "deleteError": "Failed to delete",
     "unknownError": "An unknown error occurred"
   },
+  "RoleCheck": {
+    "unauthorizedTitle": "Unauthorized",
+    "unauthorizedDescription": "You don't have sufficient permission to access this section."
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
