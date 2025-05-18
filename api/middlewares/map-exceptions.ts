@@ -45,13 +45,7 @@ export const handleExceptionMiddleware: ErrorHandler = (error, c) => {
     defaultExceptionMap[error?.constructor?.name] ??
     HttpStatusCode.InternalServerError;
   let exception: BaseException;
-  if (error instanceof HTTPException) {
-    const response = error.getResponse();
-    exception = Object.assign(new UnknownInternalError(), {
-      details: response.body,
-      stack: error.stack,
-    });
-  } else if (!(error instanceof BaseException)) {
+  if (!(error instanceof BaseException)) {
     exception = Object.assign(new UnknownInternalError(), {
       details: {
         message: error.message,
