@@ -1,3 +1,5 @@
+import { Buffer } from "node:buffer";
+
 const dataEncryptionAlgorithm = "AES-GCM";
 const dataEncryptionSalt = "7m1xTkRGV9zBF";
 const initializationVectorLength = 12; // GCM mode uses 12 bytes IV
@@ -50,8 +52,7 @@ export async function hashEmail(email: string): Promise<string> {
   const data = encoder.encode(email + (Deno.env.get("EMAIL_SALT") || ""));
   const hashBuffer = await crypto.subtle.digest("SHA-512", data);
   return Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .reduce((acc, b) => acc + b.toString(16).padStart(2, "0"), "");
 }
 
 export async function encrypt(data: string): Promise<string> {
@@ -70,11 +71,9 @@ export async function encrypt(data: string): Promise<string> {
 
   const encryptedArray = new Uint8Array(encryptedBuffer);
   const encryptedHex = Array.from(encryptedArray)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .reduce((acc, b) => acc + b.toString(16).padStart(2, "0"), "");
   const ivHex = Array.from(iv)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
+    .reduce((acc, b) => acc + b.toString(16).padStart(2, "0"), "");
 
   return `${encryptedHex}_${ivHex}`;
 }
@@ -82,12 +81,8 @@ export async function encrypt(data: string): Promise<string> {
 export async function decrypt(encryptedData: string): Promise<string> {
   const [encryptedHex, ivHex] = encryptedData.split("_");
 
-  const encryptedArray = new Uint8Array(
-    encryptedHex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
-  );
-  const iv = new Uint8Array(
-    ivHex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
-  );
+  const encryptedArray = Uint8Array.from(Buffer.from(encryptedHex, "hex"));
+  const iv = Uint8Array.from(Buffer.from(ivHex, "hex"));
 
   const key = await getDataEncryptionKey();
   const decryptedBuffer = await crypto.subtle.decrypt(
