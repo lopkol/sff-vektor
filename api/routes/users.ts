@@ -12,12 +12,13 @@ import {
   updateUserSchema,
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createUserApiSchema = createUserSchema.strict();
 
 const updateUserApiSchema = updateUserSchema.strict();
 
-app.get("/api/users", async (c) => {
+app.get("/api/users", isUserAdminMiddleware, async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
     return c.json(await getAllUsers(pool), 200);
@@ -27,7 +28,7 @@ app.get("/api/users", async (c) => {
   }
 });
 
-app.get("/api/users/:id", async (c) => {
+app.get("/api/users/:id", isUserAdminMiddleware, async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
     return c.json(await getUserById(pool, c.req.param("id")), 200);
@@ -42,6 +43,7 @@ app.get("/api/users/:id", async (c) => {
 
 app.post(
   "/api/users",
+  isUserAdminMiddleware,
   createFormValidator(createUserApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -62,6 +64,7 @@ app.post(
 
 app.patch(
   "/api/users/:id",
+  isUserAdminMiddleware,
   createFormValidator(updateUserApiSchema),
   async (c) => {
     const userId = c.req.param("id");

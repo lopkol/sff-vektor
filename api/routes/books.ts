@@ -13,6 +13,7 @@ import {
   updateBookSchema,
 } from "@sffvektor/lib";
 import { createFormValidator } from "@/middlewares/validator.ts";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createBookApiSchema = createBookSchema.strict();
 
@@ -34,6 +35,7 @@ app.get("/api/books/:id", async (c) => {
 
 app.post(
   "/api/books",
+  isUserAdminMiddleware,
   createFormValidator(createBookApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -51,6 +53,7 @@ app.post(
 
 app.patch(
   "/api/books/:id",
+  isUserAdminMiddleware,
   createFormValidator(updateBookApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
@@ -72,7 +75,7 @@ app.patch(
   },
 );
 
-app.delete("/api/books/:id", async (c) => {
+app.delete("/api/books/:id", isUserAdminMiddleware, async (c) => {
   const pool = await getOrCreateDatabasePool();
   try {
     await deleteBook(pool, c.req.param("id"));
@@ -85,6 +88,7 @@ app.delete("/api/books/:id", async (c) => {
 
 app.post(
   "/api/books/update-from-moly",
+  isUserAdminMiddleware,
   createFormValidator(bookListRefSchema),
   async (c) => {
     try {
