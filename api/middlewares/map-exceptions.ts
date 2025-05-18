@@ -36,6 +36,7 @@ const defaultExceptionMap: ExceptionRecord = {
  * This middleware is meant to be used once globally.
  */
 export const handleExceptionMiddleware: ErrorHandler = (error, c) => {
+  console.error(error); // TODO: disable in production + use new logger
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
