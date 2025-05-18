@@ -40,8 +40,8 @@ export const handleExceptionMiddleware: ErrorHandler = (error, c) => {
   if (error instanceof HTTPException) {
     return error.getResponse();
   }
-  const exceptionsMap = c.get("exceptionsMap");
-  const exceptionHttpStatus = exceptionsMap?.[error?.constructor?.name] ??
+  const exceptionMap = c.get("exceptionMap");
+  const exceptionHttpStatus = exceptionMap?.[error?.constructor?.name] ??
     defaultExceptionMap[error?.constructor?.name] ??
     HttpStatusCode.InternalServerError;
   let exception: BaseException;
@@ -87,22 +87,22 @@ export const handleExceptionMiddleware: ErrorHandler = (error, c) => {
  * ```
  */
 export const mapExceptions = (
-  ...exceptionsMap: [ExceptionConstructor, ContentfulStatusCode][]
+  ...exceptionMap: [ExceptionConstructor, ContentfulStatusCode][]
 ) =>
   createMiddleware(async (c, next) => {
-    const exceptionsRecord = exceptionsMap.reduce(
+    const exceptionRecord = exceptionMap.reduce(
       (acc, [constructor, statusCode]) => {
         acc[constructor.name] = statusCode;
         return acc;
       },
       {} as Record<string, ContentfulStatusCode>,
     );
-    c.set("exceptionsMap", exceptionsRecord);
+    c.set("exceptionMap", exceptionRecord);
     await next();
   });
 
 declare module "hono" {
   interface ContextVariableMap {
-    exceptionsMap?: ExceptionRecord;
+    exceptionMap?: ExceptionRecord;
   }
 }
