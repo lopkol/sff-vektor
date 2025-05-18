@@ -11,7 +11,7 @@ import {
   updateUser,
   updateUserSchema,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody } from "@/middlewares/validator.ts";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createUserApiSchema = createUserSchema.strict();
@@ -44,7 +44,7 @@ app.get("/api/users/:id", isUserAdminMiddleware, async (c) => {
 app.post(
   "/api/users",
   isUserAdminMiddleware,
-  createFormValidator(createUserApiSchema),
+  validateBody(createUserApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -65,7 +65,7 @@ app.post(
 app.patch(
   "/api/users/:id",
   isUserAdminMiddleware,
-  createFormValidator(updateUserApiSchema),
+  validateBody(updateUserApiSchema),
   async (c) => {
     const userId = c.req.param("id");
     const userParams = c.req.valid("form");

@@ -10,7 +10,7 @@ import {
   updateAuthor,
   updateAuthorSchema,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody } from "@/middlewares/validator.ts";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 
 const createAuthorApiSchema = createAuthorSchema.strict();
@@ -33,7 +33,7 @@ app.get("/api/authors/:id", async (c) => {
 app.post(
   "/api/authors",
   isUserAdminMiddleware,
-  createFormValidator(createAuthorApiSchema),
+  validateBody(createAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -49,7 +49,7 @@ app.post(
 app.patch(
   "/api/authors/:id",
   isUserAdminMiddleware,
-  createFormValidator(updateAuthorApiSchema),
+  validateBody(updateAuthorApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {

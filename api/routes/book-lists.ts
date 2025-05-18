@@ -1,5 +1,5 @@
 import { app } from "@/config/application.ts";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody } from "@/middlewares/validator.ts";
 import {
   bookListRefSchema,
   createBookList,
@@ -57,7 +57,7 @@ app.get("/api/book-lists/:year/:genre", async (c) => {
 app.post(
   "/api/book-lists",
   isUserAdminMiddleware,
-  createFormValidator(createBookListApiSchema),
+  validateBody(createBookListApiSchema),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
     try {
@@ -89,7 +89,7 @@ app.post(
 app.patch(
   "/api/book-lists/:year/:genre",
   isUserAdminMiddleware,
-  createFormValidator(updateBookListApiSchema),
+  validateBody(updateBookListApiSchema),
   async (c) => {
     const parsed = bookListRefSchema.safeParse({
       year: parseInt(c.req.param("year")),
