@@ -1,8 +1,8 @@
-export type BookListGenre = "sci-fi" | "fantasy";
+export type Genre = "sci-fi" | "fantasy";
 
 export type BookList = {
   year: number;
-  genre: BookListGenre;
+  genre: Genre;
   url: string;
   pendingUrl: string | null;
   readers: string[];
