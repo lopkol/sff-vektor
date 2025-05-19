@@ -101,5 +101,19 @@
         "molyUrl": "Érvénytelen link"
       }
     }
+  },
+  "BookList": {
+    "Nav": {
+      "list": "Lista",
+      "reading": "Olvasások",
+      "table": "Táblázat",
+      "admin": "Admin"
+    },
+    "Admin": {
+      "title": "{year} {genreName} könyvlista",
+      "syncFromMoly": "Frissítés molyról",
+      "syncSuccess": "Sikeresen frissítve",
+      "syncError": "Frissítés közben hiba történt"
+    }
   }
 }

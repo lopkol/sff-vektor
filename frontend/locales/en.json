@@ -141,9 +141,10 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "Admin": {
-      "title": "Admin of {genreName} books",
-      "description": "Card Description",
-      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+      "title": "{year} {genreName} book list",
+      "syncFromMoly": "Sync from moly",
+      "syncSuccess": "Sync successful",
+      "syncError": "Failed to sync"
     }
   }
 }
