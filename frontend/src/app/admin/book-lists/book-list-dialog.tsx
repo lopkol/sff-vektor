@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createBookList,
@@ -20,6 +14,12 @@ import { AxiosError } from "axios";
 import { ApiError } from "@/types/api-error";
 import { CreateBookList } from "@/types/book-list";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from "@/components/ui/responsive-dialog";
 
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -104,14 +104,9 @@ export function BookListDialog(
     }
   };
 
-  return (
-    <Dialog open={true} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {bookList ? t("dialog.editTitle") : t("dialog.createTitle")}
-          </DialogTitle>
-        </DialogHeader>
+  const content = (
+    <>
+      <div className="mt-6">
         {isLoading
           ? (
             <div className="space-y-4">
@@ -128,7 +123,20 @@ export function BookListDialog(
               onDelete={onDelete}
             />
           )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </>
+  );
+
+  return (
+    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent side="right">
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
+            {bookList ? t("dialog.editTitle") : t("dialog.createTitle")}
+          </ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
+        {content}
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }

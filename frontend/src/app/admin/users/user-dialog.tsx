@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from "@/components/ui/responsive-dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUser, getUser, updateUser } from "@/services/users";
 import { UserForm } from "./user-form";
@@ -66,30 +66,36 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     createOrUpdateUser(data);
   };
 
+  const content = (
+    <>
+      {isLoading
+        ? (
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-[100px]" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        )
+        : (
+          <UserForm
+            user={userData || user || undefined}
+            isSaving={isSavingPending}
+            onOpenChange={onOpenChange}
+            onSubmit={onSubmit}
+          />
+        )}
+    </>
+  );
+
   return (
-    <Dialog open={true} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+      <ResponsiveDialogContent>
+        <ResponsiveDialogHeader>
+          <ResponsiveDialogTitle>
             {user ? t("dialog.editTitle") : t("dialog.createTitle")}
-          </DialogTitle>
-        </DialogHeader>
-        {isLoading
-          ? (
-            <div className="space-y-4">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          )
-          : (
-            <UserForm
-              user={userData || user || undefined}
-              isSaving={isSavingPending}
-              onOpenChange={onOpenChange}
-              onSubmit={onSubmit}
-            />
-          )}
-      </DialogContent>
-    </Dialog>
+          </ResponsiveDialogTitle>
+        </ResponsiveDialogHeader>
+        {content}
+      </ResponsiveDialogContent>
+    </ResponsiveDialog>
   );
 }
