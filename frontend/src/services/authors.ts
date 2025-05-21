@@ -2,6 +2,11 @@ import { Author, CreateAuthor, UpdateAuthor } from "@/types/author";
 import http from "./http";
 import { AxiosResponse } from "axios";
 
+export async function getAuthors(): Promise<Author[]> {
+  const response = await http.get<Author[]>("/authors");
+  return response.data;
+}
+
 export async function getAuthor(id: string): Promise<Author> {
   const response = await http.get<Author>(`/authors/${id}`);
   return response.data;

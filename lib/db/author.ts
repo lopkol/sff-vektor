@@ -10,6 +10,7 @@ import {
   type CreateAuthor,
   type UpdateAuthor,
 } from "@/schema/author.ts";
+import { mutable } from "@/helpers/type.ts";
 
 const sql = createSqlTag({
   typeAliases: {
@@ -29,6 +30,16 @@ export async function createAuthor(
   `);
 
   return result.rows[0];
+}
+
+export async function getAuthors(
+  connection: DatabasePoolConnection,
+): Promise<Author[]> {
+  const result = await connection.query(sql.typeAlias("author")`
+    select * from "author" order by "sortName"
+  `);
+
+  return mutable(result.rows);
 }
 
 export async function getAuthorById(

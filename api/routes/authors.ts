@@ -5,6 +5,7 @@ import {
   deleteAuthor,
   EntityNotFoundException,
   getAuthorById,
+  getAuthors,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateAuthor,
@@ -18,6 +19,14 @@ import { mapExceptions } from "@/middlewares/map-exceptions.ts";
 const createAuthorApiSchema = createAuthorSchema.strict();
 
 const updateAuthorApiSchema = updateAuthorSchema.strict();
+
+app.get(
+  "/api/authors",
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
+    return c.json(await getAuthors(pool));
+  },
+);
 
 app.get(
   "/api/authors/:id",
