@@ -66,26 +66,6 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
     createOrUpdateUser(data);
   };
 
-  const content = (
-    <>
-      {isLoading
-        ? (
-          <div className="space-y-4">
-            <Skeleton className="h-4 w-[100px]" />
-            <Skeleton className="h-8 w-full" />
-          </div>
-        )
-        : (
-          <UserForm
-            user={userData || user || undefined}
-            isSaving={isSavingPending}
-            onOpenChange={onOpenChange}
-            onSubmit={onSubmit}
-          />
-        )}
-    </>
-  );
-
   return (
     <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent>
@@ -94,7 +74,23 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
             {user ? t("dialog.editTitle") : t("dialog.createTitle")}
           </ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
-        {content}
+        <div className="mt-4">
+          {isLoading
+            ? (
+              <div className="space-y-4">
+                <Skeleton className="h-4 w-[100px]" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            )
+            : (
+              <UserForm
+                user={userData || user || undefined}
+                isSaving={isSavingPending}
+                onOpenChange={onOpenChange}
+                onSubmit={onSubmit}
+              />
+            )}
+        </div>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

@@ -104,29 +104,6 @@ export function BookListDialog(
     }
   };
 
-  const content = (
-    <>
-      <div className="mt-6">
-        {isLoading
-          ? (
-            <div className="space-y-4">
-              <Skeleton className="h-4 w-[100px]" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          )
-          : (
-            <BookListForm
-              bookList={bookList}
-              isSaving={isSavingPending}
-              onOpenChange={onOpenChange}
-              onSubmit={onSubmit}
-              onDelete={onDelete}
-            />
-          )}
-      </div>
-    </>
-  );
-
   return (
     <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent side="right">
@@ -135,7 +112,24 @@ export function BookListDialog(
             {bookList ? t("dialog.editTitle") : t("dialog.createTitle")}
           </ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
-        {content}
+        <div className="mt-4">
+          {isLoading
+            ? (
+              <div className="space-y-4">
+                <Skeleton className="h-4 w-[100px]" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            )
+            : (
+              <BookListForm
+                bookList={bookList}
+                isSaving={isSavingPending}
+                onOpenChange={onOpenChange}
+                onSubmit={onSubmit}
+                onDelete={onDelete}
+              />
+            )}
+        </div>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

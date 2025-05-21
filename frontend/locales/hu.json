@@ -11,7 +11,11 @@
     "updateError": "Sikertelen módosítás",
     "deleteSuccess": "Sikeresen törölve",
     "deleteError": "Sikertelen törlés",
-    "unknownError": "Hiba történt, próbáld újra később"
+    "unknownError": "Hiba történt, próbáld újra később",
+    "genres": {
+      "sciFi": "Sci-Fi",
+      "fantasy": "Fantasy"
+    }
   },
   "RoleCheck": {
     "unauthorizedTitle": "Jogosulatlan hozzáférés",
@@ -40,10 +44,6 @@
       "bookLists": "Könyvlisták"
     },
     "BookLists": {
-      "genres": {
-        "sciFi": "Sci-Fi",
-        "fantasy": "Fantasy"
-      },
       "props": {
         "year": "Év",
         "genre": "Műfaj",

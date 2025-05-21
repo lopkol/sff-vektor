@@ -148,8 +148,12 @@ export function BookListForm(
                   <SelectValue placeholder={t("props.genre")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sci-fi">{t("genres.sciFi")}</SelectItem>
-                  <SelectItem value="fantasy">{t("genres.fantasy")}</SelectItem>
+                  <SelectItem value="sci-fi">
+                    {tTools("genres.sciFi")}
+                  </SelectItem>
+                  <SelectItem value="fantasy">
+                    {tTools("genres.fantasy")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>

@@ -11,7 +11,11 @@
     "updateError": "Failed to update",
     "deleteSuccess": "Delete successful",
     "deleteError": "Failed to delete",
-    "unknownError": "An unknown error occurred"
+    "unknownError": "An unknown error occurred",
+    "genres": {
+      "sciFi": "Sci-Fi",
+      "fantasy": "Fantasy"
+    }
   },
   "RoleCheck": {
     "unauthorizedTitle": "Unauthorized",
@@ -51,10 +55,6 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "BookLists": {
-      "genres": {
-        "sciFi": "Sci-Fi",
-        "fantasy": "Fantasy"
-      },
       "props": {
         "year": "Year",
         "genre": "Genre",
