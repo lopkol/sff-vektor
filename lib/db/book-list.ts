@@ -5,7 +5,7 @@ import {
   type QueryResult,
 } from "slonik";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
-import { emptyObject } from "@/helpers/type.ts";
+import { emptyObject, mutable } from "@/helpers/type.ts";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import {
   getForeignKeyConstraintErrorData,
@@ -121,12 +121,12 @@ export async function getAllBookLists(
   connection: DatabasePoolConnection,
 ): Promise<ShortBookList[]> {
   const bookListsResult = await connection.query(sql.typeAlias("shortBookList")`
-    select "year", "genre"
+    select "year", "genre", "url", "pendingUrl"
     from "book_list"
     order by "year" desc, "genre" desc
   `);
 
-  return [...bookListsResult.rows];
+  return mutable(bookListsResult.rows);
 }
 
 export async function updateBookList(

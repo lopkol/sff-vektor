@@ -1,16 +1,37 @@
 {
+  "Tools": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "saving": "Saving...",
+    "saveSuccess": "Save successful",
+    "saveError": "Failed to save",
+    "updateSuccess": "Update successful",
+    "updateError": "Failed to update",
+    "deleteSuccess": "Delete successful",
+    "deleteError": "Failed to delete",
+    "unknownError": "An unknown error occurred"
+  },
+  "RoleCheck": {
+    "unauthorizedTitle": "Unauthorized",
+    "unauthorizedDescription": "You don't have sufficient permission to access this section."
+  },
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "settings": "Settings",
+    "global": "Global",
     "bookLists": "Book lists",
     "books": "Books"
   },
+  "ThemeSelector": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
   "LocaleSelector": {
     "title": "Do you want to change the language?",
-    "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?",
-    "cancel": "Cancel",
-    "confirm": "Confirm"
+    "description": "This action will reload the page, and you may lose unsaved changes.\nAre you sure you want to continue?"
   },
   "HomePage": {
     "title": "Hello world!",
@@ -22,12 +43,74 @@
     "Nav": {
       "admin": "Admin",
       "users": "Users",
-      "candidates": "Candidate list"
+      "bookLists": "Book lists"
     },
     "Page": {
       "title": "Admin",
       "description": "Card Description",
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+    },
+    "BookLists": {
+      "genres": {
+        "sciFi": "Sci-Fi",
+        "fantasy": "Fantasy"
+      },
+      "props": {
+        "year": "Year",
+        "genre": "Genre",
+        "url": "List URL",
+        "pendingUrl": "Pending shelf URL",
+        "readers": "Jury members"
+      },
+      "form": {
+        "selectReaders": "Select jury members",
+        "noResults": "No results found"
+      },
+      "table": {
+        "title": "Book lists",
+        "addNew": "Add new"
+      },
+      "dialog": {
+        "createTitle": "Add new book list",
+        "editTitle": "Edit book list",
+        "deleteConfirmTitle": "Delete book list",
+        "deleteConfirmMessage": "Are you sure you want to delete this book list?"
+      },
+      "error": {
+        "year": "Year is required",
+        "yearMin": "Year must be greater than 1900",
+        "url": "Invalid URL",
+        "pendingUrl": "Invalid URL",
+        "UNIQUE_CONSTRAINT_VIOLATION": "A book list with this year and genre already exists",
+        "ENTITY_NOT_FOUND": "A book list with this year and genre does not exist"
+      }
+    },
+    "Users": {
+      "roles": {
+        "admin": "Admin",
+        "user": "Jury"
+      },
+      "props": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "active": "Active",
+        "molyUrl": "Moly URL"
+      },
+      "table": {
+        "title": "Users",
+        "addNew": "Add new"
+      },
+      "dialog": {
+        "createTitle": "Add new user",
+        "editTitle": "Edit user"
+      },
+      "error": {
+        "name": "Name is required",
+        "email": "Invalid email",
+        "role": "Role is required",
+        "molyUrl": "Invalid URL"
+      }
     }
   },
   "BookList": {

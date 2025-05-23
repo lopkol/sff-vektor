@@ -18,10 +18,14 @@ import {
   type Book,
   type BookAlternative,
   bookAlternativeSchema,
+  type BookFilter,
   bookSchema,
+  type CompactBook,
+  compactBookSchema,
   type CreateBook,
   type UpdateBook,
 } from "@/schema/book.ts";
+import { mutable } from "@/helpers/type.ts";
 
 const bookDbSchema = bookSchema.omit({
   alternatives: true,
@@ -32,6 +36,7 @@ const sql = createSqlTag({
   typeAliases: {
     bookAlternative: bookAlternativeSchema,
     book: bookDbSchema,
+    compactBook: compactBookSchema,
     void: z.void(),
     id: z.object({
       id: z.string(),
@@ -45,10 +50,19 @@ export async function createBook(
 ): Promise<Book> {
   return await connection.transaction<Book>(async (trConnection) => {
     try {
-      // deno-fmt-ignore
       const bookResult = await trConnection.query(sql.typeAlias("book")`
-        insert into "book" ("title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
-        values (${props.title}, ${props.year}, ${props.genre || null}, ${props.series || null}, ${props.seriesNumber || null}, ${props.isApproved}, ${props.isPending}) returning *
+        insert into "book" ("molyId", "title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
+        values (
+          ${props.molyId || null},
+          ${props.title},
+          ${props.year},
+          ${props.genre || null},
+          ${props.series || null},
+          ${props.seriesNumber || null},
+          ${props.isApproved},
+          ${props.isPending}
+          )
+        returning *
       `);
       const book = bookResult.rows[0];
 
@@ -97,6 +111,42 @@ export async function createBook(
   });
 }
 
+export async function getBooks(
+  connection: DatabasePoolConnection,
+  filter: BookFilter,
+): Promise<CompactBook[]> {
+  const filterFragments = [
+    sql.fragment`b."year" = ${filter.year}`,
+  ];
+  if (filter.genre) {
+    filterFragments.push(sql.fragment`b."genre" = ${filter.genre}`);
+  }
+
+  const books = await connection.query(sql.typeAlias("compactBook")`
+    select
+      b."id",
+      b."title",
+      b."year",
+      b."genre",
+      b."series",
+      b."seriesNumber",
+      b."isApproved" and bool_and(a."isApproved") as "isApproved",
+      b."isPending",
+      ba."urls",
+      array_agg(a."displayName" order by a."sortName") as "authorNames",
+      array_agg(a."sortName" order by a."sortName") as "authorSortNames"
+    from "book" b
+    left join "book_alternative" ba on ba."bookId" = b."id" and ba."name" = 'magyar'
+    left join "book_author" ba2 on ba2."bookId" = b."id"
+    left join "author" a on a."id" = ba2."authorId"
+    where ${sql.join(filterFragments, sql.fragment` and `)}
+    group by b."id", ba."urls"
+    order by b."year", b."genre", "authorSortNames", b."title"
+  `);
+
+  return mutable(books.rows);
+}
+
 export async function getBookById(
   connection: DatabasePoolConnection,
   id: string,
@@ -116,6 +166,36 @@ export async function getBookById(
     sql.typeAlias(
       "id",
     )`select "authorId" as id from "book_author" where "bookId" = ${id}`,
+  );
+
+  return {
+    ...bookResult.rows[0],
+    alternatives: [...alternativeResult.rows],
+    authors: authorResult.rows.map((row) => row.id),
+  };
+}
+
+export async function getBookByMolyId(
+  connection: DatabasePoolConnection,
+  molyId: string,
+): Promise<Book | null> {
+  const bookResult = await connection.query(sql.typeAlias("book")`
+    select * from "book"
+    where "molyId" = ${molyId}
+  `);
+  if (!bookResult.rowCount) {
+    return null;
+  }
+  const book = bookResult.rows[0];
+  const alternativeResult = await connection.query(
+    sql.typeAlias(
+      "bookAlternative",
+    )`select "name", "urls" from "book_alternative" where "bookId" = ${book.id}`,
+  );
+  const authorResult = await connection.query(
+    sql.typeAlias(
+      "id",
+    )`select "authorId" as id from "book_author" where "bookId" = ${book.id}`,
   );
 
   return {

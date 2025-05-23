@@ -3,9 +3,6 @@ import { Genre } from "@/schema/book.ts";
 import { isUuidv7 } from "@/helpers/type.ts";
 
 export const bookListSchema = z.object({
-  id: z.string().refine((id: string) => isUuidv7(id), {
-    message: "Invalid book list id",
-  }),
   year: z.number(),
   genre: z.nativeEnum(Genre),
   url: z.string(),
@@ -21,15 +18,23 @@ export const bookListSchema = z.object({
 
 export type BookList = z.infer<typeof bookListSchema>;
 
+export const bookListRefSchema = bookListSchema.pick({
+  year: true,
+  genre: true,
+});
+
+export type BookListRef = z.infer<typeof bookListRefSchema>;
+
 export const shortBookListSchema = bookListSchema.pick({
   year: true,
   genre: true,
+  url: true,
+  pendingUrl: true,
 });
 
 export type ShortBookList = z.infer<typeof shortBookListSchema>;
 
 export const createBookListSchema = bookListSchema.omit({
-  id: true,
   createdAt: true,
   updatedAt: true,
 });

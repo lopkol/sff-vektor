@@ -10,7 +10,7 @@ export default async function Layout({
   params: Promise<{ year: string }>;
 }) {
   const { year } = await params;
-  const t = await getTranslations('Sidebar');
+  const t = await getTranslations("Sidebar");
 
   return (
     <>

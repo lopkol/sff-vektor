@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { googleAuth } from "@/middlewares/google-auth.ts";
 import { loadActiveUser } from "@/middlewares/user.ts";
+import { handleExceptionMiddleware } from "@/middlewares/map-exceptions.ts";
 
 export const app = new Hono();
 app.use(
@@ -10,5 +11,6 @@ app.use(
     origin: Deno.env.get("WEB_URL") || "http://localhost:3000",
   }),
   googleAuth,
-  loadActiveUser
+  loadActiveUser,
 );
+app.onError(handleExceptionMiddleware);

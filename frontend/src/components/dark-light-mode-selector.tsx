@@ -9,8 +9,10 @@ import {
 import { Button } from "./ui/button";
 import { Check, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useTranslations } from "next-intl";
 
 export function DarkLightModeSelector({ className }: { className?: string }) {
+  const t = useTranslations("ThemeSelector");
   const { theme, setTheme } = useTheme();
 
   return (
@@ -24,13 +26,13 @@ export function DarkLightModeSelector({ className }: { className?: string }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
-          {theme === "light" && <Check className="h-4 w-4" />} Light
+          {theme === "light" && <Check className="h-4 w-4" />} {t("light")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
-          {theme === "dark" && <Check className="h-4 w-4" />} Dark
+          {theme === "dark" && <Check className="h-4 w-4" />} {t("dark")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
-          {theme === "system" && <Check className="h-4 w-4" />} System
+          {theme === "system" && <Check className="h-4 w-4" />} {t("system")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

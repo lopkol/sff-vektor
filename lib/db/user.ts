@@ -110,6 +110,26 @@ export async function createUser(
   });
 }
 
+export async function getAllUsers(
+  connection: DatabasePoolConnection,
+): Promise<User[]> {
+  const userResult = await connection.query(sql.typeAlias("user")`
+    ${selectUserFragment} order by lower(u."name") asc;
+  `);
+  return await Promise.all(userResult.rows.map(async (row) => ({
+    id: row.id,
+    email: await decrypt(row.emailEncrypted),
+    name: row.name,
+    role: row.role,
+    isActive: row.isActive,
+    readerId: row.readerId,
+    molyUsername: row.molyUsername,
+    molyUrl: row.molyUrl,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  })));
+}
+
 export async function getUserById(
   connection: DatabasePoolConnection,
   id: string,

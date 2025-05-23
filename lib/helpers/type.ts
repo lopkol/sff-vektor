@@ -30,3 +30,18 @@ export function isUuidv7(uuid: string): boolean {
   return /^[0-9A-F]{8}-[0-9A-F]{4}-7[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i
     .test(uuid);
 }
+
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P];
+};
+
+/**
+ * Helper function to tell the compiler that the object is mutable.
+ * This is a workaround: Slonik returns a list of items marked as readonly.
+ * @reference https://github.com/gajus/slonik/issues/218#issuecomment-2400447053
+ * @example
+ * mutable(connection.query(sql.type(z.unknown())`select * from "table_name"`));
+ */
+export function mutable<T>(value: T): Mutable<T> {
+  return value as Mutable<T>;
+}

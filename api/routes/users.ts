@@ -3,92 +3,72 @@ import {
   createUser,
   createUserSchema,
   EntityNotFoundException,
+  getAllUsers,
   getOrCreateDatabasePool,
-  getUserByEmail,
   getUserById,
   InvalidArgumentException,
   UniqueConstraintException,
   updateUser,
   updateUserSchema,
 } from "@sffvektor/lib";
-import { createFormValidator } from "@/middlewares/validator.ts";
+import { validateBody } from "@/middlewares/validator.ts";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
+import { HttpStatusCode } from "@/helpers/http-code.ts";
+import { mapExceptions } from "@/middlewares/map-exceptions.ts";
 
 const createUserApiSchema = createUserSchema.strict();
 
 const updateUserApiSchema = updateUserSchema.strict();
 
-app.get("/api/users", async (c) => {
-  const email = c.req.query("email");
-  if (!email) {
-    return c.text("Email missing!", 400);
-  }
+app.get("/api/users", isUserAdminMiddleware, async (c) => {
   const pool = await getOrCreateDatabasePool();
-  try {
-    return c.json(await getUserByEmail(pool, email), 200);
-  } catch (error) {
-    if (error instanceof EntityNotFoundException) {
-      return c.json({ message: error.message, details: error.details }, 404);
-    }
-    console.error(error);
-    throw error;
-  }
+  return c.json(await getAllUsers(pool), 200);
 });
 
-app.get("/api/users/:id", async (c) => {
-  const pool = await getOrCreateDatabasePool();
-  try {
+app.get(
+  "/api/users/:id",
+  isUserAdminMiddleware,
+  mapExceptions(
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
     return c.json(await getUserById(pool, c.req.param("id")), 200);
-  } catch (error) {
-    if (error instanceof EntityNotFoundException) {
-      return c.json({ message: error.message, details: error.details }, 404);
-    }
-    console.error(error);
-    throw error;
-  }
-});
+  },
+);
 
 app.post(
   "/api/users",
-  createFormValidator(createUserApiSchema),
+  isUserAdminMiddleware,
+  validateBody(createUserApiSchema),
+  mapExceptions(
+    [UniqueConstraintException, HttpStatusCode.BadRequest],
+  ),
   async (c) => {
     const pool = await getOrCreateDatabasePool();
-    try {
-      return c.json(
-        await createUser(pool, c.req.valid("form")),
-        201,
-      );
-    } catch (error) {
-      if (error instanceof UniqueConstraintException) {
-        return c.json({ message: error.message, details: error.details }, 400);
-      }
-      console.error(error);
-      throw error;
-    }
+    return c.json(await createUser(pool, c.req.valid("form")), 201);
   },
 );
 
 app.patch(
   "/api/users/:id",
-  createFormValidator(updateUserApiSchema),
+  isUserAdminMiddleware,
+  validateBody(updateUserApiSchema),
+  mapExceptions(
+    [InvalidArgumentException, HttpStatusCode.BadRequest],
+    [EntityNotFoundException, HttpStatusCode.NotFound],
+  ),
   async (c) => {
-    const pool = await getOrCreateDatabasePool();
-    try {
-      return c.json(
-        await updateUser(pool, c.req.param("id"), c.req.valid("form")),
-        201,
-      );
-    } catch (error) {
-      if (
-        error instanceof UniqueConstraintException ||
-        error instanceof InvalidArgumentException
-      ) {
-        return c.json({ message: error.message, details: error.details }, 400);
-      }
-      if (error instanceof EntityNotFoundException) {
-        return c.json({ message: error.message, details: error.details }, 404);
-      }
-      console.error(error);
-      throw error;
+    const userId = c.req.param("id");
+    const userParams = c.req.valid("form");
+
+    // Users cannot deactivate themselves
+    const currentUser = c.get("user");
+    if (currentUser.id === userId && userParams.isActive === false) {
+      return c.json({ message: "Cannot deactivate yourself" }, 400);
     }
+
+    const pool = await getOrCreateDatabasePool();
+    return c.json(await updateUser(pool, userId, userParams));
   },
 );

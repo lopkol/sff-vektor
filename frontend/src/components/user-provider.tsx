@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useContext, ReactNode } from "react";
-import { getAuthMe, User } from "@/services/auth";
+import { createContext, ReactNode, useContext } from "react";
+import { getAuthMe } from "@/services/auth";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { User } from "@/types/user";
 
 // Create a context for user data
 const UserContext = createContext<{

@@ -1,8 +1,105 @@
 {
-  "HomePage": {
-    "title": "Szia világ!",
-    "home": "Főoldal",
-    "content": "Qui minim labore adipisicing minim sint",
-    "button": "Tovább"
+  "Tools": {
+    "save": "Mentés",
+    "cancel": "Mégsem",
+    "confirm": "Igen",
+    "delete": "Törlés",
+    "saving": "Mentés...",
+    "saveSuccess": "Sikeresen elmentve",
+    "saveError": "Sikertelen mentés",
+    "updateSuccess": "Sikeresen módosítva",
+    "updateError": "Sikertelen módosítás",
+    "deleteSuccess": "Sikeresen törölve",
+    "deleteError": "Sikertelen törlés",
+    "unknownError": "Hiba történt, próbáld újra később"
+  },
+  "RoleCheck": {
+    "unauthorizedTitle": "Jogosulatlan hozzáférés",
+    "unauthorizedDescription": "Nincs megfelelő jogosultságod a szekció eléréséhez."
+  },
+  "Sidebar": {
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "global": "Általános",
+    "bookLists": "Könyvlisták",
+    "books": "Könyvek"
+  },
+  "ThemeSelector": {
+    "light": "Világos",
+    "dark": "Sötét",
+    "system": "Rendszer"
+  },
+  "LocaleSelector": {
+    "title": "Szeretnél nyelvet váltani?",
+    "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?"
+  },
+  "Admin": {
+    "Nav": {
+      "admin": "Admin",
+      "users": "Felhasználók",
+      "bookLists": "Könyvlisták"
+    },
+    "BookLists": {
+      "genres": {
+        "sciFi": "Sci-Fi",
+        "fantasy": "Fantasy"
+      },
+      "props": {
+        "year": "Év",
+        "genre": "Műfaj",
+        "url": "Lista linkje",
+        "pendingUrl": "Besorolásra váró lista linkje",
+        "readers": "Zsűritagok"
+      },
+      "form": {
+        "selectReaders": "Válassz zsűritagokat",
+        "noResults": "Nincs találat"
+      },
+      "table": {
+        "title": "Könyvlisták",
+        "addNew": "Új lista"
+      },
+      "dialog": {
+        "createTitle": "Új könyvlista",
+        "editTitle": "Könyvlista szerkesztése",
+        "deleteConfirmTitle": "Könyvlista törlése",
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?"
+      },
+      "error": {
+        "year": "Év megadása szükséges",
+        "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
+        "url": "Érvénytelen link",
+        "pendingUrl": "Érvénytelen link",
+        "UNIQUE_CONSTRAINT_VIOLATION": "Már létezik könyvlista ezzel az évvel és műfajjal",
+        "ENTITY_NOT_FOUND": "Nincs könyvlista ezzel az évvel és műfajjal"
+      }
+    },
+    "Users": {
+      "roles": {
+        "admin": "Admin",
+        "user": "Zsűri"
+      },
+      "props": {
+        "name": "Név",
+        "email": "Email",
+        "role": "Státusz",
+        "active": "Aktív",
+        "molyUrl": "Moly profil link"
+      },
+      "table": {
+        "title": "Felhasználók",
+        "addNew": "Új felhasználó"
+      },
+      "dialog": {
+        "createTitle": "Új felhasználó",
+        "editTitle": "Felhasználó szerkesztése"
+      },
+      "error": {
+        "name": "Név megadása szükséges",
+        "email": "Érvénytelen email",
+        "role": "Státusz megadása szükséges",
+        "molyUrl": "Érvénytelen link"
+      }
+    }
   }
 }

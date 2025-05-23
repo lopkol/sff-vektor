@@ -6,6 +6,7 @@ import {
   type Reader,
   readerSchema,
 } from "@/schema/reader.ts";
+import { mutable } from "@/helpers/type.ts";
 
 const sql = createSqlTag({
   typeAliases: {
@@ -38,6 +39,16 @@ export async function getReaderById(
   }
 
   return readerResult.rows[0];
+}
+
+export async function getAllReaders(
+  connection: DatabasePoolConnection,
+): Promise<Reader[]> {
+  const readerResult = await connection.query(sql.typeAlias("reader")`
+    select * from "reader" order by lower("molyUsername") asc
+  `);
+
+  return mutable(readerResult.rows);
 }
 
 export async function deleteReader(

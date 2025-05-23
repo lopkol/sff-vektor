@@ -23,8 +23,8 @@ export function AdminNav() {
           icon: Users,
         },
         {
-          title: t("candidates"),
-          url: "/candidates",
+          title: t("bookLists"),
+          url: "/book-lists",
           icon: Book,
         },
       ]}

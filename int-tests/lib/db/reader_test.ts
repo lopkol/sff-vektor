@@ -7,6 +7,7 @@ import {
   createReader,
   deleteReader,
   EntityNotFoundException,
+  getAllReaders,
   getOrCreateDatabasePool,
   getReaderById,
 } from "@sffvektor/lib";
@@ -60,6 +61,31 @@ describe("reader db functions", () => {
           await getReaderById(pool, "0195bda3-0273-700d-8a4c-a2548e5a5888"),
         EntityNotFoundException,
       );
+    });
+  });
+
+  describe("getAllReaders", () => {
+    it("returns all readers in alphabetical order by molyUsername", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createReader(pool, {
+        molyUsername: "bobby",
+        molyUrl: "test_url",
+      });
+      await createReader(pool, {
+        molyUsername: "Alice",
+        molyUrl: "test_url2",
+      });
+      await createReader(pool, {
+        molyUsername: "Cat",
+        molyUrl: "test_url3",
+      });
+
+      const result = await getAllReaders(pool);
+
+      assertEquals(result.length, 3);
+      assertEquals(result[0].molyUsername, "Alice");
+      assertEquals(result[1].molyUsername, "bobby");
+      assertEquals(result[2].molyUsername, "Cat");
     });
   });
 
