@@ -2,12 +2,14 @@
 name: Continuous Deployment
 
 on:
+  release:
+    types: [published]
   push:
 
 env:
   REGISTRY: ghcr.io
-  # TODO: select correct stack based on workflow
-  PULUMI_STACK_NAME: staging
+  # prod if github release, staging otherwise
+  PULUMI_STACK_NAME: ${{ github.event_name == 'release' && 'prod' || 'staging'  }}
 
 jobs:
   build-backend:
