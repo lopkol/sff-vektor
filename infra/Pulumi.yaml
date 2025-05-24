@@ -47,7 +47,7 @@ resources:
       privacy: "public"
       httpOption: redirected
       environmentVariables:
-        WEB_URL: ${stack.outputs["frontend_endpoint"]}
+        WEB_URL: https://${stack.outputs["frontend_endpoint"]}
       secretEnvironmentVariables:
         DATABASE_URL: ${neonProject.connectionUri}
         DEFAULT_ADMIN_EMAIL: ${default_admin_email}
@@ -113,11 +113,11 @@ outputs:
 config:
   scaleway:region: fr-par
   sff-vektor:api_docker_image_sha256:
-    default: "sha256:f948c555b5aaa26ba84f155e6abdfc7b2849cb163ab6c75cc7c820c315fc80cc"
+    default: ""
   sff-vektor:scheduler_docker_image_sha256:
     default: ""
   sff-vektor:frontend_docker_image_sha256:
-    default: "sha256:ce10b36420188e620894d3703369e511bcdd61ab47bc8e2d86076b99b74d54b8"
+    default: ""
   pulumi:autonaming:
     value:
       pattern: ${project}-${name}-${stack}
