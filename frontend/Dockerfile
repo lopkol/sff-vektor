@@ -10,6 +10,8 @@ WORKDIR /app
 # Builder stage
 #
 FROM base AS builder
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3030/api}
 COPY . .
 RUN npm install
 RUN npm run build

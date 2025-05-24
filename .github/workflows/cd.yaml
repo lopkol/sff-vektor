@@ -6,6 +6,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  # TODO: select correct stack based on workflow
+  PULUMI_STACK_NAME: staging
 
 jobs:
   build-backend:
@@ -135,6 +137,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Get Pulumi Stack outputs
+        uses: pulumi/actions@v6
+        id: pulumi-stack
+        with:
+          command: output
+          stack-name: ${{ env.PULUMI_STACK_NAME }}
+          work-dir: infra/
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -179,6 +190,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-frontend.outputs.tags }}
           labels: ${{ steps.meta-frontend.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=https://${{ steps.pulumi-stack.outputs.api_endpoint }}/api
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
