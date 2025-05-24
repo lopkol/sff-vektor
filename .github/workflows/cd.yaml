@@ -5,11 +5,14 @@ on:
   release:
     types: [published]
   push:
+    branches:
+      - main
 
 env:
   REGISTRY: ghcr.io
   # prod if github release, staging otherwise
   PULUMI_STACK_NAME: ${{ github.event_name == 'release' && 'prod' || 'staging'  }}
+  # Docker image tag will be the tag name if release, branch name otherwise
   DOCKER_IMAGE_TAG: ${{ github.ref_name }}
 
 jobs:
