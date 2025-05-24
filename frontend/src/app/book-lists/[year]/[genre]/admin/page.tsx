@@ -6,20 +6,24 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageSkeleton } from "@/components/page-skeleton";
-import { useBookListGenre } from "../book-list-genre-provider";
-import { useMemo } from "react";
-import { useBookListYear } from "../../book-list-year-provider";
+import { useBookListGenre } from "@/app/book-lists/[year]/[genre]/book-list-genre-provider";
+import { useMemo, useState } from "react";
+import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { BookDialog } from "./book-dialog";
+import { CompactBook } from "@/types/book";
 
 export default function AdminPage() {
   const t = useTranslations("BookList.Admin");
-  const tTools = useTranslations("Tools");
   const { year } = useBookListYear();
   const { genre, genreName } = useBookListGenre();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const [selectedBook, setSelectedBook] = useState<CompactBook | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data: books, isLoading } = useQuery({
     queryKey: ["books", year, genre],
@@ -52,6 +56,16 @@ export default function AdminPage() {
     return <PageSkeleton />;
   }
 
+  const handleRowClick = (book: CompactBook) => {
+    setSelectedBook(book);
+    setIsDialogOpen(true);
+  };
+
+  const handleCreateClick = () => {
+    setSelectedBook(null);
+    setIsDialogOpen(true);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -59,17 +73,20 @@ export default function AdminPage() {
           <h1 className="text-2xl font-bold">
             {t("title", { year, genreName })}
           </h1>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => syncBooks()}
-            disabled={isSyncing}
-          >
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${isSyncing ? "animate-spin" : ""}`}
-            />
-            {t("syncFromMoly")}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => syncBooks()}
+              disabled={isSyncing}
+              className="min-w-10"
+            >
+              <RefreshCw
+                className={`h-4 w-4 md:mr-2 ${isSyncing ? "animate-spin" : ""}`}
+              />
+              <span className="hidden md:block">{t("syncFromMoly")}</span>
+            </Button>
+            <Button onClick={handleCreateClick}>{t("addBook")}</Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -77,7 +94,11 @@ export default function AdminPage() {
           <TableBody>
             {books?.map((book) => {
               return (
-                <TableRow key={book.id}>
+                <TableRow
+                  key={book.id}
+                  className="cursor-pointer"
+                  onClick={() => handleRowClick(book)}
+                >
                   {hasNotApproved && (
                     <TableCell className="w-6">
                       {!book.isApproved && (
@@ -94,6 +115,13 @@ export default function AdminPage() {
           </TableBody>
         </Table>
       </CardContent>
+
+      {isDialogOpen && (
+        <BookDialog
+          onOpenChange={setIsDialogOpen}
+          bookId={selectedBook?.id}
+        />
+      )}
     </Card>
   );
 }

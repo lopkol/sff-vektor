@@ -66,7 +66,7 @@
         "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?"
       },
       "error": {
-        "year": "Év megadása szükséges",
+        "year": "Év megadása kötelező",
         "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
         "url": "Érvénytelen link",
         "pendingUrl": "Érvénytelen link",
@@ -95,9 +95,9 @@
         "editTitle": "Felhasználó szerkesztése"
       },
       "error": {
-        "name": "Név megadása szükséges",
+        "name": "Név megadása kötelező",
         "email": "Érvénytelen email",
-        "role": "Státusz megadása szükséges",
+        "role": "Státusz megadása kötelező",
         "molyUrl": "Érvénytelen link"
       }
     }
@@ -111,9 +111,37 @@
     },
     "Admin": {
       "title": "{year} {genreName} könyvlista",
+      "addBook": "Új könyv",
       "syncFromMoly": "Frissítés molyról",
       "syncSuccess": "Sikeresen frissítve",
-      "syncError": "Frissítés közben hiba történt"
+      "syncError": "Frissítés közben hiba történt",
+      "props": {
+        "year": "Év",
+        "genre": "Műfaj",
+        "title": "Cím",
+        "series": "Sorozat",
+        "seriesNumber": "Kötet sorszáma",
+        "alternatives": "Alternatívák",
+        "alternativeName": "Név",
+        "alternativeNamePlaceholder": "magyar",
+        "alternativeUrls": "Linkek",
+        "alternativeUrlPlaceholder": "https://...",
+        "addAlternativeUrl": "Új link",
+        "addAlternative": "Új alternatíva"
+      },
+      "error": {
+        "year": "Év megadása kötelező",
+        "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
+        "titleRequired": "Cím megadása kötelező",
+        "nameRequired": "Név megadása kötelező",
+        "url": "Érvénytelen link"
+      },
+      "dialog": {
+        "createTitle": "Új könyv",
+        "editTitle": "Könyv szerkesztése",
+        "deleteConfirmTitle": "Könyv törlése",
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?"
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ export type Book = {
   year: number;
   genre?: Genre | null;
   series?: string | null;
-  seriesNumber?: number | null;
+  seriesNumber?: string | null;
   isApproved: boolean;
   isPending: boolean;
   createdAt: string;

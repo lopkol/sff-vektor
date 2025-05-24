@@ -142,9 +142,37 @@
     },
     "Admin": {
       "title": "{year} {genreName} book list",
+      "addBook": "Add book",
       "syncFromMoly": "Sync from moly",
       "syncSuccess": "Sync successful",
-      "syncError": "Failed to sync"
+      "syncError": "Failed to sync",
+      "props": {
+        "year": "Year",
+        "genre": "Genre",
+        "title": "Title",
+        "series": "Series",
+        "seriesNumber": "Volume number in series",
+        "alternatives": "Variants",
+        "alternativeName": "Variant name",
+        "alternativeNamePlaceholder": "magyar",
+        "alternativeUrls": "URLs",
+        "alternativeUrlPlaceholder": "https://...",
+        "addAlternativeUrl": "Add URL",
+        "addAlternative": "Add variant"
+      },
+      "error": {
+        "year": "Year is required",
+        "yearMin": "Year must be greater than 1900",
+        "titleRequired": "Title is required",
+        "nameRequired": "Name is required",
+        "url": "Invalid URL"
+      },
+      "dialog": {
+        "createTitle": "Add new book",
+        "editTitle": "Edit book",
+        "deleteConfirmTitle": "Delete book",
+        "deleteConfirmMessage": "Are you sure you want to delete this book?"
+      }
     }
   }
 }
