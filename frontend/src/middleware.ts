@@ -18,11 +18,8 @@ export async function middleware(request: NextRequest) {
   });
   if (!token) {
     const baseUrl = process.env.NEXTAUTH_URL;
-    console.log("baseUrl", baseUrl);
-    console.log("pathname", pathname);
     const callbackUrl = new URL(pathname, baseUrl);
     const url = new URL("/api/auth/signin", baseUrl);
-    console.log("callbackUrl", callbackUrl.toString());
     url.searchParams.set("callbackUrl", callbackUrl.toString());
     return NextResponse.redirect(url);
   }
