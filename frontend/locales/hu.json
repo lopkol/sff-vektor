@@ -12,6 +12,8 @@
     "deleteSuccess": "Sikeresen törölve",
     "deleteError": "Sikertelen törlés",
     "unknownError": "Hiba történt, próbáld újra később",
+    "noResults": "Nincs találat",
+    "search": "Keresés...",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"
@@ -127,20 +129,32 @@
         "alternativeUrls": "Linkek",
         "alternativeUrlPlaceholder": "https://...",
         "addAlternativeUrl": "Új link",
-        "addAlternative": "Új alternatíva"
+        "addAlternative": "Új alternatíva",
+        "authors": "Szerzők",
+        "authorName": "Szerző neve",
+        "authorSortName": "Rendezési név",
+        "manageAuthors": "Szerzők kezelése",
+        "addAuthor": "Új szerző",
+        "editAuthor": "Szerző szerkesztése",
+        "existingAuthors": "Meglévő szerzők",
+        "noAuthors": "Nincsenek szerzők"
       },
       "error": {
         "year": "Év megadása kötelező",
         "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
         "titleRequired": "Cím megadása kötelező",
         "nameRequired": "Név megadása kötelező",
-        "url": "Érvénytelen link"
+        "url": "Érvénytelen link",
+        "authorNameRequired": "Szerző nevének megadása kötelező",
+        "authorSortNameRequired": "Rendezési név megadása kötelező"
       },
       "dialog": {
         "createTitle": "Új könyv",
         "editTitle": "Könyv szerkesztése",
         "deleteConfirmTitle": "Könyv törlése",
-        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?"
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?",
+        "deleteAuthorConfirmTitle": "Szerző törlése",
+        "deleteAuthorConfirmMessage": "Biztosan törlöd a következő szerzőt: {name}?"
       }
     }
   }

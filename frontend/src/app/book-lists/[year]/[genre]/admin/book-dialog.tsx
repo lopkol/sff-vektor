@@ -36,9 +36,7 @@ export function BookDialog({ onOpenChange, bookId }: BookDialogProps) {
     mutationFn: (data: CreateBook) =>
       bookId ? updateBook(bookId, data) : createBook(data),
     onSuccess: (updatedBook) => {
-      queryClient.invalidateQueries({
-        queryKey: ["books", updatedBook.year, updatedBook.genre],
-      });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
       queryClient.setQueryData(["book", bookId], updatedBook);
       toast({
         title: bookId ? tTools("updateSuccess") : tTools("saveSuccess"),

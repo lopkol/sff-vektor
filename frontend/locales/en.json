@@ -12,6 +12,8 @@
     "deleteSuccess": "Delete successful",
     "deleteError": "Failed to delete",
     "unknownError": "An unknown error occurred",
+    "noResults": "No results found",
+    "search": "Search...",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"
@@ -158,20 +160,32 @@
         "alternativeUrls": "URLs",
         "alternativeUrlPlaceholder": "https://...",
         "addAlternativeUrl": "Add URL",
-        "addAlternative": "Add variant"
+        "addAlternative": "Add variant",
+        "authors": "Authors",
+        "authorName": "Author name",
+        "authorSortName": "Sort name",
+        "manageAuthors": "Manage authors",
+        "addAuthor": "Add author",
+        "editAuthor": "Edit author",
+        "existingAuthors": "Existing authors",
+        "noAuthors": "No authors found"
       },
       "error": {
         "year": "Year is required",
         "yearMin": "Year must be greater than 1900",
         "titleRequired": "Title is required",
         "nameRequired": "Name is required",
-        "url": "Invalid URL"
+        "url": "Invalid URL",
+        "authorNameRequired": "Author name is required",
+        "authorSortNameRequired": "Sort name is required"
       },
       "dialog": {
         "createTitle": "Add new book",
         "editTitle": "Edit book",
         "deleteConfirmTitle": "Delete book",
-        "deleteConfirmMessage": "Are you sure you want to delete this book?"
+        "deleteConfirmMessage": "Are you sure you want to delete this book?",
+        "deleteAuthorConfirmTitle": "Delete author",
+        "deleteAuthorConfirmMessage": "Are you sure you want to delete the author {name}?"
       }
     }
   }
