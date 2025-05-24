@@ -33,8 +33,7 @@ resources:
       deploy: true
       namespaceId: ${scalewayContainerNamespace.id}
       name: sff-vektor-backend
-      # TODO: Change this to branch name
-      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-api:iac
+      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-api:${git_branch}
       registrySha256: ${api_docker_image_sha256}
       port: 3030
       cpuLimit: 140
@@ -65,8 +64,7 @@ resources:
       deploy: true
       namespaceId: ${scalewayContainerNamespace.id}
       name: sff-vektor-frontend
-      # TODO: Change this to branch name
-      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-frontend:iac
+      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-frontend:${git_branch}
       registrySha256: ${frontend_docker_image_sha256}
       port: 3000
       cpuLimit: 140
@@ -112,6 +110,8 @@ outputs:
   frontend_endpoint: ${scalewayFrontendServerlessContainer.domainName}
 config:
   scaleway:region: fr-par
+  sff-vektor:git_branch:
+    default: "main"
   sff-vektor:api_docker_image_sha256:
     default: ""
   sff-vektor:scheduler_docker_image_sha256:

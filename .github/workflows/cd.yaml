@@ -10,6 +10,7 @@ env:
   REGISTRY: ghcr.io
   # prod if github release, staging otherwise
   PULUMI_STACK_NAME: ${{ github.event_name == 'release' && 'prod' || 'staging'  }}
+  DOCKER_IMAGE_TAG: ${{ github.ref_name }}
 
 jobs:
   build-backend:
@@ -64,11 +65,15 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.DOCKER_IMAGE_TAG }}
       - name: Extract Docker metadata for scheduler
         id: meta-scheduler
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.SCHEDULER_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.DOCKER_IMAGE_TAG }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -180,6 +185,8 @@ jobs:
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ env.DOCKER_IMAGE_TAG }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -226,6 +233,7 @@ jobs:
           stack-name: ${{ env.PULUMI_STACK_NAME }}
           config-map: |
             {
+              "sff-vektor:git_branch": {"value": "${{ env.DOCKER_IMAGE_TAG }}", "secret": false},
               "sff-vektor:api_docker_image_sha256": {"value": "${{ needs.build-backend.outputs.api_docker_image_sha256 }}", "secret": false},
               "sff-vektor:scheduler_docker_image_sha256": {"value": "${{ needs.build-backend.outputs.scheduler_docker_image_sha256 }}", "secret": false},
               "sff-vektor:frontend_docker_image_sha256": {"value": "${{ needs.build-frontend.outputs.frontend_docker_image_sha256 }}", "secret": false}
