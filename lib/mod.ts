@@ -1,6 +1,7 @@
 export * from "@/config/env.ts";
 export * from "@/config/database.ts";
 export * from "@/config/moly-axios.ts";
+export * from "@/config/logger.ts";
 
 export * from "@/db/author.ts";
 export * from "@/db/book-list.ts";

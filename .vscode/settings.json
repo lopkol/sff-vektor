@@ -13,5 +13,9 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"*.ts": "${capture}.js, ${capture}_test.ts"
-	}
+	},
+	"cSpell.words": [
+		"logtape",
+		"sffvektor"
+	]
 }
