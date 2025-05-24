@@ -9,6 +9,7 @@ import {
   EntityNotFoundException,
   getAuthorById,
   getAuthorByName,
+  getAuthors,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateAuthor,
@@ -44,6 +45,50 @@ describe("author db functions", () => {
       assertEquals(authorInDb.sortName, author.sortName);
       assertEquals(authorInDb.url, author.url);
       assertEquals(authorInDb.isApproved, author.isApproved);
+    });
+  });
+
+  describe("getAuthors", () => {
+    it("returns empty array if no authors exist", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const authors = await getAuthors(pool);
+      assertEquals(authors.length, 0);
+    });
+
+    it("returns all authors sorted by sortName", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author1 = await createAuthor(pool, {
+        displayName: "John Doe",
+        sortName: "Doe, John",
+        url: "https://example.com",
+        isApproved: true,
+      });
+      const author2 = await createAuthor(pool, {
+        displayName: "Jane Doe",
+        sortName: "Doe, Jane",
+        url: "https://example.com/jane",
+        isApproved: true,
+      });
+      const author3 = await createAuthor(pool, {
+        displayName: "John Smith",
+        sortName: "Smith, John",
+        url: "https://example.com/john",
+        isApproved: true,
+      });
+      const author4 = await createAuthor(pool, {
+        displayName: "Jane Doeg",
+        sortName: "Doeg, Jane",
+        url: "https://example.com/jane",
+        isApproved: true,
+      });
+
+      const authors = await getAuthors(pool);
+
+      assertEquals(authors.length, 4);
+      assertEquals(authors[0].id, author2.id);
+      assertEquals(authors[1].id, author1.id);
+      assertEquals(authors[2].id, author4.id);
+      assertEquals(authors[3].id, author3.id);
     });
   });
 

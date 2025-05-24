@@ -4,7 +4,7 @@ import type React from "react";
 import { createContext, useContext } from "react";
 
 type BookListYearContextType = {
-  year: string;
+  year: number;
 };
 
 const BookListYearContext = createContext<BookListYearContextType | undefined>(
@@ -26,7 +26,7 @@ export function BookListYearProvider({
   year,
 }: {
   children: React.ReactNode;
-  year: string;
+  year: number;
 }) {
   return (
     <BookListYearContext.Provider value={{ year }}>

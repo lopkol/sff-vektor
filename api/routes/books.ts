@@ -28,6 +28,10 @@ const bookFilterApiSchema = bookFilterSchema.extend({
   year: z.coerce.number(),
 }).strict();
 
+const bookListRefApiSchema = bookListRefSchema.extend({
+  year: z.coerce.number(),
+}).strict();
+
 app.get("/api/books", validateQuery(bookFilterApiSchema), async (c) => {
   const pool = await getOrCreateDatabasePool();
   const query = c.req.valid("query");
@@ -88,7 +92,7 @@ app.delete(
 app.post(
   "/api/books/update-from-moly",
   isUserAdminMiddleware,
-  validateBody(bookListRefSchema),
+  validateBody(bookListRefApiSchema),
   mapExceptions(
     [EntityNotFoundException, HttpStatusCode.NotFound],
   ),
