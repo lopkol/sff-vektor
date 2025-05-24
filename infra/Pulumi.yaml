@@ -1,0 +1,123 @@
+name: sff-vektor
+runtime: yaml
+description: Showing the way in Science Fiction & Fantasy novels
+resources:
+  stack:
+    type: pulumi:pulumi:StackReference
+    properties:
+      name: SylvainMarty/sff-vektor/${pulumi.stack}
+  neonProject:
+    type: neon:Project
+    properties:
+      name: sff-vektor-backend
+      pgVersion: 17
+      regionId: aws-eu-central-1
+      # 1 day of retention
+      historyRetentionSeconds: 86400
+    options:
+      additionalSecretOutputs:
+        - connectionUri
+  scalewayProject:
+    type: scaleway:account/project:Project
+    properties:
+      name: sff-vektor-backend
+      description: SFF Vektor infra
+  scalewayContainerNamespace:
+    type: scaleway:containers/namespace:Namespace
+    properties:
+      name: sff-vektor-ns
+      projectId: ${scalewayProject.id}
+  scalewayApiServerlessContainer:
+    type: scaleway:containers/container:Container
+    properties:
+      deploy: true
+      namespaceId: ${scalewayContainerNamespace.id}
+      name: sff-vektor-backend
+      # TODO: Change this to branch name
+      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-api:iac
+      registrySha256: ${api_docker_image_sha256}
+      port: 3030
+      cpuLimit: 140
+      memoryLimit: 256
+      minScale: 0
+      maxScale: 2
+      scalingOptions:
+        - concurrentRequestsThreshold: 80
+      timeout: 30
+      privacy: "public"
+      httpOption: redirected
+      environmentVariables:
+        WEB_URL: ${stack.outputs["frontend_endpoint"]}
+      secretEnvironmentVariables:
+        DATABASE_URL: ${neonProject.connectionUri}
+        DEFAULT_ADMIN_EMAIL: ${default_admin_email}
+        GOOGLE_CLIENT_ID: ${google_client_id}
+        GOOGLE_CLIENT_SECRET: ${google_client_secret}
+      healthChecks:
+        - https:
+            - path: /health
+          # Health check is failing after 3 minutes of not being responsive
+          failureThreshold: 18
+          interval: 10s
+  scalewayFrontendServerlessContainer:
+    type: scaleway:containers/container:Container
+    properties:
+      deploy: true
+      namespaceId: ${scalewayContainerNamespace.id}
+      name: sff-vektor-frontend
+      # TODO: Change this to branch name
+      registryImage: ghcr.io/lopkol/sff-vektor/sff-vektor-frontend:iac
+      registrySha256: ${frontend_docker_image_sha256}
+      port: 3000
+      cpuLimit: 140
+      memoryLimit: 256
+      minScale: 0
+      maxScale: 2
+      scalingOptions:
+        - concurrentRequestsThreshold: 80
+      timeout: 30
+      privacy: "public"
+      httpOption: redirected
+      healthChecks:
+        - https:
+            - path: /api/health
+          # Health check is failing after 3 minutes of not being responsive
+          failureThreshold: 18
+          interval: 10s
+      environmentVariables:
+        NEXT_PUBLIC_API_URL: https://${stack.outputs["api_endpoint"]}/api
+        NEXTAUTH_URL: https://${stack.outputs["frontend_endpoint"]}
+      secretEnvironmentVariables:
+        NEXTAUTH_SECRET: ${next_auth_secret}  # Generate a new one for each environment (openssl rand -base64 32)
+        GOOGLE_CLIENT_ID: ${google_client_id}
+        GOOGLE_CLIENT_SECRET: ${google_client_secret}
+  # TODO: add scheduler to infra
+  # scalewaySchedulerServerlessJob:
+  #   type: scaleway:job/definition:Definition
+  #   properties:
+  #     name: sff-vektor-scheduler
+  #     projectId: ${scalewayProject.id}
+  #     cpuLimit: 140
+  #     memoryLimit: 256
+  #     imageUri: ghcr.io/lopkol/sff-vektor/sff-vektor-scheduler:master
+  #     timeout: 10m
+  #     env:
+  #       DATABASE_URL: ${neonProject.connectionUri}
+  #     cron:
+  #       # every day at 2am
+  #       schedule: 0 2 * * *
+  #       timezone: Europe/Paris
+outputs:
+  api_endpoint: ${scalewayApiServerlessContainer.domainName}
+  frontend_endpoint: ${scalewayFrontendServerlessContainer.domainName}
+config:
+  scaleway:region: fr-par
+  sff-vektor:api_docker_image_sha256:
+    default: "sha256:f948c555b5aaa26ba84f155e6abdfc7b2849cb163ab6c75cc7c820c315fc80cc"
+  sff-vektor:scheduler_docker_image_sha256:
+    default: ""
+  sff-vektor:frontend_docker_image_sha256:
+    default: "sha256:ce10b36420188e620894d3703369e511bcdd61ab47bc8e2d86076b99b74d54b8"
+  pulumi:autonaming:
+    value:
+      pattern: ${project}-${name}-${stack}
