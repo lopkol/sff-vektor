@@ -6,8 +6,8 @@ import { supportedLocales } from "./i18n/locales";
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
-  // Ignore /api/auth/*
-  if (pathname.startsWith("/api/auth")) {
+  // Ignore /api/auth/* and /api/health
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/api/health")) {
     return NextResponse.next();
   }
 
