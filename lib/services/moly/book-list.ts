@@ -17,6 +17,7 @@ import { getOrCreateDatabasePool } from "@/config/database.ts";
 import { getBookList } from "@/db/book-list.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { createOrUpdateBookFromMoly } from "@/services/moly/book.ts";
+import { logger } from "@sffvektor/lib";
 
 async function getBooksFromList(url: string): Promise<BookFromList[]> {
   try {
@@ -112,5 +113,5 @@ export async function createOrUpdateBooksOfListFromMoly(
   }
 
   // TODO: logging
-  console.log("Books updated for list", { year, genre });
+  logger.info("Books updated for list", { year, genre });
 }

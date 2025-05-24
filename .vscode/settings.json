@@ -4,7 +4,8 @@
 		"./api",
 		"./lib",
 		"./scheduler",
-		"./int-tests"
+		"./int-tests",
+		"./slonik-pg-driver"
 	],
 	"editor.inlayHints.enabled": "off",
 	"editor.tabSize": 2,
@@ -12,5 +13,9 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"*.ts": "${capture}.js, ${capture}_test.ts"
-	}
+	},
+	"cSpell.words": [
+		"logtape",
+		"sffvektor"
+	]
 }

@@ -1,4 +1,11 @@
 import { loadEnv, runDbmate } from "@sffvektor/lib";
+import { setupLogger } from "@sffvektor/lib";
+
+await setupLogger({
+  level: "debug",
+  prettyPrint: true,
+  useColors: true,
+});
 
 await loadEnv();
 

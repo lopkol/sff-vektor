@@ -1,0 +1,7 @@
+.git
+.infra
+.vscode
+frontend
+int-tests
+**/node_modules
+**/.env.local
