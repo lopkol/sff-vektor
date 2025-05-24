@@ -10,16 +10,22 @@ console.log("database loaded");
 const { app } = await import("@/config/application.ts");
 console.log("app loaded");
 
-if (
-  [true, "true"].includes(Deno.env.get("DATABASE_RUN_MIGRATIONS") ?? "false")
-) {
-  console.log("migrations loaded");
-  await runDbmate("up");
-}
-
 await import("@/routes/index.ts");
 console.log("routes loaded");
 
-await initDefaultAdminUser();
+Deno.serve({
+  port: +(Deno.env.get("PORT") ?? 3000),
+  onListen: async ({ hostname, port }) => {
+    console.log(`Server started at http://${hostname}:${port}`);
+    if (
+      [true, "true"].includes(
+        Deno.env.get("DATABASE_RUN_MIGRATIONS") ?? "false",
+      )
+    ) {
+      console.log("migrations loaded");
+      await runDbmate("up");
+    }
 
-Deno.serve({ port: +(Deno.env.get("PORT") ?? 3000) }, app.fetch);
+    await initDefaultAdminUser();
+  },
+}, app.fetch);
