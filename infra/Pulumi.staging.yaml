@@ -9,7 +9,7 @@ config:
   scaleway:secret_key:
     secure: AAABAElD2KB7xa3L82F8siYDXUhw3VxUB5wE3YDjOzyhTr2AESj3MYZgzw1RMKLwytVwalDyjBpQWsqWeJmczvJjFZ8=
   sff-vektor:default_admin_email:
-    secure: AAABAE40tW7Ekv8CCSRzldCEmU5q0sVxy3k7Mjyp/Uz2ySX9slU/Zm8JufiZPrn74KDXEoEBVBk=
+    secure: AAABAMW/iJJAM2riUefATZDF4ilcP1Gg48cDAGSf2IgJ/DLWbwZFzJBoPrU2AdqxUXvNJ3db
   sff-vektor:google_client_id:
     secure: AAABAC3Egl862HCLy6GzGk+7lBSyM1aifbrgXrJfARY2mZxrQw5AnWqEYwXNEzBg615n0UHyli6F8ZwId/Hch4sUJuGWTmlyxZuVxHAjXbTB/IalQoHeEMudNUhxnpOtVvjFBmaY3A==
   sff-vektor:google_client_secret:
