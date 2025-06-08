@@ -66,6 +66,10 @@ export default function AdminPage() {
     setIsDialogOpen(true);
   };
 
+  const handleFormSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["books", year, genre] });
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -101,9 +105,7 @@ export default function AdminPage() {
                 >
                   {hasNotApproved && (
                     <TableCell className="w-6">
-                      {!book.isApproved && (
-                        <span role="img" aria-label="not approved">⚠️</span>
-                      )}
+                      {!book.isApproved && <span>⚠️</span>}
                     </TableCell>
                   )}
                   <TableCell>
@@ -120,6 +122,7 @@ export default function AdminPage() {
         <BookDialog
           onOpenChange={setIsDialogOpen}
           bookId={selectedBook?.id}
+          onSuccess={handleFormSuccess}
         />
       )}
     </Card>

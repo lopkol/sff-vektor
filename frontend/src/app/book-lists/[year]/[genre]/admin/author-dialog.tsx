@@ -1,7 +1,12 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createBook, deleteBook, getBook, updateBook } from "@/services/books";
+import {
+  createAuthor,
+  deleteAuthor,
+  getAuthor,
+  updateAuthor,
+} from "@/services/authors";
 import { useTranslations } from "next-intl";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -10,41 +15,43 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from "@/components/ui/responsive-dialog";
-import { BookForm } from "./book-form";
-import { CreateBook } from "@/types/book";
+import { AuthorForm } from "@/app/book-lists/[year]/[genre]/admin/author-form";
+import { CreateAuthor } from "@/types/author";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface BookDialogProps {
+interface AuthorDialogProps {
   onOpenChange: (open: boolean) => void;
-  bookId?: string;
   onSuccess: () => void;
+  authorId?: string;
+  onAuthorCreated?: (authorId: string) => void;
 }
 
-export function BookDialog(
-  { onOpenChange, bookId, onSuccess }: BookDialogProps,
+export function AuthorDialog(
+  { onOpenChange, onSuccess, authorId, onAuthorCreated }: AuthorDialogProps,
 ) {
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: book, isLoading } = useQuery({
-    queryKey: ["book", bookId],
-    queryFn: () => getBook(bookId!),
-    enabled: !!bookId,
+  const { data: author, isLoading } = useQuery({
+    queryKey: ["author", authorId],
+    queryFn: () => getAuthor(authorId!),
+    enabled: !!authorId,
     refetchOnMount: "always",
   });
 
-  const { mutate: createOrUpdateBook, isPending: isSaving } = useMutation({
-    mutationFn: (data: CreateBook) =>
-      bookId ? updateBook(bookId, data) : createBook(data),
-    onSuccess: (updatedBook) => {
-      queryClient.invalidateQueries({ queryKey: ["books"] });
-      if (bookId) {
-        queryClient.setQueryData(["book", bookId], updatedBook);
+  const { mutate: createOrUpdateAuthor, isPending: isSaving } = useMutation({
+    mutationFn: (data: CreateAuthor) =>
+      authorId ? updateAuthor(authorId, data) : createAuthor(data),
+    onSuccess: (updatedAuthor) => {
+      if (authorId) {
+        queryClient.setQueryData(["author", authorId], updatedAuthor);
+      } else if (onAuthorCreated) {
+        onAuthorCreated(updatedAuthor.id);
       }
       toast({
-        title: bookId ? tTools("updateSuccess") : tTools("saveSuccess"),
+        title: authorId ? tTools("updateSuccess") : tTools("saveSuccess"),
         variant: "success",
       });
       onSuccess();
@@ -52,20 +59,17 @@ export function BookDialog(
     },
     onError: () => {
       toast({
-        title: bookId ? tTools("updateError") : tTools("saveError"),
+        title: authorId ? tTools("updateError") : tTools("saveError"),
         description: tTools("unknownError"),
         variant: "destructive",
       });
     },
   });
 
-  const { mutate: removeBook, isPending: isDeleting } = useMutation({
-    mutationFn: () => deleteBook(bookId!),
+  const { mutate: removeAuthor, isPending: isDeleting } = useMutation({
+    mutationFn: () => deleteAuthor(authorId!),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["books", book!.year, book!.genre],
-      });
-      queryClient.removeQueries({ queryKey: ["book", bookId] });
+      queryClient.removeQueries({ queryKey: ["author", authorId] });
       toast({
         title: tTools("deleteSuccess"),
         variant: "success",
@@ -82,22 +86,22 @@ export function BookDialog(
     },
   });
 
-  const onSubmit = (data: CreateBook) => {
-    createOrUpdateBook(data);
+  const onSubmit = (data: CreateAuthor) => {
+    createOrUpdateAuthor(data);
   };
 
   const onDelete = () => {
-    if (bookId) {
-      removeBook();
+    if (authorId) {
+      removeAuthor();
     }
   };
 
   return (
     <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
-      <ResponsiveDialogContent side="right">
+      <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
-            {bookId ? t("dialog.editTitle") : t("dialog.createTitle")}
+            {authorId ? t("authors.edit") : t("authors.add")}
           </ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
         <div className="mt-4">
@@ -109,8 +113,8 @@ export function BookDialog(
               </div>
             )
             : (
-              <BookForm
-                book={book}
+              <AuthorForm
+                author={author}
                 isSaving={isSaving}
                 onOpenChange={onOpenChange}
                 onSubmit={onSubmit}

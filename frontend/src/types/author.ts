@@ -1,6 +1,6 @@
 export type Author = {
   id: string;
-  name: string;
+  displayName: string;
   sortName: string;
   url?: string | null;
   isApproved: boolean;

@@ -117,31 +117,50 @@
       "syncSuccess": "Sikeresen frissítve",
       "syncError": "Frissítés közben hiba történt",
       "props": {
+        "approved": "Jóváhagyva",
+        "pending": "Besorolásra vár",
         "year": "Év",
         "genre": "Műfaj",
+        "authors": "Szerzők",
         "title": "Cím",
         "series": "Sorozat",
         "seriesNumber": "Kötet sorszáma",
         "alternatives": "Alternatívák",
         "alternativeName": "Név",
+        "alternativeUrls": "Linkek"
+      },
+      "form": {
         "alternativeNamePlaceholder": "magyar",
-        "alternativeUrls": "Linkek",
         "alternativeUrlPlaceholder": "https://...",
         "addAlternativeUrl": "Új link",
-        "addAlternative": "Új alternatíva"
+        "addAlternative": "Új alternatíva",
+        "manageAuthors": "Szerzők szerkesztése"
+      },
+      "authors": {
+        "title": "Szerzők",
+        "approved": "Jóváhagyva",
+        "name": "Név",
+        "sortName": "Rendezési név",
+        "url": "Moly link",
+        "add": "Új szerző",
+        "edit": "Szerző szerkesztése"
       },
       "error": {
         "year": "Év megadása kötelező",
         "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
         "titleRequired": "Cím megadása kötelező",
         "nameRequired": "Név megadása kötelező",
-        "url": "Érvénytelen link"
+        "url": "Érvénytelen link",
+        "authorNameRequired": "Szerző nevének megadása kötelező",
+        "authorSortNameRequired": "Rendezési név megadása kötelező"
       },
       "dialog": {
         "createTitle": "Új könyv",
         "editTitle": "Könyv szerkesztése",
         "deleteConfirmTitle": "Könyv törlése",
-        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?"
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?",
+        "deleteAuthorConfirmTitle": "Szerző törlése",
+        "deleteAuthorConfirmMessage": "Biztosan törlöd a következő szerzőt: {name}?"
       }
     }
   }
