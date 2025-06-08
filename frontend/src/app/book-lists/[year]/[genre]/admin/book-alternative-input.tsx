@@ -14,7 +14,7 @@ interface BookAlternativeInputProps {
 export function BookAlternativeInput(
   { control, errors }: BookAlternativeInputProps,
 ) {
-  const t = useTranslations("BookList.Admin.props");
+  const t = useTranslations("BookList.Admin");
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -24,7 +24,7 @@ export function BookAlternativeInput(
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
-        <Label>{t("alternatives")}</Label>
+        <Label>{t("props.alternatives")}</Label>
         {fields.map((field, index) => (
           <BookAlternativeItem
             key={field.id}
@@ -44,7 +44,7 @@ export function BookAlternativeInput(
         className="w-fit"
       >
         <Plus className="mr-2 h-4 w-4" />
-        {t("addAlternative")}
+        {t("form.addAlternative")}
       </Button>
     </div>
   );

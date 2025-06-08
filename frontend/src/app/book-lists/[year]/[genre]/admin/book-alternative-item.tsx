@@ -23,7 +23,7 @@ export function BookAlternativeItem({
   alternativeId,
   onRemove,
 }: BookAlternativeItemProps) {
-  const t = useTranslations("BookList.Admin.props");
+  const t = useTranslations("BookList.Admin");
 
   const { fields: urlFields, append: appendUrl, remove: removeUrl } =
     useFieldArray({
@@ -45,7 +45,7 @@ export function BookAlternativeItem({
     >
       <div className="flex items-center justify-between">
         <Label className="text-sm font-medium">
-          {t("alternativeName")} {index + 1}
+          {t("props.alternativeName")} {index + 1}
         </Label>
         <Button
           type="button"
@@ -64,7 +64,7 @@ export function BookAlternativeItem({
           render={({ field: nameField }) => (
             <Input
               {...nameField}
-              placeholder={t("alternativeNamePlaceholder")}
+              placeholder={t("form.alternativeNamePlaceholder")}
             />
           )}
         />
@@ -76,7 +76,7 @@ export function BookAlternativeItem({
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm">{t("alternativeUrls")}</Label>
+        <Label className="text-sm">{t("props.alternativeUrls")}</Label>
         {urlFields.map((urlField, urlIndex) => (
           <div key={urlField.id} className="flex flex-col gap-2">
             <div className="flex gap-2">
@@ -86,7 +86,7 @@ export function BookAlternativeItem({
                 render={({ field: urlField }) => (
                   <Input
                     {...urlField}
-                    placeholder={t("alternativeUrlPlaceholder")}
+                    placeholder={t("form.alternativeUrlPlaceholder")}
                   />
                 )}
               />
@@ -114,7 +114,7 @@ export function BookAlternativeItem({
           onClick={() => appendUrl("")}
         >
           <Plus className="mr-2 h-4 w-4" />
-          {t("addAlternativeUrl")}
+          {t("form.addAlternativeUrl")}
         </Button>
       </div>
     </div>

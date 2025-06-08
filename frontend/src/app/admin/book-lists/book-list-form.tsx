@@ -218,7 +218,7 @@ export function BookListForm(
                 placeholder={t("form.selectReaders")}
                 emptyIndicator={
                   <p className="text-center text-muted-foreground">
-                    {t("form.noResults")}
+                    {tTools("noResults")}
                   </p>
                 }
               />

@@ -12,6 +12,8 @@
     "deleteSuccess": "Sikeresen törölve",
     "deleteError": "Sikertelen törlés",
     "unknownError": "Hiba történt, próbáld újra később",
+    "noResults": "Nincs találat",
+    "search": "Keresés...",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"
@@ -48,12 +50,11 @@
         "year": "Év",
         "genre": "Műfaj",
         "url": "Lista linkje",
-        "pendingUrl": "Besorolásra váró lista linkje",
+        "pendingUrl": "Besorolásra váró polc linkje",
         "readers": "Zsűritagok"
       },
       "form": {
-        "selectReaders": "Válassz zsűritagokat",
-        "noResults": "Nincs találat"
+        "selectReaders": "Válassz zsűritagokat"
       },
       "table": {
         "title": "Könyvlisták",

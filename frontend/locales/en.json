@@ -12,6 +12,8 @@
     "deleteSuccess": "Delete successful",
     "deleteError": "Failed to delete",
     "unknownError": "An unknown error occurred",
+    "noResults": "No results found",
+    "search": "Search...",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"
@@ -63,8 +65,7 @@
         "readers": "Jury members"
       },
       "form": {
-        "selectReaders": "Select jury members",
-        "noResults": "No results found"
+        "selectReaders": "Select jury members"
       },
       "table": {
         "title": "Book lists",
