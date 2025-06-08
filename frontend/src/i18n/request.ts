@@ -2,7 +2,15 @@ import merge from "lodash/merge";
 import { getRequestConfig } from "next-intl/server";
 import { cookies } from "next/headers";
 import { defaultLocale, supportedLocales } from "./locales";
+import huLocale from "../../locales/hu.json";
 import enLocale from "../../locales/en.json";
+
+const messagesByLocale = {
+  en: enLocale,
+  // Fallback to EN messages if locale is partially translated
+  // TODO: once the app is fully translated, make hungarian the default fallback
+  hu: merge({}, enLocale, huLocale),
+};
 
 export default getRequestConfig(async () => {
   let currentUserLocale = (await cookies())?.get("USER_LOCALE")?.value;
@@ -10,11 +18,7 @@ export default getRequestConfig(async () => {
     currentUserLocale = undefined;
   }
   const locale = currentUserLocale || defaultLocale;
-  // Fallback to EN messages if locale is partially translated
-  // FIXME: once the app is fully translated, make hungarian the default fallback
-  const messages = locale === "en"
-    ? enLocale
-    : merge(enLocale, await import(`../../locales/${locale}.json`));
+  const messages = messagesByLocale[locale as keyof typeof messagesByLocale];
 
   return {
     locale,
