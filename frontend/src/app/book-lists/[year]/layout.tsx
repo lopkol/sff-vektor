@@ -9,5 +9,9 @@ export default async function YearLayout({
 }) {
   const { year } = await params;
 
-  return <BookListYearProvider year={year}>{children}</BookListYearProvider>;
+  return (
+    <BookListYearProvider year={Number(year)}>
+      {children}
+    </BookListYearProvider>
+  );
 }

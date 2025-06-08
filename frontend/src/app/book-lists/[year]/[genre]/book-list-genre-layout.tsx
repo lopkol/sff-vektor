@@ -46,7 +46,7 @@ export function BookListLayout({ children }: { children: React.ReactNode }) {
 
   const rootPages: MenuItem[] = [
     {
-      title: year,
+      title: year.toString(),
       url: "#",
     },
     {
