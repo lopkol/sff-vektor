@@ -157,7 +157,7 @@ For staging deployment, any push or merge in the `main` branch will trigger a de
 **API Endpoint :** https://sffvektorns3dmhzdps-sff-vektor-backend.functions.fnc.fr-par.scw.cloud
 
 > [!NOTE]
-> Startup might be a bit slow since both DB and servers are serverless, it has to starts a bunch of stuff.
+> Startup might be a bit slow since both DB and servers are serverless, it has to start a bunch of stuff.
 > 
 > If you get the error `activation request timeout`, refresh the page and it should work.
 
@@ -167,5 +167,5 @@ For staging deployment, any push or merge in the `main` branch will trigger a de
 Any Github Release created will trigger a deployment in production.
 
 > [!NOTE]
-> The workflow is configured but this environnement is not setup yet. As of now, the CD will fail.
+> The workflow is configured but this environnement is not set up yet. As of now, the CD will fail.
 
