@@ -38,7 +38,6 @@ export function AuthorDialog(
     queryKey: ["author", authorId],
     queryFn: () => getAuthor(authorId!),
     enabled: !!authorId,
-    refetchOnMount: "always",
   });
 
   const { mutate: createOrUpdateAuthor, isPending: isSaving } = useMutation({
