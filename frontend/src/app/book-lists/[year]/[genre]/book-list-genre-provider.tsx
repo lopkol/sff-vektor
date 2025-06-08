@@ -1,11 +1,12 @@
 "use client";
 
 import { capitalize } from "@/lib/utils";
+import { Genre } from "@/types/book-list";
 import type React from "react";
 import { createContext, useContext } from "react";
 
 type BookListGenreContextType = {
-  genre: string;
+  genre: Genre;
   genreName: string;
 };
 
@@ -28,7 +29,7 @@ export function BookListGenreProvider({
   genre,
 }: {
   children: React.ReactNode;
-  genre: string;
+  genre: Genre;
 }) {
   const genreName = capitalize(genre);
 

@@ -2,8 +2,8 @@ import { AxiosResponse } from "axios";
 import http from "./http";
 import {
   BookList,
-  BookListGenre,
   CreateBookList,
+  Genre,
   ShortBookList,
 } from "@/types/book-list";
 
@@ -17,7 +17,7 @@ export async function getBookLists(): Promise<ShortBookList[]> {
 
 export async function getBookList(
   year: number,
-  genre: BookListGenre,
+  genre: Genre,
 ): Promise<BookList> {
   const response = await http.get<BookList>(`/book-lists/${year}/${genre}`);
   return response.data;
@@ -49,7 +49,7 @@ export async function updateBookList(
 
 export async function deleteBookList(
   year: number,
-  genre: BookListGenre,
+  genre: Genre,
 ): Promise<void> {
   await http.delete(`/book-lists/${year}/${genre}`);
 }

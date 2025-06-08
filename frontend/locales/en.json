@@ -11,7 +11,13 @@
     "updateError": "Failed to update",
     "deleteSuccess": "Delete successful",
     "deleteError": "Failed to delete",
-    "unknownError": "An unknown error occurred"
+    "unknownError": "An unknown error occurred",
+    "noResults": "No results found",
+    "search": "Search...",
+    "genres": {
+      "sciFi": "Sci-Fi",
+      "fantasy": "Fantasy"
+    }
   },
   "RoleCheck": {
     "unauthorizedTitle": "Unauthorized",
@@ -51,10 +57,6 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "BookLists": {
-      "genres": {
-        "sciFi": "Sci-Fi",
-        "fantasy": "Fantasy"
-      },
       "props": {
         "year": "Year",
         "genre": "Genre",
@@ -63,8 +65,7 @@
         "readers": "Jury members"
       },
       "form": {
-        "selectReaders": "Select jury members",
-        "noResults": "No results found"
+        "selectReaders": "Select jury members"
       },
       "table": {
         "title": "Book lists",
@@ -141,9 +142,57 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "Admin": {
-      "title": "Admin of {genreName} books",
-      "description": "Card Description",
-      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+      "title": "{year} {genreName} book list",
+      "addBook": "Add book",
+      "syncFromMoly": "Sync from moly",
+      "syncSuccess": "Sync successful",
+      "syncError": "Failed to sync",
+      "props": {
+        "approved": "Approved",
+        "pending": "Pending",
+        "year": "Year",
+        "genre": "Genre",
+        "authors": "Authors",
+        "title": "Title",
+        "series": "Series",
+        "seriesNumber": "Volume number in series",
+        "alternatives": "Variants",
+        "alternativeName": "Variant name",
+        "alternativeUrls": "URLs"
+      },
+      "form": {
+        "alternativeNamePlaceholder": "magyar",
+        "alternativeUrlPlaceholder": "https://...",
+        "addAlternativeUrl": "Add URL",
+        "addAlternative": "Add variant",
+        "manageAuthors": "Manage authors"
+      },
+      "authors": {
+        "title": "Authors",
+        "approved": "Approved",
+        "name": "Name",
+        "sortName": "Sort name",
+        "url": "Moly URL",
+        "add": "Add author",
+        "edit": "Edit author"
+      },
+      "error": {
+        "year": "Year is required",
+        "yearMin": "Year must be greater than 1900",
+        "titleRequired": "Title is required",
+        "nameRequired": "Name is required",
+        "url": "Invalid URL",
+        "authorNameRequired": "Author name is required",
+        "authorSortNameRequired": "Sort name is required"
+      },
+      "dialog": {
+        "createTitle": "Add new book",
+        "editTitle": "Edit book",
+        "deleteConfirmTitle": "Delete book",
+        "deleteConfirmMessage": "Are you sure you want to delete this book?",
+        "deleteAuthorConfirmTitle": "Delete author",
+        "deleteAuthorConfirmMessage": "Are you sure you want to delete the author {name}?"
+      }
     }
   }
 }

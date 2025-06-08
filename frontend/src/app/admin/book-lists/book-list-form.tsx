@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useMemo, useState } from "react";
-import { BookList, BookListGenre, CreateBookList } from "@/types/book-list";
+import { BookList, CreateBookList, Genre } from "@/types/book-list";
 import { useQuery } from "@tanstack/react-query";
 import { getReaders } from "@/services/readers";
 import { Reader } from "@/types/reader";
@@ -142,15 +142,18 @@ export function BookListForm(
               <Select
                 {...field}
                 disabled={!!bookList}
-                onValueChange={(value) =>
-                  field.onChange(value as BookListGenre)}
+                onValueChange={(value) => field.onChange(value as Genre)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder={t("props.genre")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sci-fi">{t("genres.sciFi")}</SelectItem>
-                  <SelectItem value="fantasy">{t("genres.fantasy")}</SelectItem>
+                  <SelectItem value="sci-fi">
+                    {tTools("genres.sciFi")}
+                  </SelectItem>
+                  <SelectItem value="fantasy">
+                    {tTools("genres.fantasy")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>
@@ -215,7 +218,7 @@ export function BookListForm(
                 placeholder={t("form.selectReaders")}
                 emptyIndicator={
                   <p className="text-center text-muted-foreground">
-                    {t("form.noResults")}
+                    {tTools("noResults")}
                   </p>
                 }
               />

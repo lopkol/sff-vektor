@@ -11,7 +11,13 @@
     "updateError": "Sikertelen módosítás",
     "deleteSuccess": "Sikeresen törölve",
     "deleteError": "Sikertelen törlés",
-    "unknownError": "Hiba történt, próbáld újra később"
+    "unknownError": "Hiba történt, próbáld újra később",
+    "noResults": "Nincs találat",
+    "search": "Keresés...",
+    "genres": {
+      "sciFi": "Sci-Fi",
+      "fantasy": "Fantasy"
+    }
   },
   "RoleCheck": {
     "unauthorizedTitle": "Jogosulatlan hozzáférés",
@@ -40,20 +46,15 @@
       "bookLists": "Könyvlisták"
     },
     "BookLists": {
-      "genres": {
-        "sciFi": "Sci-Fi",
-        "fantasy": "Fantasy"
-      },
       "props": {
         "year": "Év",
         "genre": "Műfaj",
         "url": "Lista linkje",
-        "pendingUrl": "Besorolásra váró lista linkje",
+        "pendingUrl": "Besorolásra váró polc linkje",
         "readers": "Zsűritagok"
       },
       "form": {
-        "selectReaders": "Válassz zsűritagokat",
-        "noResults": "Nincs találat"
+        "selectReaders": "Válassz zsűritagokat"
       },
       "table": {
         "title": "Könyvlisták",
@@ -66,7 +67,7 @@
         "deleteConfirmMessage": "Biztosan törlöd ezt a könyvlistát?"
       },
       "error": {
-        "year": "Év megadása szükséges",
+        "year": "Év megadása kötelező",
         "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
         "url": "Érvénytelen link",
         "pendingUrl": "Érvénytelen link",
@@ -95,10 +96,71 @@
         "editTitle": "Felhasználó szerkesztése"
       },
       "error": {
-        "name": "Név megadása szükséges",
+        "name": "Név megadása kötelező",
         "email": "Érvénytelen email",
-        "role": "Státusz megadása szükséges",
+        "role": "Státusz megadása kötelező",
         "molyUrl": "Érvénytelen link"
+      }
+    }
+  },
+  "BookList": {
+    "Nav": {
+      "list": "Lista",
+      "reading": "Olvasások",
+      "table": "Táblázat",
+      "admin": "Admin"
+    },
+    "Admin": {
+      "title": "{year} {genreName} könyvlista",
+      "addBook": "Új könyv",
+      "syncFromMoly": "Frissítés molyról",
+      "syncSuccess": "Sikeresen frissítve",
+      "syncError": "Frissítés közben hiba történt",
+      "props": {
+        "approved": "Jóváhagyva",
+        "pending": "Besorolásra vár",
+        "year": "Év",
+        "genre": "Műfaj",
+        "authors": "Szerzők",
+        "title": "Cím",
+        "series": "Sorozat",
+        "seriesNumber": "Kötet sorszáma",
+        "alternatives": "Alternatívák",
+        "alternativeName": "Név",
+        "alternativeUrls": "Linkek"
+      },
+      "form": {
+        "alternativeNamePlaceholder": "magyar",
+        "alternativeUrlPlaceholder": "https://...",
+        "addAlternativeUrl": "Új link",
+        "addAlternative": "Új alternatíva",
+        "manageAuthors": "Szerzők szerkesztése"
+      },
+      "authors": {
+        "title": "Szerzők",
+        "approved": "Jóváhagyva",
+        "name": "Név",
+        "sortName": "Rendezési név",
+        "url": "Moly link",
+        "add": "Új szerző",
+        "edit": "Szerző szerkesztése"
+      },
+      "error": {
+        "year": "Év megadása kötelező",
+        "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
+        "titleRequired": "Cím megadása kötelező",
+        "nameRequired": "Név megadása kötelező",
+        "url": "Érvénytelen link",
+        "authorNameRequired": "Szerző nevének megadása kötelező",
+        "authorSortNameRequired": "Rendezési név megadása kötelező"
+      },
+      "dialog": {
+        "createTitle": "Új könyv",
+        "editTitle": "Könyv szerkesztése",
+        "deleteConfirmTitle": "Könyv törlése",
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?",
+        "deleteAuthorConfirmTitle": "Szerző törlése",
+        "deleteAuthorConfirmMessage": "Biztosan törlöd a következő szerzőt: {name}?"
       }
     }
   }
