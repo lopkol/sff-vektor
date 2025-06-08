@@ -4,7 +4,8 @@
     "dev": "deno run --watch --allow-net --allow-read --allow-env --allow-run main.ts",
     "prod": "deno run --allow-net --allow-read --allow-env --allow-run main.ts",
     "test": "deno test --allow-read --allow-env --parallel",
-    "migration": "deno run --allow-net --allow-read --allow-env --allow-run migration-cli.ts"
+    "migration": "deno run --allow-net --allow-read --allow-env --allow-run migration-cli.ts",
+    "cache": "deno cache main.ts"
   },
   "imports": {
     "@/": "./",

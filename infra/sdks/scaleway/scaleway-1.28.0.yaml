@@ -1,0 +1,4 @@
+packageDeclarationVersion: 1
+name: scaleway
+version: 1.28.0
+downloadUrl: github://api.github.com/pulumiverse

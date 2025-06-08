@@ -1,0 +1,18 @@
+config:
+  neon:apiKey:
+    secure: AAABAOQGeozENoCiUeRtJq6C1+sS/9sAkw0jN/i1Nh7bujcK8mgAG/3xfBe4lPIAaV27amIL7iYwlcG/hmkijxBWsBkyqJOD8jqMtpxBNlO4Gi+q4AufOZCeTF3ejhWWboOlmh4=
+  scaleway:access_key:
+    secure: AAABAKpQSGBLhcbKBKpHoVtj5KnACjH2I+Lubt7cDdz8l291hF05jsby1J6Uq6cPghfaEA==
+  scaleway:organization_id:
+    secure: AAABAJ9WBDSkw7OnwyI7Oey4ieHjD9DFEAQvKTcacZUolM3+dm2KHVpLxNVtUSr9j9UidwzN2rhcbfkXGy5tjoYJOjY=
+  scaleway:region: fr-par
+  scaleway:secret_key:
+    secure: AAABAElD2KB7xa3L82F8siYDXUhw3VxUB5wE3YDjOzyhTr2AESj3MYZgzw1RMKLwytVwalDyjBpQWsqWeJmczvJjFZ8=
+  sff-vektor:default_admin_email:
+    secure: AAABAMW/iJJAM2riUefATZDF4ilcP1Gg48cDAGSf2IgJ/DLWbwZFzJBoPrU2AdqxUXvNJ3db
+  sff-vektor:google_client_id:
+    secure: AAABAC3Egl862HCLy6GzGk+7lBSyM1aifbrgXrJfARY2mZxrQw5AnWqEYwXNEzBg615n0UHyli6F8ZwId/Hch4sUJuGWTmlyxZuVxHAjXbTB/IalQoHeEMudNUhxnpOtVvjFBmaY3A==
+  sff-vektor:google_client_secret:
+    secure: AAABADBZ+JkYii3VUkBQ2VYZNKvEasoG1bnw8E33m+hyrjsHJCw2j6zAis2cM0zQm2kxKapssDE=
+  sff-vektor:next_auth_secret:
+    secure: AAABAGQyo/88YRYmllHJQ/lmAMoxn3mDi8NoUWc1t/KwmP3Zbaa5WgVYxRBxBzoL2mU4Un8w9OyPb9ZEAY9QDv5ahmxuoFFRTUM2

@@ -1,7 +1,8 @@
 {
-  "workspace": ["lib", "api", "scheduler", "int-tests"],
+  "workspace": ["lib", "api", "scheduler", "int-tests", "slonik-pg-driver"],
   "tasks": {
     "all:test": "deno task --recursive test",
+    "all:cache": "deno task --recursive cache",
     "migration": "deno task --filter @sffvektor/api migration",
     "api:dev": "deno task --filter @sffvektor/api dev",
     "api:prod": "deno task --filter @sffvektor/api prod",
@@ -12,6 +13,7 @@
     "cleanup": "deno fmt && deno lint"
   },
   "imports": {
+    "@logtape/logtape": "jsr:@logtape/logtape@0.10.0",
     "@slonik/pg-driver": "npm:@slonik/pg-driver@46.4.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/testing": "jsr:@std/testing@1",

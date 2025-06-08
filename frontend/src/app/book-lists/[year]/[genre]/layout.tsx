@@ -6,7 +6,7 @@ export default async function GenreLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ year: string; genre: string }>;
+  params: Promise<{ genre: string }>;
 }) {
   const { genre } = await params;
 

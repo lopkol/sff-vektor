@@ -3,7 +3,8 @@
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-env main.ts",
     "prod": "deno run --allow-net --allow-env main.ts",
-    "test": "deno test --allow-env --parallel"
+    "test": "deno test --allow-env --parallel",
+    "cache": "deno cache main.ts"
   },
   "imports": {
     "@/": "./",
