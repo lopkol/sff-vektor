@@ -1,5 +1,5 @@
 import { createPool, type DatabasePool } from "slonik";
-import { createPgDriverFactory } from "@slonik/pg-driver";
+import { createPgDriverFactory } from "@sffvektor/slonik-pg-driver";
 
 let globalPool: DatabasePool | undefined;
 

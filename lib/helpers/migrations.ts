@@ -1,5 +1,6 @@
 import { resolveBinary } from "dbmate";
 import * as path from "jsr:@std/path";
+import { logger } from "@sffvektor/lib";
 
 const migrationDirectory = getMigrationDir();
 
@@ -12,7 +13,7 @@ function getMigrationDir() {
   return path.join("..", "api", MIGRATION_DIR);
 }
 
-export async function runDbmate(comand: string, args: string[] = []) {
+export async function runDbmate(cmd: string, args: string[] = []) {
   const command = new Deno.Command(resolveBinary(), {
     args: [
       "--url",
@@ -21,8 +22,8 @@ export async function runDbmate(comand: string, args: string[] = []) {
       migrationDirectory,
       "--schema-file",
       path.join(migrationDirectory, "schema.sql"),
-      comand,
       ...args,
+      cmd,
     ],
     stdin: "piped",
     stdout: "piped",
@@ -31,5 +32,13 @@ export async function runDbmate(comand: string, args: string[] = []) {
   await process.stdin.close();
   const result = await process.output();
   // TODO: improve log so it can be disabled if needed
-  console.log(new TextDecoder().decode(result.stdout));
+  const stdout = new TextDecoder().decode(result.stdout).replace(
+    /^\s+|\s+$/g,
+    "",
+  );
+  if (stdout) {
+    logger.debug(
+      stdout,
+    );
+  }
 }

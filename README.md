@@ -116,3 +116,56 @@ export default function MyComponent() {
   }
 }
 ```
+
+
+## Infrastructure
+
+Infrastructure is managed from the code (aka infra-as-code) using [Pulumi](https://www.pulumi.com/).
+
+The code that describes the infrastructure is available in `./infra/Pulumi.yaml`.
+
+Environment specific resources, config, and secrets are stored in `Pulumi.[env].yaml`.
+
+### Diagram
+
+```mermaid
+architecture-beta
+  group scaleway(cloud)[Scaleway Serverless Container]
+  group neon(cloud)[Neon Postgres]
+  
+  service db(database)[Postgres DB] in neon
+  
+  service nextjs(server)[NextJS] in scaleway
+  
+  service api(server)[API] in scaleway
+  service scheduler(server)[Scheduler] in scaleway
+
+  db:B -- R:api
+  db:L -- R:scheduler
+  api:L -- R:nextjs
+```
+
+
+### Deployment workflows
+
+#### Staging
+
+For staging deployment, any push or merge in the `main` branch will trigger a deployment to staging.
+
+**Frontend Endpoint :** https://sffvektorns3dmhzdps-sff-vektor-frontend.functions.fnc.fr-par.scw.cloud
+
+**API Endpoint :** https://sffvektorns3dmhzdps-sff-vektor-backend.functions.fnc.fr-par.scw.cloud
+
+> [!NOTE]
+> Startup might be a bit slow since both DB and servers are serverless, it has to start a bunch of stuff.
+> 
+> If you get the error `activation request timeout`, refresh the page and it should work.
+
+
+#### Production
+
+Any Github Release created will trigger a deployment in production.
+
+> [!NOTE]
+> The workflow is configured but this environnement is not set up yet. As of now, the CD will fail.
+

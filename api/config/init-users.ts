@@ -1,6 +1,7 @@
 import {
   createUser,
   getOrCreateDatabasePool,
+  logger,
   UserRole,
   userWithEmailExists,
 } from "@sffvektor/lib";
@@ -14,11 +15,11 @@ export async function initDefaultAdminUser() {
         "DEFAULT_ADMIN_EMAIL and DEFAULT_ADMIN_USERNAME must be set",
       );
     }
-    console.log("No default admin user set, skipping user creation");
+    logger.info("No default admin user set, skipping user creation");
     return;
   }
   if (await userWithEmailExists(pool, adminEmail!)) {
-    console.log("Default admin user already exists, skipping user creation");
+    logger.info("Default admin user already exists, skipping user creation");
     return;
   }
   await createUser(pool, {
@@ -27,5 +28,5 @@ export async function initDefaultAdminUser() {
     role: UserRole.Admin,
     isActive: true,
   });
-  console.log("Default admin user created");
+  logger.info("Default admin user created");
 }

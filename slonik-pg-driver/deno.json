@@ -1,0 +1,16 @@
+{
+  "name": "@sffvektor/slonik-pg-driver",
+  "version": "0.1.0",
+  "exports": "./mod.ts",
+  "tasks": {
+    "test": "deno test --allow-env --allow-read --parallel"
+  },
+  "imports": {
+    "@/": "./",
+    "@types/pg": "npm:@types/pg@^8.11.13",
+    "pg": "npm:pg@8.13.1",
+    "pg-query-stream": "npm:pg-query-stream@4.7.1",
+    "pg-types": "npm:pg-types@4.0.2",
+    "postgres-array": "npm:postgres-array@3.0.2"
+  }
+}

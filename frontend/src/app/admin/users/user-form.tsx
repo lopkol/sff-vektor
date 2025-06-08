@@ -15,7 +15,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { User, UserForm as UserFormType } from "@/types/user";
+import { User, UserForm as UserFormType, UserRole } from "@/types/user";
 import { useMemo } from "react";
 
 interface UserFormProps {
@@ -36,7 +36,7 @@ export function UserForm(
       z.object({
         name: z.string().min(1, { message: t("error.name") }),
         email: z.string().email({ message: t("error.email") }),
-        role: z.enum(["admin", "user"]),
+        role: z.enum([UserRole.Admin, UserRole.User]),
         molyUrl: z.string().url({ message: t("error.molyUrl") }).or(
           z.literal("").nullable(),
         ),
@@ -53,7 +53,7 @@ export function UserForm(
     defaultValues: {
       name: user?.name ?? "",
       email: user?.email ?? "",
-      role: user?.role ?? "user",
+      role: user?.role ?? UserRole.User,
       molyUrl: user?.molyUrl ?? "",
     },
   });
@@ -114,8 +114,12 @@ export function UserForm(
                   <SelectValue placeholder={t("props.role")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">{t("roles.admin")}</SelectItem>
-                  <SelectItem value="user">{t("roles.user")}</SelectItem>
+                  <SelectItem value={UserRole.Admin}>
+                    {t("roles.admin")}
+                  </SelectItem>
+                  <SelectItem value={UserRole.User}>
+                    {t("roles.user")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
