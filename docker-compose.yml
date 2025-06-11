@@ -9,3 +9,45 @@ services:
       TZ: UTC
       PGTZ: UTC
     command: ["postgres", "-c", "log_statement=all"]
+
+  # api:
+  #   build:
+  #     context: .
+  #     target: api
+  #     tags:
+  #       - sff-vektor-api
+  #   ports:
+  #     - "3030:3030"
+  #   environment:
+  #     APP_ENV: local
+  #     # DATABASE_URL: "postgres://postgres:ThisIsNotAPassword@postgres:5432/postgres?sslmode=disable"
+  #     DATABASE_URL: "postgresql://neondb_owner:npg_jYf2WI3JXxvR@ep-green-wildflower-a2goeyve-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+  #     DATA_ENCRYPTION_SECRET: "super-amazing-dev-secret"
+  #     EMAIL_SALT: "kbGBDGpjjCsgCoCMDzs8yrZRdkykT4NivZMqla5Wa7htHJFHkohtU7OhZhinwKesb8HcAAskEfSNg4zg1iL3iUmJgkjaJ95jjACNwdR1ipaL39rk8pUpQS6M"
+  #     DEFAULT_ADMIN_EMAIL: sylvain.martyg@gmail.com
+  #     GOOGLE_CLIENT_ID: 79996927805-bir40vchbeb3tv87n9a1fc82ube9nhd4.apps.googleusercontent.com
+  #     GOOGLE_CLIENT_SECRET: SGU1x8lboBcUfbGa10h8ozfj
+  #   depends_on:
+  #     - postgres
+
+  # # scheduler:
+  # #   build:
+  # #     context: .
+  # #     target: scheduler
+  # #     tags:
+  # #       - sff-vektor-scheduler
+  # #   depends_on:
+  # #     - postgres
+
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     tags:
+  #       - sff-vektor-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NEXTAUTH_SECRET: fJqaGLGYq7KMvodIzEEcyNcaZxqaSvZoKYxp1M0ri5I
+  #     GOOGLE_CLIENT_ID: 79996927805-bir40vchbeb3tv87n9a1fc82ube9nhd4.apps.googleusercontent.com
+  #     GOOGLE_CLIENT_SECRET: SGU1x8lboBcUfbGa10h8ozfj
+  #     INTERNAL_API_URL: http://api:3030/api

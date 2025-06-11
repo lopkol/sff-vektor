@@ -13,7 +13,7 @@ export async function getServerAuthSession() {
  */
 export async function getAuthHeader() {
   const session = await getSession();
-  if (!session?.accessToken) {
+  if (!session?.accessToken || session.error === "RefreshAccessTokenError") {
     return undefined;
   }
 
@@ -27,5 +27,5 @@ export async function getAuthHeader() {
  */
 export async function isAuthenticated() {
   const session = await getSession();
-  return !!session?.accessToken;
+  return !!session?.accessToken && session.error !== "RefreshAccessTokenError";
 }
