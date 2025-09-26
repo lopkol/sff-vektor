@@ -2,7 +2,7 @@
   "name": "@sffvektor/api",
   "tasks": {
     "dev": "deno run --watch --allow-net --allow-read --allow-env --allow-run main.ts",
-    "prod": "deno run --allow-net --allow-read --allow-env --allow-run main.ts",
+    "prod": "OTEL_DENO=true OTEL_SERVICE_NAME=sffvektor-api OTEL_METRIC_EXPORT_INTERVAL=1000 deno run --unstable-otel --allow-net --allow-read --allow-env --allow-run main.ts",
     "test": "deno test --allow-read --allow-env --parallel",
     "migration": "deno run --allow-net --allow-read --allow-env --allow-run migration-cli.ts",
     "cache": "deno cache main.ts"

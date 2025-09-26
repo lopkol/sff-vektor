@@ -9,3 +9,70 @@ services:
       TZ: UTC
       PGTZ: UTC
     command: ["postgres", "-c", "log_statement=all"]
+
+  grafana-alloy:
+    image: grafana/alloy
+    ports:
+      - 12345:12345
+      - 4317:4317
+      - 4318:4318
+    command: ["run", "--server.http.listen-addr=0.0.0.0:12345", "--storage.path=/var/lib/alloy/data", "/etc/alloy/config.alloy"]
+    configs:
+      - source: config.alloy
+        target: /etc/alloy/config.alloy
+
+configs:
+  config.alloy:
+    content: |
+      otelcol.receiver.otlp "default" {
+        grpc {
+          endpoint = "0.0.0.0:4317"
+        }
+
+        http {
+          endpoint = "0.0.0.0:4318"
+        }
+
+        output {
+          metrics = [otelcol.processor.batch.default.input]
+          logs    = [otelcol.processor.batch.default.input]
+          traces  = [otelcol.processor.batch.default.input]
+        }
+      }
+
+      otelcol.processor.batch "default" {
+        output {
+          metrics = [otelcol.exporter.prometheus.default.input]
+          logs    = [otelcol.exporter.loki.default.input]
+          traces  = [otelcol.exporter.otlp.default.input]
+        }
+      }
+  
+      // Tempo server (traces)
+      otelcol.exporter.otlp "default" {
+        client {
+          endpoint = "host.docker.internal:4817"
+        }
+      }
+
+      // Loki server (logs)
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://host.docker.internal:8000/loki/api/v1/push"
+        }
+      }
+
+      // Mimir (prometheus protocol) server (metrics)
+      otelcol.exporter.prometheus "default" {
+        forward_to = [prometheus.remote_write.default.receiver]
+      }
+
+      prometheus.remote_write "default" {
+        endpoint {
+          url = "http://host.docker.internal:8000/api/prom/push"
+        }
+      }
