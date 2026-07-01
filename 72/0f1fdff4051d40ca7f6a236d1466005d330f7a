@@ -1,0 +1,24 @@
+int-tests/lib/db/book-list_test.ts
+  s_41415b5fc2d9a6::t_dce822c5ec4e14 168-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.8",
+  "base_commit_sha": "720f1fdff4051d40ca7f6a236d1466005d330f7a",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
