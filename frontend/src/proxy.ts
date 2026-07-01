@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supportedLocales } from "./i18n/locales";
 
 // TODO: add support for user specific permissions
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
   // Ignore /api/auth/* and /api/health

@@ -83,18 +83,19 @@ export function AppNavbar({ rootPages, subPages, rootUrl }: AppNavbarProps) {
             <NavigationMenuList>
               {subPages.map((item) => (
                 <NavigationMenuItem key={item.url}>
-                  <Link href={`${rootUrl}${item.url}`} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(navigationMenuTriggerStyle(), {
-                        "flex items-center gap-2": !!item.icon,
-                        "underline bg-accent":
-                          activePage === `${rootPage.url}${item.url}`,
-                      })}
-                    >
+                  <NavigationMenuLink
+                    asChild
+                    className={cn(navigationMenuTriggerStyle(), {
+                      "flex items-center gap-2": !!item.icon,
+                      "underline bg-accent":
+                        activePage === `${rootPage.url}${item.url}`,
+                    })}
+                  >
+                    <Link href={`${rootUrl}${item.url}`}>
                       {item.icon && <item.icon />}
                       {(!isMobile || !item.icon) && item.title}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
