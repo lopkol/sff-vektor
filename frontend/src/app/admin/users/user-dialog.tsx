@@ -9,7 +9,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUser, getUser, updateUser } from "@/services/users";
 import { UserForm } from "./user-form";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,9 +21,7 @@ interface UserDialogProps {
 }
 
 export function UserDialog({ onOpenChange, user }: UserDialogProps) {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const t = useTranslations("Admin.Users");
+  const queryClient = useQueryClient();  const t = useTranslations("Admin.Users");
   const tTools = useTranslations("Tools");
 
   // If editing, fetch the latest user data
@@ -47,17 +45,12 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["users"] });
         queryClient.invalidateQueries({ queryKey: ["readers"] });
-        toast({
-          title: user ? tTools("updateSuccess") : tTools("saveSuccess"),
-          variant: "success",
-        });
+        toast.success(user ? tTools("updateSuccess") : tTools("saveSuccess"));
         onOpenChange(false);
       },
       onError: (error: AxiosError<{ code: string }>) => {
-        toast({
-          title: user ? tTools("updateError") : tTools("saveError"),
+        toast.error(user ? tTools("updateError") : tTools("saveError"), {
           description: error.message,
-          variant: "destructive",
         });
       },
     });

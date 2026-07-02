@@ -11,7 +11,7 @@ import { useMemo, useState } from "react";
 import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { BookDialog } from "./book-dialog";
 import { CompactBook } from "@/types/book";
 
@@ -20,8 +20,6 @@ export default function AdminPage() {
   const { year } = useBookListYear();
   const { genre, genreName } = useBookListGenre();
   const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const [selectedBook, setSelectedBook] = useState<CompactBook | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -34,16 +32,10 @@ export default function AdminPage() {
     mutationFn: () => updateBooksFromMoly(year, genre),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["books", year, genre] });
-      toast({
-        title: t("syncSuccess"),
-        variant: "success",
-      });
+      toast.success(t("syncSuccess"));
     },
     onError: () => {
-      toast({
-        title: t("syncError"),
-        variant: "destructive",
-      });
+      toast.error(t("syncError"));
     },
   });
 
