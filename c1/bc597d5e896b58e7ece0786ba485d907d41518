@@ -1,0 +1,23 @@
+frontend/src/components/ui/multiple-selector.tsx
+  s_41415b5fc2d9a6::t_a26b4a89e8f08b 274-279
+  s_41415b5fc2d9a6::t_5f63abab4a9439 475
+  s_41415b5fc2d9a6::t_1dad55ce3f2f24 523
+frontend/src/components/auth-button.tsx
+  s_41415b5fc2d9a6::t_e4834ff91d9ec0 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "c1bc597d5e896b58e7ece0786ba485d907d41518",
+  "prompts": {},
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
