@@ -1,0 +1,19 @@
+frontend/src/app/globals.css
+  s_41415b5fc2d9a6::t_8292a00ffb1ba5 7-39,42-73,76-111,116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "d8eb6f40605113fe341eff7457d02da58f0a6d38",
+  "prompts": {},
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
