@@ -1,0 +1,21 @@
+config:
+  ovh:endpoint: ovh-eu
+  ovh:applicationKey:
+    secure: AAABAFQraLQJulJDa7gNzV/3qW//c/IYIqidCBclKx+pRDFfTEEduXxQgVoSmn1G
+  ovh:applicationSecret:
+    secure: AAABACMjNw3K+QXgh9CCPnG3GYHCLo/tTPI8I/Ofl3qRGXs5etzS5E+5aKltF/BF9zELcOC7opnEHg5FJuFArw==
+  ovh:consumerKey:
+    secure: AAABAM6poiH5SV5bYNZ0cl8Fwbht4ErUmKKRtBZGFXiRrEzg3nvBzCHxDeOcjU6LA8hqdcBjCXEgX2mvF1wmwg==
+  neon:apiKey:
+    secure: AAABAFyIy98+sVawlEUUAPKTNn/T9TrddLKmi0vN8oufxZ26Z423eEKbl9pV0kCwjh1gXcim6jnSjJGHfNehlng0ZSb8sbHCxW5VKDmtx4NNZPS2DAUTynlV0blJCcGtS9I1wI0=
+  sff-vektor:googleClientId:
+    secure: AAABAPIwm9Vo6wxkvVHaCNkgQE5B7X8er8c/9UHv/n9flOZh9a2sjy345xzbGYwOpq4dNU+Puko0aVKPH5S7IWMZlLypTp1G1ruMGbqUnxGbDDig1LK/ENzL/ciRzZbKlT21sLuEGg==
+  sff-vektor:googleClientSecret:
+    secure: AAABANQntu/cF/ssjA+ek1ghYUGh0M0Xj38yzYFNqXQjRBXKnOzcaZRJ6F5Adfs2Ns0DpYJyxsg=
+  sff-vektor:nextAuthSecret:
+    secure: AAABADf31Fs6KvJnubOF599x8+TvVf0wcS1K+B+A7LHltkm/WrXdG9dHWttYugzNsR2yIC1NQDsO0Ylb3QVXUW9rxXowi88lOuNv
+  sff-vektor:defaultAdminEmail:
+    secure: AAABAFKmk/QS4HcToE446MlebOTJ3zPHg1Aul+fm7VXPYvucX+emToVg8FtBcuW6OzD0bEmy
+  sff-vektor:githubContainerRegistryUsername: sylvainmarty
+  sff-vektor:githubPatReadContainerRegistry:
+    secure: AAABAPA/7X/l8HxECe9BnG9pnaP89/CcJg6fQbxuT201R4DGcsrEud1yuB4pJ/uLBSUDtVU+yluSl6zx3n1v9MbX7llBPhhm

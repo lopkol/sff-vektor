@@ -1,0 +1,17 @@
+values:
+  stackRefs:
+    fn::open::pulumi-stacks:
+      stacks:
+        sff-vektor:
+          stack: sff-vektor/prod
+  infra:
+    dockerConfigGithubReadContainerRegistry: ${stackRefs.sff-vektor.dockerConfigGithubReadContainerRegistry}
+  environmentVariables:
+    DATABASE_URL: ${stackRefs.sff-vektor.neonDatabaseUrl}
+    WEB_URL: ${stackRefs.sff-vektor.frontendEndpoint}
+    DEFAULT_ADMIN_EMAIL: ${stackRefs.sff-vektor.defaultAdminEmail}
+    GOOGLE_CLIENT_ID: ${stackRefs.sff-vektor.googleClientId}
+    GOOGLE_CLIENT_SECRET: ${stackRefs.sff-vektor.googleClientSecret}
+    NEXTAUTH_URL: ${stackRefs.sff-vektor.frontendEndpoint}
+    NEXT_PUBLIC_API_URL: ${stackRefs.sff-vektor.apiEndpoint}/api
+    NEXTAUTH_SECRET: ${stackRefs.sff-vektor.nextAuthSecret}
