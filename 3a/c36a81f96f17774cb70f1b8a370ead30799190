@@ -1,0 +1,252 @@
+infra/Pulumi.prod.yaml
+  s_26f397adcc2a8b::t_ecfd8eafff1b69 1-3,5,7,9,11,13,15,17,20
+  h_c79d0d58c8ed87 4,6,8,10,12,14,16,18-19,21
+infra/pulumi-esc.prod.yaml
+  s_26f397adcc2a8b::t_d9a230bb19b3d2 1-17
+.github/workflows/cd.yaml
+  h_c79d0d58c8ed87 213-283
+  s_26f397adcc2a8b::t_a3e1408ef2d0e1 5,13-15,18-39,48,86-128,149,158,203
+infra/Pulumi.yaml
+  s_26f397adcc2a8b::t_9b2e791e4310ec 3-6,8,10-17
+infra/package.json
+  s_26f397adcc2a8b::t_098adf36aac8c5 2
+  s_26f397adcc2a8b::t_9eb9caf9e5846f 1
+  s_26f397adcc2a8b::t_f7cd0dbbd45a43 3-5
+  s_718e70f500560f::t_baaa99ecebb1db 6-13
+infra/src/main.ts
+  s_26f397adcc2a8b::t_64e5d89ac4b86c 19-20
+  s_26f397adcc2a8b::t_940c1ddcfc037b 1-18,21-116
+infra/.nvmrc
+  s_26f397adcc2a8b::t_7d33de2e7bc729 1
+infra/.gitignore
+  s_26f397adcc2a8b::t_e114ac1734a343 1-2
+infra/.npmrc
+  s_26f397adcc2a8b::t_c0dd81db816a8b 1
+infra/package-lock.json
+  s_26f397adcc2a8b::t_abb3f095a14608 1-2675
+infra/sdks/neon/README.md
+  s_26f397adcc2a8b::t_dd463e727b76e0 1-3
+infra/sdks/neon/apiKey.ts
+  s_26f397adcc2a8b::t_2c89ab2b2292e3 1-93
+infra/sdks/neon/bin/apiKey.d.ts
+  s_26f397adcc2a8b::t_62c2f78c9bb41a 1-56
+infra/sdks/neon/bin/apiKey.js
+  s_26f397adcc2a8b::t_6644f9c87bf8e7 1-53
+infra/sdks/neon/bin/apiKey.js.map
+  s_26f397adcc2a8b::t_7a260c1e80ea39 1
+infra/sdks/neon/bin/branch.d.ts
+  s_26f397adcc2a8b::t_1b5dc8c7a59a2b 1-125
+infra/sdks/neon/bin/branch.js
+  s_26f397adcc2a8b::t_828fc7a5fbc81c 1-64
+infra/sdks/neon/bin/branch.js.map
+  s_26f397adcc2a8b::t_515cc34531ef50 1
+infra/sdks/neon/bin/config/index.d.ts
+  s_26f397adcc2a8b::t_7593271a3871ef 1
+infra/sdks/neon/bin/config/index.js
+  s_26f397adcc2a8b::t_f9bae4d1b0ab95 1-21
+infra/sdks/neon/bin/config/index.js.map
+  s_26f397adcc2a8b::t_8795d191293b0a 1
+infra/sdks/neon/bin/config/vars.d.ts
+  s_26f397adcc2a8b::t_fb7e782cccbfdd 1-4
+infra/sdks/neon/bin/config/vars.js
+  s_26f397adcc2a8b::t_1e6110b1033b63 1-13
+infra/sdks/neon/bin/config/vars.js.map
+  s_26f397adcc2a8b::t_26319e706fc50a 1
+infra/sdks/neon/bin/database.d.ts
+  s_26f397adcc2a8b::t_0ce32d79682e08 1-87
+infra/sdks/neon/bin/database.js
+  s_26f397adcc2a8b::t_c90edfd9ffaa09 1-66
+infra/sdks/neon/bin/database.js.map
+  s_26f397adcc2a8b::t_f9099e623f1f14 1
+infra/sdks/neon/bin/endpoint.d.ts
+  s_26f397adcc2a8b::t_e399791c99071d 1-187
+infra/sdks/neon/bin/endpoint.js
+  s_26f397adcc2a8b::t_8d9c0dcdb67f02 1-81
+infra/sdks/neon/bin/endpoint.js.map
+  s_26f397adcc2a8b::t_2d277bf2338795 1
+infra/sdks/neon/bin/getBranchEndpoints.d.ts
+  s_26f397adcc2a8b::t_e134641571602f 1-32
+infra/sdks/neon/bin/getBranchEndpoints.js
+  s_26f397adcc2a8b::t_7231fa41c1fc27 1-28
+infra/sdks/neon/bin/getBranchEndpoints.js.map
+  s_26f397adcc2a8b::t_2a258b2c2d58b0 1
+infra/sdks/neon/bin/getBranchRolePassword.d.ts
+  s_26f397adcc2a8b::t_cc2f1113c5e70f 1-31
+infra/sdks/neon/bin/getBranchRolePassword.js
+  s_26f397adcc2a8b::t_15b89b1bca2199 1-28
+infra/sdks/neon/bin/getBranchRolePassword.js.map
+  s_26f397adcc2a8b::t_d9483483124f94 1
+infra/sdks/neon/bin/getBranchRoles.d.ts
+  s_26f397adcc2a8b::t_152716f6ff2ecb 1-32
+infra/sdks/neon/bin/getBranchRoles.js
+  s_26f397adcc2a8b::t_8bf1ce4a276e22 1-28
+infra/sdks/neon/bin/getBranchRoles.js.map
+  s_26f397adcc2a8b::t_aa2d648ecf51da 1
+infra/sdks/neon/bin/getBranches.d.ts
+  s_26f397adcc2a8b::t_a1f47df1163517 1-26
+infra/sdks/neon/bin/getBranches.js
+  s_26f397adcc2a8b::t_b9a49f2bb6b47b 1-24
+infra/sdks/neon/bin/getBranches.js.map
+  s_26f397adcc2a8b::t_1686b944351702 1
+infra/sdks/neon/bin/getProject.d.ts
+  s_26f397adcc2a8b::t_591b15bc87db0d 1-30
+infra/sdks/neon/bin/getProject.js
+  s_26f397adcc2a8b::t_6cf3005c526030 1-22
+infra/sdks/neon/bin/getProject.js.map
+  s_26f397adcc2a8b::t_6df3c7af5ec6da 1
+infra/sdks/neon/bin/index.d.ts
+  s_26f397adcc2a8b::t_bbf349adf10a51 1-49
+infra/sdks/neon/bin/index.js
+  s_26f397adcc2a8b::t_286e769bf50326 1-112
+infra/sdks/neon/bin/index.js.map
+  s_26f397adcc2a8b::t_c845beba949007 1
+infra/sdks/neon/bin/jwksUrl.d.ts
+  s_26f397adcc2a8b::t_8944e8193eb3ca 1-111
+infra/sdks/neon/bin/jwksUrl.js
+  s_26f397adcc2a8b::t_5a8ef403cdb164 1-73
+infra/sdks/neon/bin/jwksUrl.js.map
+  s_26f397adcc2a8b::t_0ec68c850ad9b4 1
+infra/sdks/neon/bin/package.json
+  s_26f397adcc2a8b::t_bbc1fb1939ba37 1-27
+infra/sdks/neon/bin/project.d.ts
+  s_26f397adcc2a8b::t_17335a9520a917 1-311
+infra/sdks/neon/bin/project.js
+  s_26f397adcc2a8b::t_48a8c2a866dab3 1-93
+infra/sdks/neon/bin/project.js.map
+  s_26f397adcc2a8b::t_6e78f06266ffe3 1
+infra/sdks/neon/bin/projectPermission.d.ts
+  s_26f397adcc2a8b::t_ad75474d03a767 1-60
+infra/sdks/neon/bin/projectPermission.js
+  s_26f397adcc2a8b::t_68f02aafd8895e 1-57
+infra/sdks/neon/bin/projectPermission.js.map
+  s_26f397adcc2a8b::t_ed5316a9f1bf86 1
+infra/sdks/neon/bin/provider.d.ts
+  s_26f397adcc2a8b::t_7f6453f316aa5b 1-51
+infra/sdks/neon/bin/provider.js
+  s_26f397adcc2a8b::t_a4c4b2278ba20b 1-54
+infra/sdks/neon/bin/provider.js.map
+  s_26f397adcc2a8b::t_d65bd5c6f7cf68 1
+infra/sdks/neon/bin/role.d.ts
+  s_26f397adcc2a8b::t_7288837c89497c 1-85
+infra/sdks/neon/bin/role.js
+  s_26f397adcc2a8b::t_14380ac3f4dcec 1-67
+infra/sdks/neon/bin/role.js.map
+  s_26f397adcc2a8b::t_444b22d7ae1679 1
+infra/sdks/neon/bin/types/index.d.ts
+  s_26f397adcc2a8b::t_4df581ef35ca75 1-3
+infra/sdks/neon/bin/types/index.js
+  s_26f397adcc2a8b::t_e65a5a042e7f16 1-11
+infra/sdks/neon/bin/types/index.js.map
+  s_26f397adcc2a8b::t_5e59bac8fb2458 1
+infra/sdks/neon/bin/types/input.d.ts
+  s_26f397adcc2a8b::t_2b00e988a3c011 1-111
+infra/sdks/neon/bin/types/input.js
+  s_26f397adcc2a8b::t_047a56d17fb80b 1-5
+infra/sdks/neon/bin/types/input.js.map
+  s_26f397adcc2a8b::t_c2116876f16e21 1
+infra/sdks/neon/bin/types/output.d.ts
+  s_26f397adcc2a8b::t_0bf531f5423bef 1-91
+infra/sdks/neon/bin/types/output.js
+  s_26f397adcc2a8b::t_4d456e92ee5177 1-5
+infra/sdks/neon/bin/types/output.js.map
+  s_26f397adcc2a8b::t_dfbdb38b8917f3 1
+infra/sdks/neon/bin/utilities.d.ts
+  s_26f397adcc2a8b::t_fc0398268cc009 1-5
+infra/sdks/neon/bin/utilities.js
+  s_26f397adcc2a8b::t_d009e4cbc78c36 1-129
+infra/sdks/neon/bin/utilities.js.map
+  s_26f397adcc2a8b::t_901ebd2f8fc75a 1
+infra/sdks/neon/bin/vpcEndpointAssignment.d.ts
+  s_26f397adcc2a8b::t_050105a9b099c9 1-87
+infra/sdks/neon/bin/vpcEndpointAssignment.js
+  s_26f397adcc2a8b::t_ed8c636aa9fd74 1-69
+infra/sdks/neon/bin/vpcEndpointAssignment.js.map
+  s_26f397adcc2a8b::t_9a1123fccce627 1
+infra/sdks/neon/bin/vpcEndpointRestriction.d.ts
+  s_26f397adcc2a8b::t_8f40b208234ffb 1-75
+infra/sdks/neon/bin/vpcEndpointRestriction.js
+  s_26f397adcc2a8b::t_1fd5c7f4bbfb69 1-64
+infra/sdks/neon/bin/vpcEndpointRestriction.js.map
+  s_26f397adcc2a8b::t_286845f00d92c2 1
+infra/sdks/neon/branch.ts
+  s_26f397adcc2a8b::t_a893ab371a8870 1-173
+infra/sdks/neon/config/index.ts
+  s_26f397adcc2a8b::t_8530238cf7d5e3 1-5
+infra/sdks/neon/config/vars.ts
+  s_26f397adcc2a8b::t_3004baf0252c63 1-20
+infra/sdks/neon/database.ts
+  s_26f397adcc2a8b::t_ed74b6bf4a00be 1-137
+infra/sdks/neon/endpoint.ts
+  s_26f397adcc2a8b::t_39cf3455334c20 1-246
+infra/sdks/neon/getBranchEndpoints.ts
+  s_26f397adcc2a8b::t_abfe3514df9c8b 1-56
+infra/sdks/neon/getBranchRolePassword.ts
+  s_26f397adcc2a8b::t_69a7d9da5d2b95 1-55
+infra/sdks/neon/getBranchRoles.ts
+  s_26f397adcc2a8b::t_29e2429885109a 1-56
+infra/sdks/neon/getBranches.ts
+  s_26f397adcc2a8b::t_bf04442d906286 1-47
+infra/sdks/neon/getProject.ts
+  s_26f397adcc2a8b::t_9d0926b3687c1d 1-48
+infra/sdks/neon/index.ts
+  s_26f397adcc2a8b::t_51359588109131 1-143
+infra/sdks/neon/jwksUrl.ts
+  s_26f397adcc2a8b::t_9f25d3fe21a0be 1-168
+infra/sdks/neon/package.json
+  s_26f397adcc2a8b::t_2ef8177f508a93 1-27
+infra/sdks/neon/project.ts
+  s_26f397adcc2a8b::t_362165acb2b5fe 1-388
+infra/sdks/neon/projectPermission.ts
+  s_26f397adcc2a8b::t_e1977e459e955f 1-101
+infra/sdks/neon/provider.ts
+  s_26f397adcc2a8b::t_bd8eca079b136c 1-79
+infra/sdks/neon/role.ts
+  s_26f397adcc2a8b::t_3c1d066f374b31 1-136
+infra/sdks/neon/scripts/postinstall.js
+  s_26f397adcc2a8b::t_2c313b0fe14319 1-20
+infra/sdks/neon/tsconfig.json
+  s_26f397adcc2a8b::t_54d05dc8f56ad8 1-40
+infra/sdks/neon/types/index.ts
+  s_26f397adcc2a8b::t_d1cbf1c1f60ea3 1-13
+infra/sdks/neon/types/input.ts
+  s_26f397adcc2a8b::t_f9a8f35975b01c 1-123
+infra/sdks/neon/types/output.ts
+  s_26f397adcc2a8b::t_d38b0f6f443ca6 1-104
+infra/sdks/neon/utilities.ts
+  s_26f397adcc2a8b::t_86280b678181a7 1-135
+infra/sdks/neon/vpcEndpointAssignment.ts
+  s_26f397adcc2a8b::t_fe305b952b6ff1 1-140
+infra/sdks/neon/vpcEndpointRestriction.ts
+  s_26f397adcc2a8b::t_21dd5d41ed63ff 1-123
+infra/tsconfig.json
+  s_26f397adcc2a8b::t_d0561d23b2b9ce 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3ac36a81f96f17774cb70f1b8a370ead30799190",
+  "prompts": {},
+  "humans": {
+    "h_c79d0d58c8ed87": {
+      "author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_26f397adcc2a8b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ee6a78f5-7a6e-4acb-989d-b48e0f64221a",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    },
+    "s_718e70f500560f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "agent-a43323e79fa4cddd2",
+        "model": "unknown"
+      },
+      "human_author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  }
+}
