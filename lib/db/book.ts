@@ -1,7 +1,7 @@
 import z from "zod";
 import {
+  type CommonQueryMethods,
   createSqlTag,
-  type DatabasePoolConnection,
   type QueryResult,
 } from "slonik";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
@@ -45,10 +45,10 @@ const sql = createSqlTag({
 });
 
 export async function createBook(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   props: CreateBook,
 ): Promise<Book> {
-  return await connection.transaction<Book>(async (trConnection) => {
+  return await db.transaction<Book>(async (trConnection) => {
     try {
       const bookResult = await trConnection.query(sql.typeAlias("book")`
         insert into "book" ("molyId", "title", "year", "genre", "series", "seriesNumber", "isApproved", "isPending")
@@ -112,7 +112,7 @@ export async function createBook(
 }
 
 export async function getBooks(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   filter: BookFilter,
 ): Promise<CompactBook[]> {
   const filterFragments = [
@@ -122,7 +122,7 @@ export async function getBooks(
     filterFragments.push(sql.fragment`b."genre" = ${filter.genre}`);
   }
 
-  const books = await connection.query(sql.typeAlias("compactBook")`
+  const books = await db.query(sql.typeAlias("compactBook")`
     select
       b."id",
       b."title",
@@ -148,21 +148,21 @@ export async function getBooks(
 }
 
 export async function getBookById(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<Book> {
-  const bookResult = await connection.query(sql.typeAlias("book")`
+  const bookResult = await db.query(sql.typeAlias("book")`
     select * from "book" where "id" = ${id}
   `);
   if (!bookResult.rowCount) {
     throw new EntityNotFoundException("Book not found", { id });
   }
-  const alternativeResult = await connection.query(
+  const alternativeResult = await db.query(
     sql.typeAlias(
       "bookAlternative",
     )`select "name", "urls" from "book_alternative" where "bookId" = ${id}`,
   );
-  const authorResult = await connection.query(
+  const authorResult = await db.query(
     sql.typeAlias(
       "id",
     )`select "authorId" as id from "book_author" where "bookId" = ${id}`,
@@ -176,10 +176,10 @@ export async function getBookById(
 }
 
 export async function getBookByMolyId(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   molyId: string,
 ): Promise<Book | null> {
-  const bookResult = await connection.query(sql.typeAlias("book")`
+  const bookResult = await db.query(sql.typeAlias("book")`
     select * from "book"
     where "molyId" = ${molyId}
   `);
@@ -187,12 +187,12 @@ export async function getBookByMolyId(
     return null;
   }
   const book = bookResult.rows[0];
-  const alternativeResult = await connection.query(
+  const alternativeResult = await db.query(
     sql.typeAlias(
       "bookAlternative",
     )`select "name", "urls" from "book_alternative" where "bookId" = ${book.id}`,
   );
-  const authorResult = await connection.query(
+  const authorResult = await db.query(
     sql.typeAlias(
       "id",
     )`select "authorId" as id from "book_author" where "bookId" = ${book.id}`,
@@ -206,10 +206,10 @@ export async function getBookByMolyId(
 }
 
 export async function getBookByUrl(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   url: string,
 ): Promise<Book | null> {
-  const bookResult = await connection.query(sql.typeAlias("book")`
+  const bookResult = await db.query(sql.typeAlias("book")`
     select b.* from "book" b
     join "book_alternative" ba on ba."bookId" = b."id"
     where ba."urls" @> ${sql.jsonb([url])}
@@ -218,12 +218,12 @@ export async function getBookByUrl(
     return null;
   }
   const book = bookResult.rows[0];
-  const alternativeResult = await connection.query(
+  const alternativeResult = await db.query(
     sql.typeAlias(
       "bookAlternative",
     )`select "name", "urls" from "book_alternative" where "bookId" = ${book.id}`,
   );
-  const authorResult = await connection.query(
+  const authorResult = await db.query(
     sql.typeAlias(
       "id",
     )`select "authorId" as id from "book_author" where "bookId" = ${book.id}`,
@@ -237,7 +237,7 @@ export async function getBookByUrl(
 }
 
 export async function updateBook(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
   props: UpdateBook,
 ): Promise<Book> {
@@ -262,7 +262,7 @@ export async function updateBook(
       }
     });
 
-  return await connection.transaction<Book>(async (trConnection) => {
+  return await db.transaction<Book>(async (trConnection) => {
     try {
       let bookResult: QueryResult<z.infer<typeof bookDbSchema>>;
       if (!emptyObject(bookPropsToUpdate)) {
@@ -362,10 +362,10 @@ export async function updateBook(
 }
 
 export async function deleteBook(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<void> {
-  await connection.query(sql.typeAlias("void")`
+  await db.query(sql.typeAlias("void")`
     delete from "book" where "id" = ${id}
   `);
 }

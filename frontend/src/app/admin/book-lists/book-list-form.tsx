@@ -81,7 +81,7 @@ export function BookListForm(
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm({
+  } = useForm<CreateBookList>({
     resolver: zodResolver(schema),
     defaultValues: {
       year: bookList?.year ?? new Date().getFullYear(),
@@ -122,10 +122,8 @@ export function BookListForm(
                 {...field}
                 type="number"
                 disabled={!!bookList}
-                onChange={(e) =>
-                  field.onChange(
-                    e.target.value ? parseInt(e.target.value) : "",
-                  )}
+                value={Number.isNaN(field.value) ? "" : field.value}
+                onChange={(e) => field.onChange(e.target.valueAsNumber)}
               />
               <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
             </>

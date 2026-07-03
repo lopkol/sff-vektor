@@ -7,12 +7,12 @@ export default async function GenreLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ genre: Genre }>;
+  params: Promise<{ genre: string }>;
 }) {
   const { genre } = await params;
 
   return (
-    <BookListGenreProvider genre={genre}>
+    <BookListGenreProvider genre={genre as Genre}>
       <BookListLayout>{children}</BookListLayout>
     </BookListGenreProvider>
   );

@@ -1,5 +1,5 @@
 import z from "zod";
-import { createSqlTag, type DatabasePoolConnection } from "slonik";
+import { type CommonQueryMethods, createSqlTag } from "slonik";
 import { decrypt, encrypt, hashEmail } from "@/helpers/crypto.ts";
 import {
   isUniqueConstraintError,
@@ -50,13 +50,13 @@ const selectUserFragment = sql.fragment`
  * link the user to that reader, otherwise create reader too.
  */
 export async function createUser(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   props: CreateUser,
 ): Promise<User> {
   const emailHash = await hashEmail(props.email);
   const emailEncrypted = await encrypt(props.email);
 
-  return connection.transaction<User>(async (trConnection) => {
+  return db.transaction<User>(async (trConnection) => {
     try {
       let readerId: string | null = null;
       if (props.molyUsername && props.molyUrl) {
@@ -111,9 +111,9 @@ export async function createUser(
 }
 
 export async function getAllUsers(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
 ): Promise<User[]> {
-  const userResult = await connection.query(sql.typeAlias("user")`
+  const userResult = await db.query(sql.typeAlias("user")`
     ${selectUserFragment} order by lower(u."name") asc;
   `);
   return await Promise.all(userResult.rows.map(async (row) => ({
@@ -131,10 +131,10 @@ export async function getAllUsers(
 }
 
 export async function getUserById(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<User> {
-  const userResult = await connection.query(sql.typeAlias("user")`
+  const userResult = await db.query(sql.typeAlias("user")`
     ${selectUserFragment}
     where u."id" = ${id};
   `);
@@ -159,11 +159,11 @@ export async function getUserById(
 }
 
 export async function userWithEmailExists(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   email: string,
 ): Promise<boolean> {
   const hashedEmail = await hashEmail(email);
-  const userResult = await connection.query(sql.typeAlias("id")`
+  const userResult = await db.query(sql.typeAlias("id")`
     SELECT id FROM "user"
     where "emailHash" = ${hashedEmail};
   `);
@@ -172,11 +172,11 @@ export async function userWithEmailExists(
 }
 
 export async function getUserByEmail(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   email: string,
 ): Promise<User> {
   const hashedEmail = await hashEmail(email);
-  const userResult = await connection.query(sql.typeAlias("user")`
+  const userResult = await db.query(sql.typeAlias("user")`
     ${selectUserFragment}
     where u."emailHash" = ${hashedEmail};
   `);
@@ -201,7 +201,7 @@ export async function getUserByEmail(
 }
 
 export async function updateUser(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
   props: UpdateUser,
 ): Promise<User> {
@@ -231,7 +231,7 @@ export async function updateUser(
     }
   });
 
-  return connection.transaction<User>(async (trConnection) => {
+  return db.transaction<User>(async (trConnection) => {
     try {
       if (Object.keys(readerPropsToUpdate).length) {
         // if user already has a reader, update it

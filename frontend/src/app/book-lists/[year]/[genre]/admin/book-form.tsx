@@ -60,7 +60,7 @@ export function BookForm({
   const schema = useMemo(
     () =>
       z.object({
-        year: z.coerce.number({ message: t("error.year") }).min(1900, {
+        year: z.number({ message: t("error.year") }).min(1900, {
           message: t("error.yearMin"),
         }),
         genre: z.enum(["sci-fi", "fantasy"] as const).nullable().optional(),
@@ -181,10 +181,8 @@ export function BookForm({
                   id="year"
                   {...field}
                   type="number"
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value ? parseInt(e.target.value) : "",
-                    )}
+                  value={Number.isNaN(field.value) ? "" : field.value}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
                 />
                 <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
               </>

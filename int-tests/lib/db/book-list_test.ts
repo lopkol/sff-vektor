@@ -165,8 +165,8 @@ describe("book list db functions", () => {
       assertEquals(result.url, "https://example.com/book-list");
       assertEquals(result.pendingUrl, "https://example.com/book-list-pending");
       assertEquals(result.readers.length, 2);
-      assertEquals(result.readers[0], reader1.id);
-      assertEquals(result.readers[1], reader2.id);
+      // readers order is not guaranteed by the query, so compare as a sorted set
+      assertEquals([...result.readers].sort(), [reader1.id, reader2.id].sort());
     });
 
     it("throws an error if the book list does not exist", async () => {
