@@ -9,7 +9,7 @@ import {
 } from "@/services/book-lists";
 import { useTranslations } from "next-intl";
 import { BookListForm } from "./book-list-form";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types/api-error";
 import { CreateBookList } from "@/types/book-list";
@@ -33,8 +33,6 @@ export function BookListDialog(
   const t = useTranslations("Admin.BookLists");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const { data: bookList, isLoading } = useQuery({
     queryKey: ["book-list", year, genre],
     queryFn: () => getBookList(year!, genre!),
@@ -53,19 +51,16 @@ export function BookListDialog(
           updatedBookList.year,
           updatedBookList.genre,
         ], updatedBookList);
-        toast({
-          title: bookList ? tTools("updateSuccess") : tTools("saveSuccess"),
-          variant: "success",
-        });
+        toast.success(
+          bookList ? tTools("updateSuccess") : tTools("saveSuccess"),
+        );
         onOpenChange(false);
       },
       onError: (error: AxiosError<ApiError>) => {
-        toast({
-          title: bookList ? tTools("updateError") : tTools("saveError"),
+        toast.error(bookList ? tTools("updateError") : tTools("saveError"), {
           description: t.has("error." + error.response?.data.code as any)
             ? t("error." + error.response?.data.code as any)
             : tTools("unknownError"),
-          variant: "destructive",
         });
       },
     });
@@ -77,19 +72,14 @@ export function BookListDialog(
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["book-lists"] });
       queryClient.removeQueries({ queryKey: ["book-list", year, genre] });
-      toast({
-        title: tTools("deleteSuccess"),
-        variant: "success",
-      });
+      toast.success(tTools("deleteSuccess"));
       onOpenChange(false);
     },
     onError: (error: AxiosError<ApiError>) => {
-      toast({
-        title: tTools("deleteError"),
+      toast.error(tTools("deleteError"), {
         description: t.has("error." + error.response?.data.code as any)
           ? t("error." + error.response?.data.code as any)
           : tTools("unknownError"),
-        variant: "destructive",
       });
     },
   });

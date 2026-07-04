@@ -1,9 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { FormErrorMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -11,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -44,11 +50,7 @@ export function UserForm(
     [],
   );
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
+  const form = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
       name: user?.name ?? "",
@@ -59,60 +61,59 @@ export function UserForm(
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Controller
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
           name="email"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="email">{t("props.email")}</Label>
-              <Input id="email" type="email" {...field} />
-              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.email")}</FormLabel>
+              <FormControl>
+                <Input type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="name"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="name">{t("props.name")}</Label>
-              <Input id="name" {...field} />
-              <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.name")}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="molyUrl"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="molyUrl">{t("props.molyUrl")}</Label>
-              <Input id="molyUrl" {...field} value={field.value ?? ""} />
-              <FormErrorMessage>{errors.molyUrl?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.molyUrl")}</FormLabel>
+              <FormControl>
+                <Input {...field} value={field.value ?? ""} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="role"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="role">{t("props.role")}</Label>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("props.role")} />
-                </SelectTrigger>
+            <FormItem>
+              <FormLabel>{t("props.role")}</FormLabel>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("props.role")} />
+                  </SelectTrigger>
+                </FormControl>
                 <SelectContent>
                   <SelectItem value={UserRole.Admin}>
                     {t("roles.admin")}
@@ -122,23 +123,23 @@ export function UserForm(
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <FormErrorMessage>{errors.role?.message}</FormErrorMessage>
-            </>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="flex justify-end space-x-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => onOpenChange(false)}
-        >
-          {tTools("cancel")}
-        </Button>
-        <Button type="submit" disabled={isSaving}>
-          {isSaving ? tTools("saving") : tTools("save")}
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-end space-x-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            {tTools("cancel")}
+          </Button>
+          <Button type="submit" disabled={isSaving}>
+            {isSaving ? tTools("saving") : tTools("save")}
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

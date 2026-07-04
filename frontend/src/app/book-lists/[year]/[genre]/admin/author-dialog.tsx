@@ -8,7 +8,7 @@ import {
   updateAuthor,
 } from "@/services/authors";
 import { useTranslations } from "next-intl";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -32,8 +32,6 @@ export function AuthorDialog(
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const { data: author, isLoading } = useQuery({
     queryKey: ["author", authorId],
     queryFn: () => getAuthor(authorId!),
@@ -49,18 +47,15 @@ export function AuthorDialog(
       } else if (onAuthorCreated) {
         onAuthorCreated(updatedAuthor.id);
       }
-      toast({
-        title: authorId ? tTools("updateSuccess") : tTools("saveSuccess"),
-        variant: "success",
-      });
+      toast.success(
+        authorId ? tTools("updateSuccess") : tTools("saveSuccess"),
+      );
       onSuccess();
       onOpenChange(false);
     },
     onError: () => {
-      toast({
-        title: authorId ? tTools("updateError") : tTools("saveError"),
+      toast.error(authorId ? tTools("updateError") : tTools("saveError"), {
         description: tTools("unknownError"),
-        variant: "destructive",
       });
     },
   });
@@ -69,18 +64,13 @@ export function AuthorDialog(
     mutationFn: () => deleteAuthor(authorId!),
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: ["author", authorId] });
-      toast({
-        title: tTools("deleteSuccess"),
-        variant: "success",
-      });
+      toast.success(tTools("deleteSuccess"));
       onSuccess();
       onOpenChange(false);
     },
     onError: () => {
-      toast({
-        title: tTools("deleteError"),
+      toast.error(tTools("deleteError"), {
         description: tTools("unknownError"),
-        variant: "destructive",
       });
     },
   });

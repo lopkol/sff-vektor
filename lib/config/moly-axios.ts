@@ -12,7 +12,6 @@ export function getMolyAxiosInstance() {
 
 export const raxConfig = {
   retry: 5,
-  noResponseRetries: 5,
   retryDelay: 100,
   statusCodesToRetry: [
     [100, 199],

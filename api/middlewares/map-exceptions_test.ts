@@ -21,7 +21,11 @@ const createTestClient = (
   callback: () => void,
   middleware?: MiddlewareHandler,
 ) => {
-  const app = new Hono().get("/", ...(middleware ? [middleware] : []), (c) => {
+  const base = new Hono();
+  if (middleware) {
+    base.use("/", middleware);
+  }
+  const app = base.get("/", (c) => {
     callback();
     return c.json({ message: "OK" }, 200);
   });

@@ -67,7 +67,7 @@ export function AppNavbar({ rootPages, subPages, rootUrl }: AppNavbarProps) {
 
   return (
     <header className="flex flex-col">
-      <div className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <div className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           {!isMobile && (
@@ -83,18 +83,19 @@ export function AppNavbar({ rootPages, subPages, rootUrl }: AppNavbarProps) {
             <NavigationMenuList>
               {subPages.map((item) => (
                 <NavigationMenuItem key={item.url}>
-                  <Link href={`${rootUrl}${item.url}`} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(navigationMenuTriggerStyle(), {
-                        "flex items-center gap-2": !!item.icon,
-                        "underline bg-accent":
-                          activePage === `${rootPage.url}${item.url}`,
-                      })}
-                    >
+                  <NavigationMenuLink
+                    asChild
+                    className={cn(navigationMenuTriggerStyle(), {
+                      "flex items-center gap-2": !!item.icon,
+                      "underline bg-accent":
+                        activePage === `${rootPage.url}${item.url}`,
+                    })}
+                  >
+                    <Link href={`${rootUrl}${item.url}`}>
                       {item.icon && <item.icon />}
                       {(!isMobile || !item.icon) && item.title}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -102,7 +103,7 @@ export function AppNavbar({ rootPages, subPages, rootUrl }: AppNavbarProps) {
         </div>
       </div>
       {isMobile && (
-        <div className="flex h-10 shrink-0 items-start gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+        <div className="flex h-10 shrink-0 items-start gap-2 px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <AppBreadcrumb rootPages={rootPages} />
         </div>
       )}

@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createBook, deleteBook, getBook, updateBook } from "@/services/books";
 import { useTranslations } from "next-intl";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -26,8 +26,6 @@ export function BookDialog(
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const { data: book, isLoading } = useQuery({
     queryKey: ["book", bookId],
     queryFn: () => getBook(bookId!),
@@ -43,18 +41,13 @@ export function BookDialog(
       if (bookId) {
         queryClient.setQueryData(["book", bookId], updatedBook);
       }
-      toast({
-        title: bookId ? tTools("updateSuccess") : tTools("saveSuccess"),
-        variant: "success",
-      });
+      toast.success(bookId ? tTools("updateSuccess") : tTools("saveSuccess"));
       onSuccess();
       onOpenChange(false);
     },
     onError: () => {
-      toast({
-        title: bookId ? tTools("updateError") : tTools("saveError"),
+      toast.error(bookId ? tTools("updateError") : tTools("saveError"), {
         description: tTools("unknownError"),
-        variant: "destructive",
       });
     },
   });
@@ -66,18 +59,13 @@ export function BookDialog(
         queryKey: ["books", book!.year, book!.genre],
       });
       queryClient.removeQueries({ queryKey: ["book", bookId] });
-      toast({
-        title: tTools("deleteSuccess"),
-        variant: "success",
-      });
+      toast.success(tTools("deleteSuccess"));
       onSuccess();
       onOpenChange(false);
     },
     onError: () => {
-      toast({
-        title: tTools("deleteError"),
+      toast.error(tTools("deleteError"), {
         description: tTools("unknownError"),
-        variant: "destructive",
       });
     },
   });

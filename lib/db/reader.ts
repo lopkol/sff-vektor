@@ -1,5 +1,5 @@
 import z from "zod";
-import { createSqlTag, type DatabasePoolConnection } from "slonik";
+import { type CommonQueryMethods, createSqlTag } from "slonik";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import {
   type CreateReader,
@@ -16,10 +16,10 @@ const sql = createSqlTag({
 });
 
 export async function createReader(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   props: CreateReader,
 ): Promise<Reader> {
-  const readerResult = await connection.query(sql.typeAlias("reader")`
+  const readerResult = await db.query(sql.typeAlias("reader")`
     insert into "reader" ("molyUsername", "molyUrl")
     values (${props.molyUsername ?? null}, ${props.molyUrl ?? null}) returning *
   `);
@@ -28,10 +28,10 @@ export async function createReader(
 }
 
 export async function getReaderById(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<Reader> {
-  const readerResult = await connection.query(sql.typeAlias("reader")`
+  const readerResult = await db.query(sql.typeAlias("reader")`
     select * from "reader" where "id" = ${id}
   `);
   if (!readerResult.rowCount) {
@@ -42,9 +42,9 @@ export async function getReaderById(
 }
 
 export async function getAllReaders(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
 ): Promise<Reader[]> {
-  const readerResult = await connection.query(sql.typeAlias("reader")`
+  const readerResult = await db.query(sql.typeAlias("reader")`
     select * from "reader" order by lower("molyUsername") asc
   `);
 
@@ -52,10 +52,10 @@ export async function getAllReaders(
 }
 
 export async function deleteReader(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<void> {
-  await connection.query(sql.typeAlias("void")`
+  await db.query(sql.typeAlias("void")`
     delete from "reader" where "id" = ${id}
   `);
 }

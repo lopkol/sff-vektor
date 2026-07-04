@@ -1,5 +1,5 @@
 import z from "zod";
-import { createSqlTag, type DatabasePoolConnection } from "slonik";
+import { type CommonQueryMethods, createSqlTag } from "slonik";
 import { InvalidArgumentException } from "@/exceptions/invalid-argument.exception.ts";
 import { emptyObject } from "@/helpers/type.ts";
 import { updateFragmentFromProps } from "@/helpers/slonik.ts";
@@ -20,11 +20,11 @@ const sql = createSqlTag({
 });
 
 export async function createAuthor(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   props: CreateAuthor,
 ): Promise<Author> {
   // deno-fmt-ignore
-  const result = await connection.query(sql.typeAlias("author")`
+  const result = await db.query(sql.typeAlias("author")`
     insert into "author" ("displayName", "sortName", "url", "isApproved")
     values (${props.displayName}, ${props.sortName}, ${props.url || null}, ${props.isApproved}) returning *
   `);
@@ -33,9 +33,9 @@ export async function createAuthor(
 }
 
 export async function getAuthors(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
 ): Promise<Author[]> {
-  const result = await connection.query(sql.typeAlias("author")`
+  const result = await db.query(sql.typeAlias("author")`
     select * from "author" order by "sortName"
   `);
 
@@ -43,10 +43,10 @@ export async function getAuthors(
 }
 
 export async function getAuthorById(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<Author> {
-  const result = await connection.query(sql.typeAlias("author")`
+  const result = await db.query(sql.typeAlias("author")`
     select * from "author" where "id" = ${id}
   `);
   if (!result.rowCount) {
@@ -57,10 +57,10 @@ export async function getAuthorById(
 }
 
 export async function getAuthorByName(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   name: string,
 ): Promise<Author | null> {
-  const result = await connection.query(sql.typeAlias("author")`
+  const result = await db.query(sql.typeAlias("author")`
     select * from "author" where "displayName" = ${name}
   `);
   if (!result.rowCount) {
@@ -70,7 +70,7 @@ export async function getAuthorByName(
 }
 
 export async function updateAuthor(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
   props: UpdateAuthor,
 ): Promise<Author> {
@@ -80,7 +80,7 @@ export async function updateAuthor(
 
   const updatedPropsFragment = updateFragmentFromProps(props);
 
-  const result = await connection.query(sql.typeAlias("author")`
+  const result = await db.query(sql.typeAlias("author")`
     update "author" set ${updatedPropsFragment}, "updatedAt" = now() where "id" = ${id} returning *
   `);
   if (!result.rowCount) {
@@ -91,10 +91,10 @@ export async function updateAuthor(
 }
 
 export async function deleteAuthor(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   id: string,
 ): Promise<void> {
-  await connection.query(sql.typeAlias("void")`
+  await db.query(sql.typeAlias("void")`
     delete from "author" where "id" = ${id}
   `);
 }

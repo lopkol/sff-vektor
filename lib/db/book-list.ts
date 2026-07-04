@@ -1,7 +1,7 @@
 import { z } from "zod";
 import {
+  type CommonQueryMethods,
   createSqlTag,
-  type DatabasePoolConnection,
   type QueryResult,
 } from "slonik";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
@@ -43,10 +43,10 @@ const sql = createSqlTag({
 });
 
 export async function createBookList(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   props: CreateBookList,
 ): Promise<BookList> {
-  return await connection.transaction<BookList>(async (trConnection) => {
+  return await db.transaction<BookList>(async (trConnection) => {
     try {
       // deno-fmt-ignore
       const bookListResult = await trConnection.query(sql.typeAlias("bookList")`
@@ -95,11 +95,11 @@ export async function createBookList(
 }
 
 export async function getBookList(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   year: number,
   genre: Genre,
 ): Promise<BookList> {
-  const bookListResult = await connection.query(
+  const bookListResult = await db.query(
     sql.typeAlias("bookListWithReaders")`
     select 
       bl.*,
@@ -118,9 +118,9 @@ export async function getBookList(
 }
 
 export async function getAllBookLists(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
 ): Promise<ShortBookList[]> {
-  const bookListsResult = await connection.query(sql.typeAlias("shortBookList")`
+  const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
     select "year", "genre", "url", "pendingUrl"
     from "book_list"
     order by "year" desc, "genre" desc
@@ -130,7 +130,7 @@ export async function getAllBookLists(
 }
 
 export async function updateBookList(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   year: number,
   genre: Genre,
   props: Partial<UpdateBookList>,
@@ -149,7 +149,7 @@ export async function updateBookList(
       }
     });
 
-  return await connection.transaction<BookList>(async (trConnection) => {
+  return await db.transaction<BookList>(async (trConnection) => {
     let bookListResult: QueryResult<z.infer<typeof bookListDbSchema>>;
     if (!emptyObject(bookListPropsToUpdate)) {
       const updatedPropsFragment = updateFragmentFromProps(
@@ -223,11 +223,11 @@ export async function updateBookList(
 }
 
 export async function deleteBookList(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   year: number,
   genre: Genre,
 ): Promise<void> {
-  await connection.query(sql.typeAlias("void")`
+  await db.query(sql.typeAlias("void")`
     delete from "book_list" where "year" = ${year} and "genre" = ${genre}
   `);
 }

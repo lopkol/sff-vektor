@@ -271,6 +271,12 @@ const MultipleSelector = React.forwardRef<
           if (e.key === "Escape") {
             input.blur();
           }
+          // Close the dropdown when tabbing away so it doesn't disrupt the
+          // surrounding dialog's focus order (otherwise focus gets trapped
+          // and loops back to the first element).
+          if (e.key === "Tab") {
+            setOpen(false);
+          }
         }
       },
       [handleUnselect, selected],
@@ -466,6 +472,7 @@ const MultipleSelector = React.forwardRef<
           )}
           onClick={() => {
             if (disabled) return;
+            setOpen(true);
             inputRef?.current?.focus();
           }}
         >
@@ -475,8 +482,8 @@ const MultipleSelector = React.forwardRef<
                 <Badge
                   key={option.value}
                   className={cn(
-                    "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground",
-                    "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",
+                    "data-disabled:bg-muted-foreground data-disabled:text-muted data-disabled:hover:bg-muted-foreground",
+                    "data-fixed:bg-muted-foreground data-fixed:text-muted data-fixed:hover:bg-muted-foreground",
                     badgeClassName,
                   )}
                   data-fixed={option.fixed}
@@ -486,7 +493,7 @@ const MultipleSelector = React.forwardRef<
                   <button
                     type="button"
                     className={cn(
-                      "ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      "ml-1 rounded-full outline-hidden ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden",
                     )}
                     onKeyDown={(e) => {
@@ -513,6 +520,7 @@ const MultipleSelector = React.forwardRef<
               disabled={disabled}
               onValueChange={(value) => {
                 setInputValue(value);
+                setOpen(true);
                 inputProps?.onValueChange?.(value);
               }}
               onBlur={(event) => {
@@ -522,14 +530,13 @@ const MultipleSelector = React.forwardRef<
                 inputProps?.onBlur?.(event);
               }}
               onFocus={(event) => {
-                setOpen(true);
                 inputProps?.onFocus?.(event);
               }}
               placeholder={hidePlaceholderWhenSelected && selected.length !== 0
                 ? ""
                 : placeholder}
               className={cn(
-                "flex-1 bg-transparent outline-none placeholder:text-muted-foreground",
+                "flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground",
                 {
                   "w-full": hidePlaceholderWhenSelected,
                   "px-3 py-2": selected.length === 0,
@@ -560,7 +567,7 @@ const MultipleSelector = React.forwardRef<
         <div className="relative">
           {open && (
             <CommandList
-              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in"
+              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden animate-in"
               onMouseLeave={() => {
                 setOnScrollbar(false);
               }}

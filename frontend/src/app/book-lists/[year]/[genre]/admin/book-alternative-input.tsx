@@ -8,11 +8,10 @@ import { BookAlternativeItem } from "./book-alternative-item";
 
 interface BookAlternativeInputProps {
   control: Control<CreateBook>;
-  errors?: any;
 }
 
 export function BookAlternativeInput(
-  { control, errors }: BookAlternativeInputProps,
+  { control }: BookAlternativeInputProps,
 ) {
   const t = useTranslations("BookList.Admin");
 
@@ -29,7 +28,6 @@ export function BookAlternativeInput(
           <BookAlternativeItem
             key={field.id}
             control={control}
-            errors={errors}
             index={index}
             alternativeId={field.id}
             onRemove={() => remove(index)}

@@ -24,7 +24,7 @@ export function AuthButton() {
         variant="ghost"
         onClick={() => signOut({ callbackUrl: "/" })}
         title="Sign out"
-        className="w-full flex items-center align-start gap-2"
+        className="flex-1 min-w-0 flex items-center justify-start gap-2"
       >
         <LogOut className="h-4 w-4" />
         {user?.name}

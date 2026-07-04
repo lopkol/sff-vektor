@@ -16,3 +16,5 @@ config:
     secure: AAABADBZ+JkYii3VUkBQ2VYZNKvEasoG1bnw8E33m+hyrjsHJCw2j6zAis2cM0zQm2kxKapssDE=
   sff-vektor:next_auth_secret:
     secure: AAABAGQyo/88YRYmllHJQ/lmAMoxn3mDi8NoUWc1t/KwmP3Zbaa5WgVYxRBxBzoL2mU4Un8w9OyPb9ZEAY9QDv5ahmxuoFFRTUM2
+  sff-vektor:googleClientId:
+    secure: AAABAEc4UpEbBZd8CLtYx8m1wqRnKbOLj/88CSyyfnkk0j8dE94tCgeKKXIXsgRpTvWIR1RIL+2N56SvyVnvljtVj9BXVQGQSzoMQvxKj7x6WLk5NCAGSSTrK7zDnV2czw3T8y3TUg==

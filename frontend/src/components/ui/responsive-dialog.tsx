@@ -78,7 +78,7 @@ export function ResponsiveDialogContent(
       )}
       {...props}
     >
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-6">
         {children}
       </div>
     </SheetContent>
@@ -94,7 +94,10 @@ export function ResponsiveDialogHeader(
     return <DrawerHeader className={className} {...props} />;
   }
 
-  return <SheetHeader className={className} {...props} />;
+  // Zero out SheetHeader's own v4 padding so the header aligns with the body
+  // (both inset by the content wrapper's p-6), and reserve space on the right
+  // so header actions clear the absolutely-positioned close button.
+  return <SheetHeader className={cn("p-0 pr-8", className)} {...props} />;
 }
 
 export function ResponsiveDialogTitle(

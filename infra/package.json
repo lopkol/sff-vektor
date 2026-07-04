@@ -1,0 +1,13 @@
+{
+  "name": "@sff-vektor/infra",
+  "main": "src/main.ts",
+  "devDependencies": {
+    "@types/node": "^16"
+  },
+  "dependencies": {
+    "@ovhcloud/pulumi-ovh": "^1.1.0",
+    "@pulumi/neon": "file:sdks/neon",
+    "@pulumi/pulumi": "^3.0.0",
+    "@pulumi/pulumiservice": "0.31.0"
+  }
+}

@@ -4,9 +4,15 @@ import { useTranslations } from "next-intl";
 import { Book, CreateBook } from "@/types/book";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { FormErrorMessage } from "@/components/ui/form";
-import { Controller, useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMemo, useState } from "react";
@@ -60,7 +66,7 @@ export function BookForm({
   const schema = useMemo(
     () =>
       z.object({
-        year: z.coerce.number({ message: t("error.year") }).min(1900, {
+        year: z.number({ message: t("error.year") }).min(1900, {
           message: t("error.yearMin"),
         }),
         genre: z.enum(["sci-fi", "fantasy"] as const).nullable().optional(),
@@ -92,14 +98,7 @@ export function BookForm({
     }, {} as Record<string, Author>);
   }, [authors]);
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    getValues,
-    watch,
-  } = useForm<CreateBook>({
+  const form = useForm<CreateBook>({
     resolver: zodResolver(schema),
     defaultValues: {
       year: book?.year ?? year,
@@ -113,7 +112,7 @@ export function BookForm({
       isPending: book?.isPending ?? false,
     },
   });
-  const bookAuthors = watch("authors");
+  const bookAuthors = form.watch("authors");
 
   const handleDelete = () => {
     setIsDeleteDialogOpen(false);
@@ -131,83 +130,75 @@ export function BookForm({
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isApproved">{t("props.approved")}</Label>
-            <Controller
-              name="isApproved"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  id="isApproved"
-                  checked={field.value}
-                  onCheckedChange={(checked: boolean) => {
-                    field.onChange(checked);
-                  }}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isPending">{t("props.pending")}</Label>
-            <Controller
-              name="isPending"
-              control={control}
-              render={({ field }) => (
-                <Switch
-                  id="isPending"
-                  checked={field.value}
-                  onCheckedChange={(checked: boolean) => {
-                    field.onChange(checked);
-                  }}
-                />
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Controller
-            name="year"
-            control={control}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="isApproved"
             render={({ field }) => (
-              <>
-                <Label htmlFor="year">{t("props.year")}</Label>
-                <Input
-                  id="year"
-                  {...field}
-                  type="number"
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value ? parseInt(e.target.value) : "",
-                    )}
-                />
-                <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
-              </>
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>{t("props.approved")}</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Controller
-            name="genre"
-            control={control}
+          <FormField
+            control={form.control}
+            name="isPending"
             render={({ field }) => (
-              <>
-                <Label htmlFor="genre">{t("props.genre")}</Label>
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>{t("props.pending")}</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="year"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("props.year")}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="number"
+                    value={Number.isNaN(field.value) ? "" : field.value}
+                    onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="genre"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("props.genre")}</FormLabel>
                 <Select
-                  {...field}
                   onValueChange={(value) =>
                     field.onChange(value as Genre | null)}
                   value={field.value ?? undefined}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder={t("props.genre")} />
-                  </SelectTrigger>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder={t("props.genre")} />
+                    </SelectTrigger>
+                  </FormControl>
                   <SelectContent>
                     <SelectItem value="sci-fi">
                       {tTools("genres.sciFi")}
@@ -217,30 +208,28 @@ export function BookForm({
                     </SelectItem>
                   </SelectContent>
                 </Select>
-                <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>
-              </>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="authors">{t("props.authors")}</Label>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsAuthorDialogOpen(true)}
-              title={t("form.manageAuthors")}
-            >
-              <Settings2 className="h-4 w-4" />
-            </Button>
-          </div>
-          <Controller
+          <FormField
+            control={form.control}
             name="authors"
-            control={control}
             render={({ field }) => (
-              <>
+              <FormItem>
+                <div className="flex items-center justify-between">
+                  <FormLabel>{t("props.authors")}</FormLabel>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsAuthorDialogOpen(true)}
+                    title={t("form.manageAuthors")}
+                  >
+                    <Settings2 className="h-4 w-4" />
+                  </Button>
+                </div>
                 <MultipleSelector
                   value={field.value.map((id: string) => ({
                     label: (
@@ -266,103 +255,93 @@ export function BookForm({
                     </p>
                   }
                 />
-                <FormErrorMessage>{errors.authors?.message}</FormErrorMessage>
-              </>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Controller
+          <FormField
+            control={form.control}
             name="title"
-            control={control}
             render={({ field }) => (
-              <>
-                <Label htmlFor="title">{t("props.title")}</Label>
-                <Input
-                  id="title"
-                  {...field}
-                />
-                <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
-              </>
+              <FormItem>
+                <FormLabel>{t("props.title")}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Controller
+          <FormField
+            control={form.control}
             name="series"
-            control={control}
             render={({ field }) => (
-              <>
-                <Label htmlFor="series">{t("props.series")}</Label>
-                <Input
-                  id="series"
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value || null)}
-                />
-                <FormErrorMessage>{errors.series?.message}</FormErrorMessage>
-              </>
+              <FormItem>
+                <FormLabel>{t("props.series")}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Controller
+          <FormField
+            control={form.control}
             name="seriesNumber"
-            control={control}
             render={({ field }) => (
-              <>
-                <Label htmlFor="seriesNumber">{t("props.seriesNumber")}</Label>
-                <Input
-                  id="seriesNumber"
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => field.onChange(e.target.value || null)}
-                />
-                <FormErrorMessage>
-                  {errors.seriesNumber?.message}
-                </FormErrorMessage>
-              </>
+              <FormItem>
+                <FormLabel>{t("props.seriesNumber")}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <BookAlternativeInput
-            control={control}
-            errors={errors}
-          />
-        </div>
+          <div className="space-y-2">
+            <BookAlternativeInput control={form.control} />
+          </div>
 
-        <div className="flex justify-between space-x-2">
-          <div>
-            {book && (
+          <div className="flex justify-between space-x-2">
+            <div>
+              {book && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={isSaving}
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  {tTools("delete")}
+                </Button>
+              )}
+            </div>
+            <div className="flex space-x-2">
               <Button
                 type="button"
-                variant="destructive"
-                disabled={isSaving}
-                onClick={() => setIsDeleteDialogOpen(true)}
+                variant="outline"
+                onClick={() => onOpenChange(false)}
               >
-                {tTools("delete")}
+                {tTools("cancel")}
               </Button>
-            )}
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? tTools("saving") : tTools("save")}
+              </Button>
+            </div>
           </div>
-          <div className="flex space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              {tTools("cancel")}
-            </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? tTools("saving") : tTools("save")}
-            </Button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </Form>
 
       {isDeleteDialogOpen && (
         <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
@@ -392,7 +371,7 @@ export function BookForm({
           onOpenChange={setIsAuthorDialogOpen}
           authorIdsToDisplay={bookAuthors ?? []}
           onAuthorCreated={(authorId) => {
-            setValue("authors", [...getValues("authors"), authorId]);
+            form.setValue("authors", [...form.getValues("authors"), authorId]);
           }}
         />
       )}

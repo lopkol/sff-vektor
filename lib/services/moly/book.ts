@@ -11,7 +11,7 @@ import {
   getTitleAndSeriesFromBookPage,
 } from "@/helpers/moly/book.ts";
 import { createAuthor, getAuthorByName } from "@/db/author.ts";
-import type { DatabasePoolConnection } from "slonik";
+import type { CommonQueryMethods } from "slonik";
 import type { CreateBook, Genre } from "@/schema/book.ts";
 import { guessAuthorSortName } from "@/helpers/author.ts";
 import { getOrCreateDatabasePool } from "@/config/database.ts";
@@ -23,16 +23,16 @@ import {
 } from "@/db/book.ts";
 
 async function getOrCreateAuthor(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   name: string,
   relativeUrl: string,
 ): Promise<string> {
-  const existingAuthor = await getAuthorByName(connection, name);
+  const existingAuthor = await getAuthorByName(db, name);
   if (existingAuthor) {
     return existingAuthor.id;
   }
 
-  const author = await createAuthor(connection, {
+  const author = await createAuthor(db, {
     displayName: name,
     sortName: guessAuthorSortName(name),
     url: molyBaseUrl + relativeUrl,
@@ -42,29 +42,29 @@ async function getOrCreateAuthor(
 }
 
 async function createOrUpdateBook(
-  connection: DatabasePoolConnection,
+  db: CommonQueryMethods,
   url: string,
   props: CreateBook,
 ): Promise<void> {
   const existingBook = props.molyId
-    ? await getBookByMolyId(connection, props.molyId)
-    : await getBookByUrl(connection, url);
+    ? await getBookByMolyId(db, props.molyId)
+    : await getBookByUrl(db, url);
 
   if (existingBook && existingBook.isApproved) {
     // if approved: the only thing we can update is the pending status
     if (existingBook.isPending && !props.isPending) {
-      await updateBook(connection, existingBook.id, {
+      await updateBook(db, existingBook.id, {
         isPending: false,
       });
     }
     return;
   }
   if (existingBook) {
-    await updateBook(connection, existingBook.id, props);
+    await updateBook(db, existingBook.id, props);
     return;
   }
 
-  await createBook(connection, props);
+  await createBook(db, props);
 }
 
 export async function createOrUpdateBookFromMoly(
@@ -95,11 +95,11 @@ export async function createOrUpdateBookFromMoly(
       : [hunVersion];
 
     // create or update book in the database
-    const connection = await getOrCreateDatabasePool();
+    const db = await getOrCreateDatabasePool();
     const authorIds = await Promise.all(
       authors.map(async (author) => {
         const authorId = await getOrCreateAuthor(
-          connection,
+          db,
           author.name,
           author.relativeUrl,
         );
@@ -107,7 +107,7 @@ export async function createOrUpdateBookFromMoly(
       }),
     );
 
-    await createOrUpdateBook(connection, url, {
+    await createOrUpdateBook(db, url, {
       molyId,
       title,
       year,

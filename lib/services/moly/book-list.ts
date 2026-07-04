@@ -75,8 +75,8 @@ export async function createOrUpdateBooksOfListFromMoly(
   year: number,
   genre: Genre,
 ): Promise<void> {
-  const connection = await getOrCreateDatabasePool();
-  const bookList = await getBookList(connection, year, genre);
+  const db = await getOrCreateDatabasePool();
+  const bookList = await getBookList(db, year, genre);
   if (!bookList) {
     throw new EntityNotFoundException("Booklist does not exist", {
       year,
