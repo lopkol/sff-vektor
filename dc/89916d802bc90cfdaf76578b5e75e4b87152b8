@@ -1,0 +1,32 @@
+frontend/src/app/book-lists/[year]/[genre]/admin/author-form.tsx
+  s_41415b5fc2d9a6::t_bfa67c64d33bd6 82-101,103-114,117-128,131-142,145-167,169-170
+  s_41415b5fc2d9a6::t_2cf12b96ea0ada 7-14
+frontend/src/components/ui/form.tsx
+  s_41415b5fc2d9a6::t_c203df713fd352 1-167
+frontend/src/app/admin/book-lists/book-list-form.tsx
+  s_41415b5fc2d9a6::t_b909a36d8c4658 4-11,22,86,114-117,120-132,135-136,139-140,142,146-150,160-161,164-165,168-174,177-178,181-191,194-195,198-199,220-221,224-272,274-275
+frontend/src/app/admin/users/user-form.tsx
+  s_41415b5fc2d9a6::t_a88c0e29003cee 4-11,20,53,64-67,70-76,79-80,83-89,92-93,96-102,105-106,109-116,126-127,130-143
+frontend/src/app/book-lists/[year]/[genre]/admin/book-alternative-item.tsx
+  s_41415b5fc2d9a6::t_4a8e3cf2a3bc67 5-10,12,63-75,77,81-105,107
+frontend/src/app/book-lists/[year]/[genre]/admin/book-form.tsx
+  s_41415b5fc2d9a6::t_012ecd14d4b668 7-15,101,115,133-149,151-165,167-168,171-182,186-187,190-191,197-201,211-212,216-217,220-232,258-259,263-264,267-273,277-278,281-291,295-296,299-309,313-315,317-330,333-334,336,338-341,343-344,374
+frontend/src/app/book-lists/[year]/[genre]/admin/book-alternative-input.tsx
+  s_41415b5fc2d9a6::t_eb54ae759b8f02 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "dc89916d802bc90cfdaf76578b5e75e4b87152b8",
+  "prompts": {},
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
