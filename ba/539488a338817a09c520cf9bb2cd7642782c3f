@@ -1,0 +1,55 @@
+frontend/src/components/app-sidebar.tsx
+  s_41415b5fc2d9a6::t_0e909436b95898 73-77
+  s_41415b5fc2d9a6::t_37ed9b32833d5e 4-12
+frontend/locales/hu.json
+  s_41415b5fc2d9a6::t_52b84edb197435 43-63
+  s_41415b5fc2d9a6::t_ae83e33ecfd2d7 68-69
+  s_41415b5fc2d9a6::t_d1e17e0e14ea4e 30
+  s_41415b5fc2d9a6::t_14f3e6973fd0ac 167,173
+frontend/src/app/admin/authors/page.tsx
+  s_41415b5fc2d9a6::t_fc94bdbf714af4 1-21,23-24,26-71,84-86,93-95,97-145
+  s_41415b5fc2d9a6::t_8c3d3bf7ca7e73 22
+  s_41415b5fc2d9a6::t_113ea8dee58cd8 72-83,87,89-92,96
+  s_41415b5fc2d9a6::t_f5b2b5bbf0c9a5 25
+  s_41415b5fc2d9a6::t_e213946684ff89 88
+frontend/locales/en.json
+  s_41415b5fc2d9a6::t_cf7ef21b703543 30
+  s_41415b5fc2d9a6::t_65529559bc936a 49-69
+  s_41415b5fc2d9a6::t_162599fbaf77cf 198,204
+  s_41415b5fc2d9a6::t_793f4bc32529c0 74-75
+frontend/src/components/authors/author-dialog.tsx
+  s_41415b5fc2d9a6::t_9d32d098356e41 32
+  s_41415b5fc2d9a6::t_ff99c8751e53db 93
+  s_41415b5fc2d9a6::t_0a048a1f9dc1a0 18
+frontend/src/app/admin/admin-nav.tsx
+  s_41415b5fc2d9a6::t_0e7158bf7819dc 21-24
+frontend/src/app/book-lists/[year]/[genre]/admin/author-management-dialog.tsx
+  s_41415b5fc2d9a6::t_5ec3a60f052c42 94
+  s_41415b5fc2d9a6::t_0f54f6aa9b9078 98
+  s_41415b5fc2d9a6::t_521bea43d7017d 31
+  s_41415b5fc2d9a6::t_0522f722c40273 19
+frontend/src/components/authors/author-form.tsx
+  s_41415b5fc2d9a6::t_e2af6181bf05d6 136
+  s_41415b5fc2d9a6::t_4e67ebcb176c81 52-53
+  s_41415b5fc2d9a6::t_41bb5dbaa6b765 108
+  s_41415b5fc2d9a6::t_7a0e942421bd74 180
+  s_41415b5fc2d9a6::t_27deeffc642e25 183
+  s_41415b5fc2d9a6::t_4e020cae1bdba7 46
+  s_41415b5fc2d9a6::t_71d5f76541cfde 122
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "ba539488a338817a09c520cf9bb2cd7642782c3f",
+  "prompts": {},
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
