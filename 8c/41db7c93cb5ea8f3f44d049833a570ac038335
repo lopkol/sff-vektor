@@ -1,0 +1,27 @@
+frontend/src/app/admin/admin-nav.tsx
+  s_41415b5fc2d9a6::t_de7fc7ed5559bc 5-6,10,12-33
+frontend/src/components/app-sidebar.tsx
+  s_41415b5fc2d9a6::t_9c5de03e1595e4 4
+  s_41415b5fc2d9a6::t_9d50d62e566fb9 56-63
+  s_41415b5fc2d9a6::t_b709fe4092ce2d 126
+frontend/locales/hu.json
+  s_41415b5fc2d9a6::t_ba923cecfccd77 29
+frontend/locales/en.json
+  s_41415b5fc2d9a6::t_89caaf4e30d2d8 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8c41db7c93cb5ea8f3f44d049833a570ac038335",
+  "prompts": {},
+  "sessions": {
+    "s_41415b5fc2d9a6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e3007d25-ce6d-47b0-84b5-6128d0430fa4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
