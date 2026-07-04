@@ -43,14 +43,14 @@ export function AuthorForm({
   onSubmit,
   onDelete,
 }: AuthorFormProps) {
-  const t = useTranslations("BookList.Admin");
+  const t = useTranslations("Authors");
   const tTools = useTranslations("Tools");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const schema = useMemo(() => {
     return z.object({
-      displayName: z.string().nonempty(t("error.authorNameRequired")),
-      sortName: z.string().nonempty(t("error.authorSortNameRequired")),
+      displayName: z.string().nonempty(t("error.nameRequired")),
+      sortName: z.string().nonempty(t("error.sortNameRequired")),
       isApproved: z.boolean(),
       url: z.string().url({ message: t("error.url") }).or(
         z.literal("").nullable().optional(),
@@ -105,7 +105,7 @@ export function AuthorForm({
             name="displayName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("authors.name")}</FormLabel>
+                <FormLabel>{t("props.name")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -119,7 +119,7 @@ export function AuthorForm({
             name="sortName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("authors.sortName")}</FormLabel>
+                <FormLabel>{t("props.sortName")}</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -133,7 +133,7 @@ export function AuthorForm({
             name="url"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("authors.url")}</FormLabel>
+                <FormLabel>{t("props.url")}</FormLabel>
                 <FormControl>
                   <Input {...field} value={field.value ?? ""} />
                 </FormControl>
@@ -177,10 +177,10 @@ export function AuthorForm({
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                {t("dialog.deleteAuthorConfirmTitle")}
+                {t("dialog.deleteConfirmTitle")}
               </AlertDialogTitle>
               <AlertDialogDescription>
-                {t("dialog.deleteAuthorConfirmMessage", {
+                {t("dialog.deleteConfirmMessage", {
                   name: author.displayName,
                 })}
               </AlertDialogDescription>

@@ -27,6 +27,7 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "users": "Felhasználók",
+    "authors": "Szerzők",
     "bookLists": "Könyvlisták",
     "books": "Könyvek"
   },
@@ -39,11 +40,33 @@
     "title": "Szeretnél nyelvet váltani?",
     "description": "Ez az oldal újra betöltésre kerül, és elveszíted a még nem mentett változtatásokat.\nBiztosan folytatod?"
   },
+  "Authors": {
+    "title": "Szerzők",
+    "addNew": "Új szerző",
+    "add": "Új szerző",
+    "edit": "Szerző szerkesztése",
+    "props": {
+      "name": "Név",
+      "sortName": "Rendezési név",
+      "url": "Moly link",
+      "approved": "Jóváhagyva"
+    },
+    "error": {
+      "nameRequired": "Szerző nevének megadása kötelező",
+      "sortNameRequired": "Rendezési név megadása kötelező",
+      "url": "Érvénytelen link"
+    },
+    "dialog": {
+      "deleteConfirmTitle": "Szerző törlése",
+      "deleteConfirmMessage": "Biztosan törlöd a következő szerzőt: {name}?"
+    }
+  },
   "Admin": {
     "Nav": {
       "admin": "Admin",
       "users": "Felhasználók",
-      "bookLists": "Könyvlisták"
+      "bookLists": "Könyvlisták",
+      "authors": "Szerzők"
     },
     "BookLists": {
       "props": {
@@ -136,31 +159,18 @@
         "addAlternative": "Új alternatíva",
         "manageAuthors": "Szerzők szerkesztése"
       },
-      "authors": {
-        "title": "Szerzők",
-        "approved": "Jóváhagyva",
-        "name": "Név",
-        "sortName": "Rendezési név",
-        "url": "Moly link",
-        "add": "Új szerző",
-        "edit": "Szerző szerkesztése"
-      },
       "error": {
         "year": "Év megadása kötelező",
         "yearMin": "Az évnek nagyobbnak kell lennie 1900-nál",
         "titleRequired": "Cím megadása kötelező",
         "nameRequired": "Név megadása kötelező",
-        "url": "Érvénytelen link",
-        "authorNameRequired": "Szerző nevének megadása kötelező",
-        "authorSortNameRequired": "Rendezési név megadása kötelező"
+        "url": "Érvénytelen link"
       },
       "dialog": {
         "createTitle": "Új könyv",
         "editTitle": "Könyv szerkesztése",
         "deleteConfirmTitle": "Könyv törlése",
-        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?",
-        "deleteAuthorConfirmTitle": "Szerző törlése",
-        "deleteAuthorConfirmMessage": "Biztosan törlöd a következő szerzőt: {name}?"
+        "deleteConfirmMessage": "Biztosan törlöd ezt a könyvet?"
       }
     }
   }

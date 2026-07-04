@@ -1,7 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { Book, BookCopy, ChevronRight, Orbit, Users, Wand } from "lucide-react";
+import {
+  Book,
+  BookCopy,
+  ChevronRight,
+  Feather,
+  Orbit,
+  Users,
+  Wand,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -61,6 +69,11 @@ export function AppSidebar() {
       title: t("bookLists"),
       url: "/admin/book-lists",
       icon: Book,
+    },
+    {
+      title: t("authors"),
+      url: "/admin/authors",
+      icon: Feather,
     },
   ];
 

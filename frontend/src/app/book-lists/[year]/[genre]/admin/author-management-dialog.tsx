@@ -16,7 +16,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAuthors } from "@/services/authors";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { AuthorDialog } from "./author-dialog";
+import { AuthorDialog } from "@/components/authors/author-dialog";
 
 interface AuthorManagementDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -28,7 +28,7 @@ export function AuthorManagementDialog(
   { onOpenChange, authorIdsToDisplay, onAuthorCreated }:
     AuthorManagementDialogProps,
 ) {
-  const t = useTranslations("BookList.Admin");
+  const t = useTranslations("Authors");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
@@ -91,11 +91,11 @@ export function AuthorManagementDialog(
         <ResponsiveDialogHeader>
           <div className="flex items-center justify-between">
             <ResponsiveDialogTitle>
-              {t("authors.title")}
+              {t("title")}
             </ResponsiveDialogTitle>
             <Button onClick={handleAdd}>
               <Plus className="mr-2 h-4 w-4" />
-              {t("authors.add")}
+              {t("add")}
             </Button>
           </div>
         </ResponsiveDialogHeader>

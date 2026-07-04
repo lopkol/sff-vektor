@@ -18,6 +18,10 @@ export function AdminNav() {
       title: t("bookLists"),
       url: "/admin/book-lists",
     },
+    {
+      title: t("authors"),
+      url: "/admin/authors",
+    },
   ];
 
   const currentPage = pages.find((page) => pathname.startsWith(page.url));

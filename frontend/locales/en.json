@@ -27,6 +27,7 @@
     "dashboard": "Dashboard",
     "admin": "Admin",
     "users": "Users",
+    "authors": "Authors",
     "bookLists": "Book lists",
     "books": "Books"
   },
@@ -45,11 +46,33 @@
     "content": "Qui minim labore adipisicing minim sint",
     "button": "Learn More"
   },
+  "Authors": {
+    "title": "Authors",
+    "addNew": "Add new",
+    "add": "Add author",
+    "edit": "Edit author",
+    "props": {
+      "name": "Name",
+      "sortName": "Sort name",
+      "url": "Moly URL",
+      "approved": "Approved"
+    },
+    "error": {
+      "nameRequired": "Author name is required",
+      "sortNameRequired": "Sort name is required",
+      "url": "Invalid URL"
+    },
+    "dialog": {
+      "deleteConfirmTitle": "Delete author",
+      "deleteConfirmMessage": "Are you sure you want to delete the author {name}?"
+    }
+  },
   "Admin": {
     "Nav": {
       "admin": "Admin",
       "users": "Users",
-      "bookLists": "Book lists"
+      "bookLists": "Book lists",
+      "authors": "Authors"
     },
     "Page": {
       "title": "Admin",
@@ -167,31 +190,18 @@
         "addAlternative": "Add variant",
         "manageAuthors": "Manage authors"
       },
-      "authors": {
-        "title": "Authors",
-        "approved": "Approved",
-        "name": "Name",
-        "sortName": "Sort name",
-        "url": "Moly URL",
-        "add": "Add author",
-        "edit": "Edit author"
-      },
       "error": {
         "year": "Year is required",
         "yearMin": "Year must be greater than 1900",
         "titleRequired": "Title is required",
         "nameRequired": "Name is required",
-        "url": "Invalid URL",
-        "authorNameRequired": "Author name is required",
-        "authorSortNameRequired": "Sort name is required"
+        "url": "Invalid URL"
       },
       "dialog": {
         "createTitle": "Add new book",
         "editTitle": "Edit book",
         "deleteConfirmTitle": "Delete book",
-        "deleteConfirmMessage": "Are you sure you want to delete this book?",
-        "deleteAuthorConfirmTitle": "Delete author",
-        "deleteAuthorConfirmMessage": "Are you sure you want to delete the author {name}?"
+        "deleteConfirmMessage": "Are you sure you want to delete this book?"
       }
     }
   }

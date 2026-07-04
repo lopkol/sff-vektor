@@ -15,7 +15,7 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from "@/components/ui/responsive-dialog";
-import { AuthorForm } from "@/app/book-lists/[year]/[genre]/admin/author-form";
+import { AuthorForm } from "@/components/authors/author-form";
 import { CreateAuthor } from "@/types/author";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -29,7 +29,7 @@ interface AuthorDialogProps {
 export function AuthorDialog(
   { onOpenChange, onSuccess, authorId, onAuthorCreated }: AuthorDialogProps,
 ) {
-  const t = useTranslations("BookList.Admin");
+  const t = useTranslations("Authors");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
   const { data: author, isLoading } = useQuery({
@@ -90,7 +90,7 @@ export function AuthorDialog(
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
-            {authorId ? t("authors.edit") : t("authors.add")}
+            {authorId ? t("edit") : t("add")}
           </ResponsiveDialogTitle>
         </ResponsiveDialogHeader>
         <div className="mt-4">
