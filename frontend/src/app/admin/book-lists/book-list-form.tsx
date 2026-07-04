@@ -1,9 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { FormErrorMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -13,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { useTranslations } from "next-intl";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -77,11 +83,7 @@ export function BookListForm(
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-  } = useForm<CreateBookList>({
+  const form = useForm<CreateBookList>({
     resolver: zodResolver(schema),
     defaultValues: {
       year: bookList?.year ?? new Date().getFullYear(),
@@ -109,42 +111,43 @@ export function BookListForm(
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Controller
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
           name="year"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="year">{t("props.year")}</Label>
-              <Input
-                id="year"
-                {...field}
-                type="number"
-                disabled={!!bookList}
-                value={Number.isNaN(field.value) ? "" : field.value}
-                onChange={(e) => field.onChange(e.target.valueAsNumber)}
-              />
-              <FormErrorMessage>{errors.year?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.year")}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="number"
+                  disabled={!!bookList}
+                  value={Number.isNaN(field.value) ? "" : field.value}
+                  onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="genre"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="genre">{t("props.genre")}</Label>
+            <FormItem>
+              <FormLabel>{t("props.genre")}</FormLabel>
               <Select
-                {...field}
+                value={field.value}
                 disabled={!!bookList}
                 onValueChange={(value) => field.onChange(value as Genre)}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("props.genre")} />
-                </SelectTrigger>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("props.genre")} />
+                  </SelectTrigger>
+                </FormControl>
                 <SelectContent>
                   <SelectItem value="sci-fi">
                     {tTools("genres.sciFi")}
@@ -154,52 +157,46 @@ export function BookListForm(
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <FormErrorMessage>{errors.genre?.message}</FormErrorMessage>
-            </>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="url"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="url">{t("props.url")}</Label>
-              <Input
-                id="url"
-                {...field}
-              />
-              <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.url")}</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="pendingUrl"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="pendingUrl">{t("props.pendingUrl")}</Label>
-              <Input
-                id="pendingUrl"
-                {...field}
-                value={field.value ?? ""}
-                onChange={(pendingUrl) => field.onChange(pendingUrl || null)}
-              />
-              <FormErrorMessage>{errors.pendingUrl?.message}</FormErrorMessage>
-            </>
+            <FormItem>
+              <FormLabel>{t("props.pendingUrl")}</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(pendingUrl) => field.onChange(pendingUrl || null)}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="space-y-2">
-        <Controller
+        <FormField
+          control={form.control}
           name="readers"
-          control={control}
           render={({ field }) => (
-            <>
-              <Label htmlFor="readers">{t("props.readers")}</Label>
+            <FormItem>
+              <FormLabel>{t("props.readers")}</FormLabel>
               <MultipleSelector
                 value={field.value.map((id: string) => ({
                   label: readersById?.[id]?.molyUsername ?? "",
@@ -220,59 +217,61 @@ export function BookListForm(
                   </p>
                 }
               />
-              <FormErrorMessage>{errors.readers?.message}</FormErrorMessage>
-            </>
+              <FormMessage />
+            </FormItem>
           )}
         />
-      </div>
-      <div className="flex justify-between space-x-2">
-        <div>
-          {bookList && (
-            <>
-              <Button
-                type="button"
-                variant="destructive"
-                disabled={isSaving}
-                onClick={() => setIsDeleteDialogOpen(true)}
-              >
-                {tTools("delete")}
-              </Button>
-              {isDeleteDialogOpen && (
-                <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        {t("dialog.deleteConfirmTitle")}
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        {t("dialog.deleteConfirmMessage")}
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>{tTools("cancel")}</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete}>
-                        {tTools("delete")}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              )}
-            </>
-          )}
+        <div className="flex justify-between space-x-2">
+          <div>
+            {bookList && (
+              <>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={isSaving}
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  {tTools("delete")}
+                </Button>
+                {isDeleteDialogOpen && (
+                  <AlertDialog open={true} onOpenChange={setIsDeleteDialogOpen}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          {t("dialog.deleteConfirmTitle")}
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("dialog.deleteConfirmMessage")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>
+                          {tTools("cancel")}
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>
+                          {tTools("delete")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </>
+            )}
+          </div>
+          <div className="flex space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              {tTools("cancel")}
+            </Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? tTools("saving") : tTools("save")}
+            </Button>
+          </div>
         </div>
-        <div className="flex space-x-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
-            {tTools("cancel")}
-          </Button>
-          <Button type="submit" disabled={isSaving}>
-            {isSaving ? tTools("saving") : tTools("save")}
-          </Button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }
