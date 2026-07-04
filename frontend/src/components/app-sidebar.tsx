@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { BookCopy, ChevronRight, Orbit, ShieldUser, Wand } from "lucide-react";
+import { Book, BookCopy, ChevronRight, Orbit, Users, Wand } from "lucide-react";
 
 import {
   Sidebar,
@@ -53,9 +53,14 @@ export function AppSidebar() {
 
   const adminPages: MenuItem[] = [
     {
-      title: t("admin"),
-      url: "/admin",
-      icon: ShieldUser,
+      title: t("users"),
+      url: "/admin/users",
+      icon: Users,
+    },
+    {
+      title: t("bookLists"),
+      url: "/admin/book-lists",
+      icon: Book,
     },
   ];
 
@@ -118,7 +123,7 @@ export function AppSidebar() {
       <SidebarContent>
         <RoleCheck role={UserRole.Admin} hide>
           <SidebarGroup>
-            <SidebarGroupLabel>{t("global")}</SidebarGroupLabel>
+            <SidebarGroupLabel>{t("admin")}</SidebarGroupLabel>
             <SidebarGroupContent>
               <NestableMenuItem activePage={activePage} items={adminPages} />
             </SidebarGroupContent>

@@ -1,33 +1,34 @@
 "use client";
 
 import { AppNavbar } from "@/components/app-navbar";
-import { Book, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
+import type { MenuItem } from "@/lib/menu-item";
 
 export function AdminNav() {
   const t = useTranslations("Admin.Nav");
+  const pathname = usePathname();
 
-  return (
-    <AppNavbar
-      rootUrl="/admin"
-      rootPages={[
-        {
-          title: t("admin"),
-          url: "/admin",
-        },
-      ]}
-      subPages={[
-        {
-          title: t("users"),
-          url: "/users",
-          icon: Users,
-        },
-        {
-          title: t("bookLists"),
-          url: "/book-lists",
-          icon: Book,
-        },
-      ]}
-    />
-  );
+  const pages: Pick<MenuItem, "title" | "url">[] = [
+    {
+      title: t("users"),
+      url: "/admin/users",
+    },
+    {
+      title: t("bookLists"),
+      url: "/admin/book-lists",
+    },
+  ];
+
+  const currentPage = pages.find((page) => pathname.startsWith(page.url));
+
+  const rootPages: Pick<MenuItem, "title" | "url">[] = [
+    {
+      title: t("admin"),
+      url: "/admin",
+    },
+    ...(currentPage ? [currentPage] : []),
+  ];
+
+  return <AppNavbar rootUrl="/admin" rootPages={rootPages} subPages={[]} />;
 }

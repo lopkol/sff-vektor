@@ -26,7 +26,7 @@
   "Sidebar": {
     "dashboard": "Dashboard",
     "admin": "Admin",
-    "global": "Általános",
+    "users": "Felhasználók",
     "bookLists": "Könyvlisták",
     "books": "Könyvek"
   },
