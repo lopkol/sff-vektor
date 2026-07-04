@@ -2,15 +2,19 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FormErrorMessage } from "@/components/ui/form";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Plus, Trash2, X } from "lucide-react";
-import { Control, Controller, useFieldArray, useWatch } from "react-hook-form";
+import { Control, useFieldArray } from "react-hook-form";
 import { CreateBook } from "@/types/book";
 import { useEffect } from "react";
 
 interface BookAlternativeItemProps {
   control: Control<CreateBook>;
-  errors?: any;
   index: number;
   alternativeId: string;
   onRemove: () => void;
@@ -18,7 +22,6 @@ interface BookAlternativeItemProps {
 
 export function BookAlternativeItem({
   control,
-  errors,
   index,
   alternativeId,
   onRemove,
@@ -57,55 +60,51 @@ export function BookAlternativeItem({
         </Button>
       </div>
 
-      <div className="space-y-2">
-        <Controller
-          name={`alternatives.${index}.name`}
-          control={control}
-          render={({ field: nameField }) => (
-            <Input
-              {...nameField}
-              placeholder={t("form.alternativeNamePlaceholder")}
-            />
-          )}
-        />
-        {errors?.alternatives?.[index]?.name && (
-          <FormErrorMessage>
-            {errors.alternatives[index].name.message}
-          </FormErrorMessage>
+      <FormField
+        control={control}
+        name={`alternatives.${index}.name`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder={t("form.alternativeNamePlaceholder")}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
-      </div>
+      />
 
       <div className="space-y-2">
         <Label className="text-sm">{t("props.alternativeUrls")}</Label>
-        {urlFields.map((urlField, urlIndex) => (
-          <div key={urlField.id} className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <Controller
-                name={`alternatives.${index}.urls.${urlIndex}`}
-                control={control}
-                render={({ field: urlField }) => (
-                  <Input
-                    {...urlField}
-                    placeholder={t("form.alternativeUrlPlaceholder")}
-                  />
-                )}
-              />
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() =>
-                  removeUrl(urlIndex)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            {errors?.alternatives?.[index]?.urls?.[urlIndex] && (
-              <FormErrorMessage>
-                {errors.alternatives[index].urls[urlIndex].message}
-              </FormErrorMessage>
+        {urlFields.map((urlFieldItem, urlIndex) => (
+          <FormField
+            key={urlFieldItem.id}
+            control={control}
+            name={`alternatives.${index}.urls.${urlIndex}`}
+            render={({ field }) => (
+              <FormItem className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder={t("form.alternativeUrlPlaceholder")}
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeUrl(urlIndex)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
+          />
         ))}
         <Button
           type="button"

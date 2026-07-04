@@ -4,8 +4,14 @@ import { useTranslations } from "next-intl";
 import { Author, CreateAuthor } from "@/types/author";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { FormErrorMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -73,81 +79,95 @@ export function AuthorForm({
 
   return (
     <>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-4"
-      >
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="isApproved">{t("props.approved")}</Label>
-            <Switch
-              id="isApproved"
-              checked={form.watch("isApproved")}
-              onCheckedChange={(checked: boolean) => {
-                form.setValue("isApproved", checked);
-              }}
-            />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="space-y-4"
+        >
+          <FormField
+            control={form.control}
+            name="isApproved"
+            render={({ field }) => (
+              <FormItem className="flex items-center justify-between">
+                <FormLabel>{t("props.approved")}</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="displayName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("authors.name")}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="sortName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("authors.sortName")}</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("authors.url")}</FormLabel>
+                <FormControl>
+                  <Input {...field} value={field.value ?? ""} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-between">
+            {author && (
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={isSaving}
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                {tTools("delete")}
+              </Button>
+            )}
+            <div className="flex space-x-2 ml-auto">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+              >
+                {tTools("cancel")}
+              </Button>
+              <Button type="submit" disabled={isSaving}>
+                {isSaving ? tTools("saving") : tTools("save")}
+              </Button>
+            </div>
           </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="displayName">{t("authors.name")}</Label>
-          <Input
-            id="displayName"
-            {...form.register("displayName")}
-          />
-          <FormErrorMessage>
-            {form.formState.errors.displayName?.message}
-          </FormErrorMessage>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="sortName">{t("authors.sortName")}</Label>
-          <Input
-            id="sortName"
-            {...form.register("sortName")}
-          />
-          <FormErrorMessage>
-            {form.formState.errors.sortName?.message}
-          </FormErrorMessage>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="url">{t("authors.url")}</Label>
-          <Input
-            id="url"
-            {...form.register("url")}
-          />
-          <FormErrorMessage>
-            {form.formState.errors.url?.message}
-          </FormErrorMessage>
-        </div>
-
-        <div className="flex justify-between">
-          {author && (
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={isSaving}
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              {tTools("delete")}
-            </Button>
-          )}
-          <div className="flex space-x-2 ml-auto">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              {tTools("cancel")}
-            </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? tTools("saving") : tTools("save")}
-            </Button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </Form>
 
       {isDeleteDialogOpen && author && (
         <AlertDialog

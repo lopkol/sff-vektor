@@ -17,7 +17,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AuthProvider } from "@/components/auth-provider";
 import { UserProvider } from "@/components/user-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,7 +64,7 @@ export default async function RootLayout({
                 </UserProvider>
               </AuthProvider>
             </ReactQueryProvider>
-            <Toaster />
+            <Toaster richColors />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

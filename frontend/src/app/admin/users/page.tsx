@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserDialog } from "./user-dialog";
 import { useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { PageSkeleton } from "@/components/page-skeleton";
 import { User } from "@/types/user";
 
@@ -26,8 +26,6 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const queryClient = useQueryClient();
-  const { toast } = useToast();
-
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
@@ -38,16 +36,10 @@ export default function UsersPage() {
       updateUser(user.id, { isActive: !user.isActive }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
-      toast({
-        title: tTools("updateSuccess"),
-        variant: "success",
-      });
+      toast.success(tTools("updateSuccess"));
     },
     onError: () => {
-      toast({
-        title: tTools("updateError"),
-        variant: "destructive",
-      });
+      toast.error(tTools("updateError"));
     },
   });
 

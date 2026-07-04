@@ -271,6 +271,12 @@ const MultipleSelector = React.forwardRef<
           if (e.key === "Escape") {
             input.blur();
           }
+          // Close the dropdown when tabbing away so it doesn't disrupt the
+          // surrounding dialog's focus order (otherwise focus gets trapped
+          // and loops back to the first element).
+          if (e.key === "Tab") {
+            setOpen(false);
+          }
         }
       },
       [handleUnselect, selected],
@@ -466,6 +472,7 @@ const MultipleSelector = React.forwardRef<
           )}
           onClick={() => {
             if (disabled) return;
+            setOpen(true);
             inputRef?.current?.focus();
           }}
         >
@@ -513,6 +520,7 @@ const MultipleSelector = React.forwardRef<
               disabled={disabled}
               onValueChange={(value) => {
                 setInputValue(value);
+                setOpen(true);
                 inputProps?.onValueChange?.(value);
               }}
               onBlur={(event) => {
@@ -522,7 +530,6 @@ const MultipleSelector = React.forwardRef<
                 inputProps?.onBlur?.(event);
               }}
               onFocus={(event) => {
-                setOpen(true);
                 inputProps?.onFocus?.(event);
               }}
               placeholder={hidePlaceholderWhenSelected && selected.length !== 0
