@@ -132,15 +132,30 @@ export async function getBooks(
       b."seriesNumber",
       b."isApproved" and bool_and(a."isApproved") as "isApproved",
       b."isPending",
-      ba."urls",
+      alt."urls",
       array_agg(a."displayName" order by a."sortName") as "authorNames",
       array_agg(a."sortName" order by a."sortName") as "authorSortNames"
     from "book" b
-    left join "book_alternative" ba on ba."bookId" = b."id" and ba."name" = 'magyar'
+    left join lateral (
+      select array_agg(u."url" order by
+        case ba."name"
+          when 'magyar' then 0
+          when 'eredeti' then 1
+          when 'original' then 2
+          else 3
+        end,
+        ba."name",
+        u."ord"
+      ) as "urls"
+      from "book_alternative" ba
+      cross join lateral jsonb_array_elements_text(ba."urls")
+        with ordinality as u("url", "ord")
+      where ba."bookId" = b."id"
+    ) alt on true
     left join "book_author" ba2 on ba2."bookId" = b."id"
     left join "author" a on a."id" = ba2."authorId"
     where ${sql.join(filterFragments, sql.fragment` and `)}
-    group by b."id", ba."urls"
+    group by b."id", alt."urls"
     order by b."year", b."genre", "authorSortNames", b."title"
   `);
 

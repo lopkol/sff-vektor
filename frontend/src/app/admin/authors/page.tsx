@@ -20,6 +20,7 @@ import { Author } from "@/types/author";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MolyLink } from "@/components/moly-link";
 
 export default function AuthorsPage() {
   const t = useTranslations("Authors");
@@ -115,7 +116,12 @@ export default function AuthorsPage() {
                     {!author.isApproved && <span>⚠️</span>}
                   </TableCell>
                 )}
-                <TableCell>{author.displayName}</TableCell>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1.5">
+                    {author.displayName}
+                    {author.url && <MolyLink url={author.url} />}
+                  </span>
+                </TableCell>
                 <TableCell>{author.sortName}</TableCell>
               </TableRow>
             ))}

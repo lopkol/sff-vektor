@@ -14,6 +14,7 @@ import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { BookDialog } from "./book-dialog";
 import { CompactBook } from "@/types/book";
+import { MolyLink } from "@/components/moly-link";
 
 export default function AdminPage() {
   const t = useTranslations("BookList.Admin");
@@ -101,7 +102,10 @@ export default function AdminPage() {
                     </TableCell>
                   )}
                   <TableCell>
-                    {book.authorNames.join(", ")} - {book.title}
+                    <span className="inline-flex items-center gap-1.5">
+                      {book.authorNames.join(", ")} - {book.title}
+                      {book.urls?.[0] && <MolyLink url={book.urls[0]} />}
+                    </span>
                   </TableCell>
                 </TableRow>
               );

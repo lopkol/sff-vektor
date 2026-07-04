@@ -411,7 +411,7 @@ describe("book db functions", () => {
       assertEquals(books[6].id, book3.id);
     });
 
-    it("returns the book urls of the alternative 'magyar'", async () => {
+    it("returns all book urls ordered by variant (magyar first, then eredeti)", async () => {
       const pool = await getOrCreateDatabasePool();
       const author = await createAuthor(pool, {
         displayName: "J.R.R. Tolkien",
@@ -464,11 +464,45 @@ describe("book db functions", () => {
       });
 
       assertEquals(books.length, 2);
-      assertEquals(books[0].urls, ["https://example.com/magyar"]);
+      assertEquals(books[0].urls, [
+        "https://example.com/magyar",
+        "https://example.com/original",
+      ]);
       assertEquals(books[1].urls, [
         "https://example.com/magyar2",
         "https://example.com/magyar3",
       ]);
+    });
+
+    it("falls back to the eredeti url when there is no magyar variant", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "Isaac Asimov",
+        sortName: "Asimov, Isaac",
+        isApproved: true,
+      });
+      await createBook(pool, {
+        title: "Foundation",
+        year: 2007,
+        genre: Genre.SciFi,
+        isApproved: true,
+        isPending: false,
+        alternatives: [
+          {
+            name: "eredeti",
+            urls: ["https://example.com/foundation-original"],
+          },
+        ],
+        authors: [author.id],
+      });
+
+      const books = await getBooks(pool, {
+        year: 2007,
+        genre: Genre.SciFi,
+      });
+
+      assertEquals(books.length, 1);
+      assertEquals(books[0].urls, ["https://example.com/foundation-original"]);
     });
 
     it("calculates isApproved correctly: if book and all authors are approved, returns true", async () => {
