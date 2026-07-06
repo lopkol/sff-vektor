@@ -133,6 +133,18 @@
       "table": "Táblázat",
       "admin": "Admin"
     },
+    "Books": {
+      "title": "{year} könyvei",
+      "addBook": "Új könyv",
+      "syncFromMoly": "Frissítés molyról",
+      "syncSuccess": "Sikeresen frissítve",
+      "syncError": "Frissítés közben hiba történt",
+      "props": {
+        "title": "Cím",
+        "genre": "Műfaj",
+        "pending": "Besorolásra vár"
+      }
+    },
     "Admin": {
       "title": "{year} {genreName} könyvlista",
       "addBook": "Új könyv",

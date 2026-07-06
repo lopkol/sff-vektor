@@ -12,16 +12,20 @@ import {
 } from "@/components/ui/responsive-dialog";
 import { BookForm } from "./book-form";
 import { CreateBook } from "@/types/book";
+import { Genre } from "@/types/book-list";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface BookDialogProps {
   onOpenChange: (open: boolean) => void;
   bookId?: string;
+  defaultYear?: number;
+  defaultGenre?: Genre | null;
   onSuccess: () => void;
 }
 
 export function BookDialog(
-  { onOpenChange, bookId, onSuccess }: BookDialogProps,
+  { onOpenChange, bookId, defaultYear, defaultGenre, onSuccess }:
+    BookDialogProps,
 ) {
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
@@ -100,6 +104,8 @@ export function BookDialog(
               <BookForm
                 book={book}
                 isSaving={isSaving}
+                defaultYear={defaultYear}
+                defaultGenre={defaultGenre}
                 onOpenChange={onOpenChange}
                 onSubmit={onSubmit}
                 onDelete={onDelete}

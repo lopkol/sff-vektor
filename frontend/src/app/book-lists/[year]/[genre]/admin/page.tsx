@@ -12,7 +12,7 @@ import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import { BookDialog } from "./book-dialog";
+import { BookDialog } from "@/components/books/book-dialog";
 import { CompactBook } from "@/types/book";
 import { MolyLink } from "@/components/moly-link";
 
@@ -118,6 +118,8 @@ export default function AdminPage() {
         <BookDialog
           onOpenChange={setIsDialogOpen}
           bookId={selectedBook?.id}
+          defaultYear={year}
+          defaultGenre={genre}
           onSuccess={handleFormSuccess}
         />
       )}

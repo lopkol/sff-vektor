@@ -4,9 +4,10 @@ import {
   bookListRefSchema,
   createBook,
   createBookSchema,
-  createOrUpdateBooksOfListFromMoly,
+  createOrUpdateBooksFromMoly,
   deleteBook,
   EntityNotFoundException,
+  Genre,
   getBookById,
   getBooks,
   getOrCreateDatabasePool,
@@ -28,8 +29,9 @@ const bookFilterApiSchema = bookFilterSchema.extend({
   year: z.coerce.number(),
 }).strict();
 
-const bookListRefApiSchema = bookListRefSchema.extend({
+const updateBooksFromMolyApiSchema = bookListRefSchema.extend({
   year: z.coerce.number(),
+  genre: z.enum(Genre).optional(),
 }).strict();
 
 app.get("/api/books", validateQuery(bookFilterApiSchema), async (c) => {
@@ -92,13 +94,13 @@ app.delete(
 app.post(
   "/api/books/update-from-moly",
   isUserAdminMiddleware,
-  validateBody(bookListRefApiSchema),
+  validateBody(updateBooksFromMolyApiSchema),
   mapExceptions(
     [EntityNotFoundException, HttpStatusCode.NotFound],
   ),
   async (c) => {
     const { year, genre } = c.req.valid("form");
-    await createOrUpdateBooksOfListFromMoly(year, genre);
+    await createOrUpdateBooksFromMoly(year, genre);
     return c.json({ message: "Books updated" });
   },
 );

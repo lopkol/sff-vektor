@@ -1,5 +1,6 @@
 // @ts-types="npm:@types/jsdom"
 import { JSDOM } from "jsdom";
+import type { CommonQueryMethods } from "slonik";
 import {
   getMolyAxiosInstance,
   molyBaseUrl,
@@ -14,7 +15,7 @@ import {
 } from "@/helpers/moly/book-list.ts";
 import type { Genre } from "@/schema/book.ts";
 import { getOrCreateDatabasePool } from "@/config/database.ts";
-import { getBookList } from "@/db/book-list.ts";
+import { getBookList, getBookListsByYear } from "@/db/book-list.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { createOrUpdateBookFromMoly } from "@/services/moly/book.ts";
 import { logger } from "@sffvektor/lib";
@@ -71,11 +72,11 @@ async function getBooksFromPendingShelf(url: string): Promise<BookFromShelf[]> {
   }
 }
 
-export async function createOrUpdateBooksOfListFromMoly(
+async function createOrUpdateBooksOfListFromMoly(
+  db: CommonQueryMethods,
   year: number,
   genre: Genre,
 ): Promise<void> {
-  const db = await getOrCreateDatabasePool();
   const bookList = await getBookList(db, year, genre);
   if (!bookList) {
     throw new EntityNotFoundException("Booklist does not exist", {
@@ -114,4 +115,27 @@ export async function createOrUpdateBooksOfListFromMoly(
 
   // TODO: logging
   logger.info("Books updated for list", { year, genre });
+}
+
+export async function createOrUpdateBooksFromMoly(
+  year: number,
+  genre?: Genre,
+): Promise<void> {
+  const db = await getOrCreateDatabasePool();
+  if (genre) {
+    await createOrUpdateBooksOfListFromMoly(db, year, genre);
+    return;
+  }
+
+  const bookLists = await getBookListsByYear(db, year);
+  if (!bookLists.length) {
+    throw new EntityNotFoundException("No book lists exist for year", { year });
+  }
+
+  for (const bookList of bookLists) {
+    await createOrUpdateBooksOfListFromMoly(db, year, bookList.genre);
+  }
+
+  // TODO: logging
+  logger.info("Books updated for year", { year });
 }
