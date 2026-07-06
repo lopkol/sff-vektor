@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AlertDialog } from "@/components/ui/alert-dialog";
 import { AlertDialogContent } from "@/components/ui/alert-dialog";
-import { BookAlternativeInput } from "@/app/book-lists/[year]/[genre]/admin/book-alternative-input";
+import { BookAlternativeInput } from "./book-alternative-input";
 import { Author } from "@/types/author";
 import { getAuthors } from "@/services/authors";
 import { useQuery } from "@tanstack/react-query";
@@ -38,13 +38,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import MultipleSelector from "@/components/ui/multiple-selector";
 import { AuthorManagementDialog } from "./author-management-dialog";
 import { Settings2 } from "lucide-react";
-import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
-import { useBookListGenre } from "@/app/book-lists/[year]/[genre]/book-list-genre-provider";
 import { Switch } from "@/components/ui/switch";
 
 interface BookFormProps {
   book?: Book;
   isSaving: boolean;
+  defaultYear?: number;
+  defaultGenre?: Genre | null;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CreateBook) => void;
   onDelete: () => void;
@@ -53,14 +53,14 @@ interface BookFormProps {
 export function BookForm({
   book,
   isSaving,
+  defaultYear,
+  defaultGenre,
   onOpenChange,
   onSubmit,
   onDelete,
 }: BookFormProps) {
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
-  const { year } = useBookListYear();
-  const { genre } = useBookListGenre();
   const [isAuthorDialogOpen, setIsAuthorDialogOpen] = useState(false);
 
   const schema = useMemo(
@@ -101,8 +101,8 @@ export function BookForm({
   const form = useForm<CreateBook>({
     resolver: zodResolver(schema),
     defaultValues: {
-      year: book?.year ?? year,
-      genre: book?.genre ?? genre,
+      year: book?.year ?? defaultYear,
+      genre: book?.genre ?? defaultGenre ?? null,
       title: book?.title ?? "",
       series: book?.series ?? null,
       seriesNumber: book?.seriesNumber ?? null,

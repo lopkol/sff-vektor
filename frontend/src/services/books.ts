@@ -36,7 +36,7 @@ export async function deleteBook(id: string): Promise<void> {
 
 export async function updateBooksFromMoly(
   year: number,
-  genre: Genre,
+  genre?: Genre,
 ): Promise<void> {
   await http.post("/books/update-from-moly", { year, genre });
 }

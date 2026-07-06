@@ -146,8 +146,15 @@
     },
     "Books": {
       "title": "Books available in {year}",
-      "description": "Card Description",
-      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+      "addBook": "Add book",
+      "syncFromMoly": "Sync from moly",
+      "syncSuccess": "Sync successful",
+      "syncError": "Failed to sync",
+      "props": {
+        "title": "Title",
+        "genre": "Genre",
+        "pending": "Pending"
+      }
     },
     "Table": {
       "title": "Table of {genreName} books",

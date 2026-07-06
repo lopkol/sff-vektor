@@ -129,6 +129,20 @@ export async function getAllBookLists(
   return mutable(bookListsResult.rows);
 }
 
+export async function getBookListsByYear(
+  db: CommonQueryMethods,
+  year: number,
+): Promise<ShortBookList[]> {
+  const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
+    select "year", "genre", "url", "pendingUrl"
+    from "book_list"
+    where "year" = ${year}
+    order by "genre" desc
+  `);
+
+  return mutable(bookListsResult.rows);
+}
+
 export async function updateBookList(
   db: CommonQueryMethods,
   year: number,

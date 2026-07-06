@@ -16,6 +16,7 @@ import {
   Genre,
   getAllBookLists,
   getBookList,
+  getBookListsByYear,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   UniqueConstraintException,
@@ -236,6 +237,53 @@ describe("book list db functions", () => {
         url: "https://example.com/book-list1",
         pendingUrl: "https://example.com/book-list-pending1",
       });
+    });
+  });
+
+  describe("getBookListsByYear", () => {
+    it("gets only the book lists of the given year", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/2023-fantasy",
+        pendingUrl: null,
+        readers: [],
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/2024-fantasy",
+        pendingUrl: null,
+        readers: [],
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.SciFi,
+        url: "https://example.com/2024-sci-fi",
+        pendingUrl: null,
+        readers: [],
+      });
+
+      const result = await getBookListsByYear(pool, 2024);
+
+      assertEquals(result.length, 2);
+      assertArrayIncludes(result.map((bookList) => bookList.genre), [
+        Genre.Fantasy,
+        Genre.SciFi,
+      ]);
+      assertEquals(
+        result.every((bookList) => bookList.year === 2024),
+        true,
+      );
+    });
+
+    it("returns an empty array if there are no book lists for the year", async () => {
+      const pool = await getOrCreateDatabasePool();
+
+      const result = await getBookListsByYear(pool, 2024);
+
+      assertEquals(result, []);
     });
   });
 
