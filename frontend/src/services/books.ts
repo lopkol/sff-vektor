@@ -1,11 +1,22 @@
 import { Book, CreateBook, UpdateBook } from "@/types/book";
-import { BookFilter, CompactBook } from "@/types/book";
+import { BookFilter, BookWithReadingPlan, CompactBook } from "@/types/book";
 import http from "./http";
 import { AxiosResponse } from "axios";
 import { Genre } from "@/types/book-list";
 
 export async function getBooks(filter: BookFilter): Promise<CompactBook[]> {
   const response = await http.get<CompactBook[]>("/books", { params: filter });
+  return response.data;
+}
+
+export async function getBooksWithReadingPlan(
+  year: number,
+  genre: Genre,
+): Promise<BookWithReadingPlan[]> {
+  const response = await http.get<BookWithReadingPlan[]>(
+    "/books/reading-plans",
+    { params: { year, genre } },
+  );
   return response.data;
 }
 

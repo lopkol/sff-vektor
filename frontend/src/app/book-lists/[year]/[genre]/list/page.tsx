@@ -1,31 +1,166 @@
 "use client";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
+import { getBooksWithReadingPlan } from "@/services/books";
+import { setReadingPlan } from "@/services/reading-plans";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { List } from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageSkeleton } from "@/components/page-skeleton";
 import { useBookListGenre } from "../book-list-genre-provider";
+import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
+import { toast } from "sonner";
+import { MolyLink } from "@/components/moly-link";
+import { BookWithReadingPlan } from "@/types/book";
+import { ReadingPlanStatus } from "@/types/reading-plan";
+
+const READING_PLAN_STATUSES: ReadingPlanStatus[] = [
+  "noPlan",
+  "willRead",
+  "read",
+  "willNotRead",
+];
+
+const READING_PLAN_EMOJI: Record<ReadingPlanStatus, string> = {
+  noPlan: "🤔",
+  willRead: "🔖",
+  read: "✅",
+  willNotRead: "🚫",
+};
 
 export default function Page() {
-  const { genreName } = useBookListGenre();
   const t = useTranslations("BookList.List");
+  const { year } = useBookListYear();
+  const { genre, genreName } = useBookListGenre();
+  const queryClient = useQueryClient();
+  const queryKey = ["reading-plans", year, genre];
+
+  const { data: books, isLoading, error } = useQuery({
+    queryKey,
+    queryFn: () => getBooksWithReadingPlan(year, genre),
+    retry: false,
+  });
+
+  const { mutate: updateReadingPlan } = useMutation({
+    mutationFn: (
+      { bookId, status }: { bookId: string; status: ReadingPlanStatus },
+    ) => setReadingPlan(bookId, status),
+    onMutate: async ({ bookId, status }) => {
+      await queryClient.cancelQueries({ queryKey });
+      const previous = queryClient.getQueryData<BookWithReadingPlan[]>(queryKey);
+      queryClient.setQueryData<BookWithReadingPlan[]>(
+        queryKey,
+        (old) =>
+          old?.map((book) =>
+            book.id === bookId ? { ...book, readingPlanStatus: status } : book
+          ),
+      );
+      return { previous };
+    },
+    onError: (_error, _variables, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous);
+      }
+      toast.error(t("updateError"));
+    },
+  });
+
+  if (isLoading) {
+    return <PageSkeleton />;
+  }
+
+  if (error) {
+    const isNotJuryMember = isAxiosError(error) &&
+      (error.response?.data as { code?: string } | undefined)?.code ===
+        "NOT_A_JURY_MEMBER";
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("title", { genreName })}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">
+            {isNotJuryMember ? t("notJuryMember") : t("loadError")}
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <List />
-          {t("title", { genreName })}
+        <CardTitle>
+          <h1 className="text-2xl font-bold">{t("title", { genreName })}</h1>
         </CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>{t("content")}</p>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t("columns.title")}</TableHead>
+              <TableHead className="w-56">{t("columns.readingPlan")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {books?.map((book) => (
+              <TableRow key={book.id}>
+                <TableCell>
+                  <span className="inline-flex items-center gap-1.5">
+                    {book.authorNames.join(", ")} - {book.title}
+                    {book.urls?.[0] && <MolyLink url={book.urls[0]} />}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <Select
+                    value={book.readingPlanStatus ?? "noPlan"}
+                    onValueChange={(value) =>
+                      updateReadingPlan({
+                        bookId: book.id,
+                        status: value as ReadingPlanStatus,
+                      })}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {READING_PLAN_STATUSES.map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {READING_PLAN_EMOJI[status]} {t(`statuses.${status}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+              </TableRow>
+            ))}
+            {books?.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={2}
+                  className="text-center text-muted-foreground"
+                >
+                  {t("noBooks")}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </CardContent>
     </Card>
   );

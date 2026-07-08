@@ -145,6 +145,23 @@
         "pending": "Besorolásra vár"
       }
     },
+    "List": {
+      "title": "{genreName} olvasási lista",
+      "columns": {
+        "title": "Cím",
+        "readingPlan": "Olvasási terv"
+      },
+      "statuses": {
+        "read": "olvastam",
+        "willRead": "olvasni fogom",
+        "willNotRead": "nem olvasom",
+        "noPlan": "még nem tudom"
+      },
+      "notJuryMember": "Nem vagy zsűritagja ennek a könyvlistának",
+      "loadError": "Nem sikerült betölteni az olvasási listát.",
+      "updateError": "Nem sikerült frissíteni az olvasási tervet.",
+      "noBooks": "Még nincsenek jóváhagyott könyvek."
+    },
     "Admin": {
       "title": "{year} {genreName} könyvlista",
       "addBook": "Új könyv",
