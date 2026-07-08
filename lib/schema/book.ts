@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isUuidv7 } from "@/helpers/type.ts";
+import { ReadingPlanStatus } from "@/schema/reading-plan.ts";
 
 export enum Genre {
   Fantasy = "fantasy",
@@ -20,7 +21,7 @@ export const bookSchema = z.object({
   molyId: z.string().nullable().optional(),
   title: z.string(),
   year: z.number(),
-  genre: z.nativeEnum(Genre).nullable().optional(),
+  genre: z.enum(Genre).nullable().optional(),
   series: z.string().nullable().optional(),
   seriesNumber: z.string().nullable().optional(),
   isApproved: z.boolean(),
@@ -74,3 +75,12 @@ export const compactBookSchema = bookSchema.pick({
 });
 
 export type CompactBook = z.infer<typeof compactBookSchema>;
+
+// A compact book plus the current reader's reading plan for it.
+// `readingPlanStatus` is null only when the reader has no row yet (a left-join
+// miss), which the frontend renders the same as `noPlan`.
+export const bookWithReadingPlanSchema = compactBookSchema.extend({
+  readingPlanStatus: z.enum(ReadingPlanStatus).nullable(),
+});
+
+export type BookWithReadingPlan = z.infer<typeof bookWithReadingPlanSchema>;

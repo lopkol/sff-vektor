@@ -7,11 +7,14 @@ import {
   createOrUpdateBooksFromMoly,
   deleteBook,
   EntityNotFoundException,
+  ForbiddenException,
   Genre,
+  getApprovedBooksWithReadingPlan,
   getBookById,
   getBooks,
   getOrCreateDatabasePool,
   InvalidArgumentException,
+  isReaderOfBookList,
   updateBook,
   updateBookSchema,
 } from "@sffvektor/lib";
@@ -29,6 +32,10 @@ const bookFilterApiSchema = bookFilterSchema.extend({
   year: z.coerce.number(),
 }).strict();
 
+const bookWithReadingPlanFilterApiSchema = bookFilterApiSchema.extend({
+  genre: z.enum(Genre),
+}).strict();
+
 const updateBooksFromMolyApiSchema = bookListRefSchema.extend({
   year: z.coerce.number(),
   genre: z.enum(Genre).optional(),
@@ -39,6 +46,36 @@ app.get("/api/books", validateQuery(bookFilterApiSchema), async (c) => {
   const query = c.req.valid("query");
   return c.json(await getBooks(pool, query));
 });
+
+// Returns the approved books of a book list annotated with the current reader's
+// reading plan. Registered before "/api/books/:id" so the static path wins.
+app.get(
+  "/api/books/reading-plans",
+  validateQuery(bookWithReadingPlanFilterApiSchema),
+  async (c) => {
+    const user = c.get("user");
+    const { year, genre } = c.req.valid("query");
+    const pool = await getOrCreateDatabasePool();
+
+    if (
+      !user.readerId ||
+      !(await isReaderOfBookList(pool, year, genre, user.readerId))
+    ) {
+      throw new ForbiddenException(
+        "You are not a jury member for this book list",
+        "NOT_A_JURY_MEMBER",
+      );
+    }
+
+    return c.json(
+      await getApprovedBooksWithReadingPlan(pool, {
+        year,
+        genre,
+        readerId: user.readerId,
+      }),
+    );
+  },
+);
 
 app.get(
   "/api/books/:id",

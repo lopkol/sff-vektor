@@ -20,9 +20,12 @@ import {
   bookAlternativeSchema,
   type BookFilter,
   bookSchema,
+  type BookWithReadingPlan,
+  bookWithReadingPlanSchema,
   type CompactBook,
   compactBookSchema,
   type CreateBook,
+  type Genre,
   type UpdateBook,
 } from "@/schema/book.ts";
 import { mutable } from "@/helpers/type.ts";
@@ -37,6 +40,7 @@ const sql = createSqlTag({
     bookAlternative: bookAlternativeSchema,
     book: bookDbSchema,
     compactBook: compactBookSchema,
+    bookWithReadingPlan: bookWithReadingPlanSchema,
     void: z.void(),
     id: z.object({
       id: z.string(),
@@ -111,6 +115,43 @@ export async function createBook(
   });
 }
 
+// Shared projection + source for the compact-book queries below
+const compactBookColumns = sql.fragment`
+  b."id",
+  b."title",
+  b."year",
+  b."genre",
+  b."series",
+  b."seriesNumber",
+  b."isApproved" and bool_and(a."isApproved") as "isApproved",
+  b."isPending",
+  alt."urls",
+  array_agg(a."displayName" order by a."sortName") as "authorNames",
+  array_agg(a."sortName" order by a."sortName") as "authorSortNames"
+`;
+
+const compactBookFrom = sql.fragment`
+  from "book" b
+  left join lateral (
+    select array_agg(u."url" order by
+      case ba."name"
+        when 'magyar' then 0
+        when 'eredeti' then 1
+        when 'original' then 2
+        else 3
+      end,
+      ba."name",
+      u."ord"
+    ) as "urls"
+    from "book_alternative" ba
+    cross join lateral jsonb_array_elements_text(ba."urls")
+      with ordinality as u("url", "ord")
+    where ba."bookId" = b."id"
+  ) alt on true
+  left join "book_author" ba2 on ba2."bookId" = b."id"
+  left join "author" a on a."id" = ba2."authorId"
+`;
+
 export async function getBooks(
   db: CommonQueryMethods,
   filter: BookFilter,
@@ -123,39 +164,28 @@ export async function getBooks(
   }
 
   const books = await db.query(sql.typeAlias("compactBook")`
-    select
-      b."id",
-      b."title",
-      b."year",
-      b."genre",
-      b."series",
-      b."seriesNumber",
-      b."isApproved" and bool_and(a."isApproved") as "isApproved",
-      b."isPending",
-      alt."urls",
-      array_agg(a."displayName" order by a."sortName") as "authorNames",
-      array_agg(a."sortName" order by a."sortName") as "authorSortNames"
-    from "book" b
-    left join lateral (
-      select array_agg(u."url" order by
-        case ba."name"
-          when 'magyar' then 0
-          when 'eredeti' then 1
-          when 'original' then 2
-          else 3
-        end,
-        ba."name",
-        u."ord"
-      ) as "urls"
-      from "book_alternative" ba
-      cross join lateral jsonb_array_elements_text(ba."urls")
-        with ordinality as u("url", "ord")
-      where ba."bookId" = b."id"
-    ) alt on true
-    left join "book_author" ba2 on ba2."bookId" = b."id"
-    left join "author" a on a."id" = ba2."authorId"
+    select ${compactBookColumns}
+    ${compactBookFrom}
     where ${sql.join(filterFragments, sql.fragment` and `)}
     group by b."id", alt."urls"
+    order by b."year", b."genre", "authorSortNames", b."title"
+  `);
+
+  return mutable(books.rows);
+}
+
+export async function getApprovedBooksWithReadingPlan(
+  db: CommonQueryMethods,
+  filter: { year: number; genre: Genre; readerId: string },
+): Promise<BookWithReadingPlan[]> {
+  const books = await db.query(sql.typeAlias("bookWithReadingPlan")`
+    select ${compactBookColumns}, rp."status" as "readingPlanStatus"
+    ${compactBookFrom}
+    left join "reading_plan" rp
+      on rp."bookId" = b."id" and rp."readerId" = ${filter.readerId}
+    where b."year" = ${filter.year} and b."genre" = ${filter.genre}
+    group by b."id", alt."urls", rp."status"
+    having b."isApproved" and bool_and(a."isApproved")
     order by b."year", b."genre", "authorSortNames", b."title"
   `);
 

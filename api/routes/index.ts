@@ -4,4 +4,5 @@ import "@/routes/book-lists.ts";
 import "@/routes/books.ts";
 import "@/routes/health.ts";
 import "@/routes/readers.ts";
+import "@/routes/reading-plans.ts";
 import "@/routes/users.ts";
