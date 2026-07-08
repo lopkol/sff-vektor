@@ -3,6 +3,7 @@ import { createMiddleware } from "hono/factory";
 import { HttpStatusCode } from "../helpers/http-code.ts";
 import {
   BaseException,
+  ForbiddenException,
   UniqueConstraintException,
   ValidationException,
 } from "@sffvektor/lib";
@@ -30,6 +31,7 @@ class UnknownInternalError extends BaseException {
 const defaultExceptionMap: ExceptionRecord = {
   [UniqueConstraintException.name]: HttpStatusCode.Conflict,
   [ValidationException.name]: HttpStatusCode.BadRequest,
+  [ForbiddenException.name]: HttpStatusCode.Forbidden,
 };
 
 /**

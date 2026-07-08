@@ -1,4 +1,5 @@
 import { Genre } from "./book-list";
+import { ReadingPlanStatus } from "./reading-plan";
 
 export type BookAlternative = {
   name: string;
@@ -39,6 +40,10 @@ export type CompactBook =
     authorNames: string[];
     authorSortNames: string[];
   };
+
+export type BookWithReadingPlan = CompactBook & {
+  readingPlanStatus: ReadingPlanStatus | null;
+};
 
 export type CreateBook = Omit<Book, "id" | "createdAt" | "updatedAt">;
 

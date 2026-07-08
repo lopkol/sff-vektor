@@ -167,9 +167,21 @@
       "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
     },
     "List": {
-      "title": "List of {genreName} books",
-      "description": "Card Description",
-      "content": "Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat."
+      "title": "{genreName} reading list",
+      "columns": {
+        "title": "Title",
+        "readingPlan": "Reading plan"
+      },
+      "statuses": {
+        "read": "Read",
+        "willRead": "Will read",
+        "willNotRead": "Will not read",
+        "noPlan": "No plan yet"
+      },
+      "notJuryMember": "You are not a jury member for this book list",
+      "loadError": "Could not load the reading list.",
+      "updateError": "Could not update the reading plan.",
+      "noBooks": "There are no approved books yet."
     },
     "Admin": {
       "title": "{year} {genreName} book list",

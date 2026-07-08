@@ -6,12 +6,14 @@ import {
   type Reader,
   readerSchema,
 } from "@/schema/reader.ts";
+import type { Genre } from "@/schema/book.ts";
 import { mutable } from "@/helpers/type.ts";
 
 const sql = createSqlTag({
   typeAliases: {
     reader: readerSchema,
     void: z.void(),
+    exists: z.object({ exists: z.boolean() }),
   },
 });
 
@@ -58,4 +60,22 @@ export async function deleteReader(
   await db.query(sql.typeAlias("void")`
     delete from "reader" where "id" = ${id}
   `);
+}
+
+export async function isReaderOfBookList(
+  db: CommonQueryMethods,
+  year: number,
+  genre: Genre,
+  readerId: string,
+): Promise<boolean> {
+  const result = await db.query(sql.typeAlias("exists")`
+    select exists (
+      select 1 from "book_list_reader"
+      where "bookListYear" = ${year}
+        and "bookListGenre" = ${genre}
+        and "readerId" = ${readerId}
+    ) as "exists"
+  `);
+
+  return result.rows[0].exists;
 }
