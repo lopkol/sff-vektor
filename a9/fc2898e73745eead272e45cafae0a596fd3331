@@ -1,0 +1,35 @@
+frontend/src/types/book.ts
+  s_39d98c00fb89ff::t_00f279f4666f2c 2
+  s_39d98c00fb89ff::t_5759e97d0b7253 44-47
+frontend/src/app/book-lists/[year]/[genre]/list/page.tsx
+  s_39d98c00fb89ff::t_6f60c8000ca8c2 3-6,8-21,23-24,26-38,48-103,108-109,113-143,145-163
+  s_39d98c00fb89ff::t_f62bdf8a2b0fe6 144
+  s_39d98c00fb89ff::t_f6c539aebe92ee 39-44
+frontend/src/services/reading-plans.ts
+  s_39d98c00fb89ff::t_61d6aa548cb399 1-9
+frontend/src/services/books.ts
+  s_39d98c00fb89ff::t_ead73da1058cc4 2,12-19
+  s_39d98c00fb89ff::t_0a11396cf33554 20-22
+frontend/src/types/reading-plan.ts
+  s_39d98c00fb89ff::t_f922db4f44cacd 1
+frontend/locales/en.json
+  s_39d98c00fb89ff::t_695e8de61ad389 170-184
+frontend/locales/hu.json
+  s_39d98c00fb89ff::t_ce2792b1786929 148-164
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "a9fc2898e73745eead272e45cafae0a596fd3331",
+  "prompts": {},
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
