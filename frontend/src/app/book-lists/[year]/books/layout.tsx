@@ -1,5 +1,7 @@
 import { AppContent } from "@/components/app-content";
 import { AppNavbar } from "@/components/app-navbar";
+import { PageRoleCheck } from "@/components/role-check";
+import { UserRole } from "@/types/user";
 import { getTranslations } from "next-intl/server";
 
 export default async function Layout({
@@ -13,7 +15,7 @@ export default async function Layout({
   const t = await getTranslations("Sidebar");
 
   return (
-    <>
+    <PageRoleCheck role={UserRole.Admin}>
       <AppNavbar
         rootUrl="/books"
         rootPages={[
@@ -29,6 +31,6 @@ export default async function Layout({
         subPages={[]}
       />
       <AppContent>{children}</AppContent>
-    </>
+    </PageRoleCheck>
   );
 }

@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 import type { MenuItem } from "@/lib/menu-item";
 import { useTranslations } from "next-intl";
 import { useBookListYear } from "../book-list-year-provider";
+import { useUser } from "@/components/user-provider";
+import { UserRole } from "@/types/user";
 
 export function BookListLayout({ children }: { children: React.ReactNode }) {
   const { year } = useBookListYear();
@@ -17,6 +19,8 @@ export function BookListLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isMobile = useIsMobile();
   const t = useTranslations("BookList.Nav");
+  const { user } = useUser();
+  const isAdmin = user?.role === UserRole.Admin;
 
   const rootUrl = `/book-lists/${year}/${genre}`;
   const currentPage = pathname.split("/").pop();
@@ -37,11 +41,14 @@ export function BookListLayout({ children }: { children: React.ReactNode }) {
       url: "/table",
       icon: Table,
     },
-    {
-      title: t("admin"),
-      url: "/admin",
-      icon: Settings,
-    },
+    // The admin sub-page is admin-only.
+    ...(isAdmin
+      ? [{
+        title: t("admin"),
+        url: "/admin",
+        icon: Settings,
+      }]
+      : []),
   ];
 
   const rootPages: MenuItem[] = [

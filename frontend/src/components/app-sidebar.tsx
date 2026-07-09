@@ -44,6 +44,7 @@ import { DarkLightModeSelector } from "./dark-light-mode-selector";
 import { LocaleSelector } from "./locale-selector";
 import { useTranslations } from "next-intl";
 import { RoleCheck } from "./role-check";
+import { useUser } from "./user-provider";
 import { UserRole } from "@/types/user";
 
 const iconByGenre = {
@@ -58,6 +59,8 @@ export function AppSidebar() {
     queryKey: ["book-lists"],
     queryFn: getBookLists,
   });
+  const { user } = useUser();
+  const isAdmin = user?.role === UserRole.Admin;
 
   const adminPages: MenuItem[] = [
     {
@@ -100,14 +103,17 @@ export function AppSidebar() {
 
     return sortedYears.map((year) => {
       const bookList = unorderedBookListByYear[year];
-      bookList.children!.push({
-        title: t("books"),
-        url: `/book-lists/${year}/books`,
-        icon: BookCopy,
-      });
+      // The year-level "Books" page is admin-only.
+      if (isAdmin) {
+        bookList.children!.push({
+          title: t("books"),
+          url: `/book-lists/${year}/books`,
+          icon: BookCopy,
+        });
+      }
       return bookList;
     });
-  }, [t, rawBookLists]);
+  }, [t, rawBookLists, isAdmin]);
 
   return (
     <Sidebar>
