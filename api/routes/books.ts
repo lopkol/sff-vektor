@@ -41,11 +41,16 @@ const updateBooksFromMolyApiSchema = bookListRefSchema.extend({
   genre: z.enum(Genre).optional(),
 }).strict();
 
-app.get("/api/books", validateQuery(bookFilterApiSchema), async (c) => {
-  const pool = await getOrCreateDatabasePool();
-  const query = c.req.valid("query");
-  return c.json(await getBooks(pool, query));
-});
+app.get(
+  "/api/books",
+  isUserAdminMiddleware,
+  validateQuery(bookFilterApiSchema),
+  async (c) => {
+    const pool = await getOrCreateDatabasePool();
+    const query = c.req.valid("query");
+    return c.json(await getBooks(pool, query));
+  },
+);
 
 // Returns the approved books of a book list annotated with the current reader's
 // reading plan. Registered before "/api/books/:id" so the static path wins.
@@ -79,6 +84,7 @@ app.get(
 
 app.get(
   "/api/books/:id",
+  isUserAdminMiddleware,
   mapExceptions(
     [EntityNotFoundException, HttpStatusCode.NotFound],
   ),

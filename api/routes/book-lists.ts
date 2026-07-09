@@ -8,10 +8,12 @@ import {
   EntityNotFoundException,
   getAllBookLists,
   getBookList,
+  getBookListsForReader,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateBookList,
   updateBookListSchema,
+  UserRole,
 } from "@sffvektor/lib";
 import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 import { HttpStatusCode } from "@/helpers/http-code.ts";
@@ -24,14 +26,21 @@ const bookListRefApiSchema = bookListRefSchema.extend({
   year: z.coerce.number(),
 });
 
+// Admins see every book list; other users see only the ones they're a reader of.
 app.get("/api/book-lists", async (c) => {
+  const user = c.get("user");
   const pool = await getOrCreateDatabasePool();
-  const bookLists = await getAllBookLists(pool);
+  const bookLists = user.role === UserRole.Admin
+    ? await getAllBookLists(pool)
+    : user.readerId
+    ? await getBookListsForReader(pool, user.readerId)
+    : [];
   return c.json(bookLists);
 });
 
 app.get(
   "/api/book-lists/:year/:genre",
+  isUserAdminMiddleware,
   validateParams(bookListRefApiSchema),
   mapExceptions(
     [EntityNotFoundException, HttpStatusCode.NotFound],
