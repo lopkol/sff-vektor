@@ -17,6 +17,7 @@ import {
   getAllBookLists,
   getBookList,
   getBookListsByYear,
+  getBookListsForReader,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   UniqueConstraintException,
@@ -282,6 +283,66 @@ describe("book list db functions", () => {
       const pool = await getOrCreateDatabasePool();
 
       const result = await getBookListsByYear(pool, 2024);
+
+      assertEquals(result, []);
+    });
+  });
+
+  describe("getBookListsForReader", () => {
+    it("returns only the book lists the reader is assigned to", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "reader",
+        molyUrl: "https://example.com/reader",
+      });
+      const otherReader = await createReader(pool, {
+        molyUsername: "other",
+        molyUrl: "https://example.com/other",
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/2024-fantasy",
+        pendingUrl: null,
+        readers: [reader.id],
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.SciFi,
+        url: "https://example.com/2024-sci-fi",
+        pendingUrl: null,
+        readers: [otherReader.id],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/2023-fantasy",
+        pendingUrl: null,
+        readers: [],
+      });
+
+      const result = await getBookListsForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].year, 2024);
+      assertEquals(result[0].genre, Genre.Fantasy);
+    });
+
+    it("returns an empty array when the reader has no assigned lists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "reader",
+        molyUrl: "https://example.com/reader",
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/2024-fantasy",
+        pendingUrl: null,
+        readers: [],
+      });
+
+      const result = await getBookListsForReader(pool, reader.id);
 
       assertEquals(result, []);
     });
