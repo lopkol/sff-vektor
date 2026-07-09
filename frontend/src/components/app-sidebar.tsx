@@ -25,6 +25,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Collapsible,
@@ -195,6 +196,15 @@ function NestableMenuItem({
   activePage: string;
   items: MenuItem[];
 }) {
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  // On mobile the sidebar is an overlay; close it after navigating.
+  const handleNavigate = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   return (
     <SidebarMenu>
       {items.map((item) => (
@@ -224,7 +234,7 @@ function NestableMenuItem({
                           asChild
                           isActive={item.url === activePage}
                         >
-                          <Link href={subItem.url}>
+                          <Link href={subItem.url} onClick={handleNavigate}>
                             {subItem.icon && <subItem.icon />}
                             <span>{subItem.title}</span>
                           </Link>
@@ -238,7 +248,7 @@ function NestableMenuItem({
           )) || (
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={item.url === activePage}>
-                <Link href={item.url}>
+                <Link href={item.url} onClick={handleNavigate}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>
