@@ -1,0 +1,20 @@
+frontend/src/components/ui/sidebar.tsx
+  s_39d98c00fb89ff::t_e018acba931d3a 5
+  s_39d98c00fb89ff::t_704ead62f7a897 260-261,276
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5d8233f3846957388b349cdf35a5acdad28bcdeb",
+  "prompts": {},
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
