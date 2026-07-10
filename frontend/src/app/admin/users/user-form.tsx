@@ -22,17 +22,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { User, UserForm as UserFormType, UserRole } from "@/types/user";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 interface UserFormProps {
   user?: User;
   isSaving: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: UserFormType) => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function UserForm(
-  { user, isSaving, onOpenChange, onSubmit }: UserFormProps,
+  { user, isSaving, onOpenChange, onSubmit, onDirtyChange }: UserFormProps,
 ) {
   const t = useTranslations("Admin.Users");
   const tTools = useTranslations("Tools");
@@ -59,6 +60,11 @@ export function UserForm(
       molyUrl: user?.molyUrl ?? "",
     },
   });
+
+  const { isDirty } = form.formState;
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   return (
     <Form {...form}>

@@ -14,6 +14,10 @@
     "unknownError": "Hiba történt, próbáld újra később",
     "noResults": "Nincs találat",
     "search": "Keresés...",
+    "unsavedChangesTitle": "Nem mentett módosításaid vannak.",
+    "unsavedChangesDescription": "A módosítások elvesznek, ha most bezárod.",
+    "keepEditing": "Szerkesztés folytatása",
+    "discard": "Elvetés",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"

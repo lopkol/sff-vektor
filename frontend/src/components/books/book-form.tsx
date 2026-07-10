@@ -15,7 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SelectContent, SelectItem } from "@/components/ui/select";
 import { Select } from "@/components/ui/select";
@@ -48,6 +48,7 @@ interface BookFormProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CreateBook) => void;
   onDelete: () => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function BookForm({
@@ -58,6 +59,7 @@ export function BookForm({
   onOpenChange,
   onSubmit,
   onDelete,
+  onDirtyChange,
 }: BookFormProps) {
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
@@ -113,6 +115,11 @@ export function BookForm({
     },
   });
   const bookAuthors = form.watch("authors");
+
+  const { isDirty } = form.formState;
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const handleDelete = () => {
     setIsDeleteDialogOpen(false);

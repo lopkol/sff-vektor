@@ -14,6 +14,8 @@ import { AxiosError } from "axios";
 import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User, UserForm as UserFormType } from "@/types/user";
+import { useState } from "react";
+import { useUnsavedChangesConfirm } from "@/hooks/use-unsaved-changes-confirm";
 
 interface UserDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -21,8 +23,14 @@ interface UserDialogProps {
 }
 
 export function UserDialog({ onOpenChange, user }: UserDialogProps) {
-  const queryClient = useQueryClient();  const t = useTranslations("Admin.Users");
+  const queryClient = useQueryClient();
+  const t = useTranslations("Admin.Users");
   const tTools = useTranslations("Tools");
+  const [isDirty, setIsDirty] = useState(false);
+  const { guardedOnOpenChange, confirmDialog } = useUnsavedChangesConfirm(
+    isDirty,
+    onOpenChange,
+  );
 
   // If editing, fetch the latest user data
   const { data: userData, isLoading } = useQuery({
@@ -60,7 +68,7 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
   };
 
   return (
-    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+    <ResponsiveDialog open={true} onOpenChange={guardedOnOpenChange}>
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
@@ -79,11 +87,13 @@ export function UserDialog({ onOpenChange, user }: UserDialogProps) {
               <UserForm
                 user={userData || user || undefined}
                 isSaving={isSavingPending}
-                onOpenChange={onOpenChange}
+                onOpenChange={guardedOnOpenChange}
                 onSubmit={onSubmit}
+                onDirtyChange={setIsDirty}
               />
             )}
         </div>
+        {confirmDialog}
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

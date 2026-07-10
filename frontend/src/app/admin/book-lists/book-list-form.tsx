@@ -32,7 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BookList, CreateBookList, Genre } from "@/types/book-list";
 import { useQuery } from "@tanstack/react-query";
 import { getReaders } from "@/services/readers";
@@ -45,10 +45,12 @@ interface BookListFormProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CreateBookList) => void;
   onDelete: () => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function BookListForm(
-  { bookList, isSaving, onOpenChange, onSubmit, onDelete }: BookListFormProps,
+  { bookList, isSaving, onOpenChange, onSubmit, onDelete, onDirtyChange }:
+    BookListFormProps,
 ) {
   const t = useTranslations("Admin.BookLists");
   const tTools = useTranslations("Tools");
@@ -93,6 +95,11 @@ export function BookListForm(
       readers: bookList?.readers ?? [],
     },
   });
+
+  const { isDirty } = form.formState;
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const handleDelete = () => {
     setIsDeleteDialogOpen(false);

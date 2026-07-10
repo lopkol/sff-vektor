@@ -15,7 +15,7 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
@@ -34,6 +34,7 @@ interface AuthorFormProps {
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: CreateAuthor) => void;
   onDelete: () => void;
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 export function AuthorForm({
@@ -42,6 +43,7 @@ export function AuthorForm({
   onOpenChange,
   onSubmit,
   onDelete,
+  onDirtyChange,
 }: AuthorFormProps) {
   const t = useTranslations("Authors");
   const tTools = useTranslations("Tools");
@@ -67,6 +69,11 @@ export function AuthorForm({
       url: author?.url ?? null,
     },
   });
+
+  const { isDirty } = form.formState;
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const handleSubmit: SubmitHandler<CreateAuthor> = async (data) => {
     onSubmit(data);

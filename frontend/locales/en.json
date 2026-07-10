@@ -14,6 +14,10 @@
     "unknownError": "An unknown error occurred",
     "noResults": "No results found",
     "search": "Search...",
+    "unsavedChangesTitle": "You have unsaved changes.",
+    "unsavedChangesDescription": "Your changes will be lost if you close now.",
+    "keepEditing": "Keep editing",
+    "discard": "Discard",
     "genres": {
       "sciFi": "Sci-Fi",
       "fantasy": "Fantasy"

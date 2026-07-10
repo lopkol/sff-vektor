@@ -20,6 +20,8 @@ import {
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
 } from "@/components/ui/responsive-dialog";
+import { useState } from "react";
+import { useUnsavedChangesConfirm } from "@/hooks/use-unsaved-changes-confirm";
 
 interface BookListDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -33,6 +35,11 @@ export function BookListDialog(
   const t = useTranslations("Admin.BookLists");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
+  const [isDirty, setIsDirty] = useState(false);
+  const { guardedOnOpenChange, confirmDialog } = useUnsavedChangesConfirm(
+    isDirty,
+    onOpenChange,
+  );
   const { data: bookList, isLoading } = useQuery({
     queryKey: ["book-list", year, genre],
     queryFn: () => getBookList(year!, genre!),
@@ -95,7 +102,7 @@ export function BookListDialog(
   };
 
   return (
-    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+    <ResponsiveDialog open={true} onOpenChange={guardedOnOpenChange}>
       <ResponsiveDialogContent side="right">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
@@ -114,12 +121,14 @@ export function BookListDialog(
               <BookListForm
                 bookList={bookList}
                 isSaving={isSavingPending}
-                onOpenChange={onOpenChange}
+                onOpenChange={guardedOnOpenChange}
                 onSubmit={onSubmit}
                 onDelete={onDelete}
+                onDirtyChange={setIsDirty}
               />
             )}
         </div>
+        {confirmDialog}
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

@@ -18,6 +18,8 @@ import {
 import { AuthorForm } from "@/components/authors/author-form";
 import { CreateAuthor } from "@/types/author";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { useUnsavedChangesConfirm } from "@/hooks/use-unsaved-changes-confirm";
 
 interface AuthorDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -32,6 +34,11 @@ export function AuthorDialog(
   const t = useTranslations("Authors");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
+  const [isDirty, setIsDirty] = useState(false);
+  const { guardedOnOpenChange, confirmDialog } = useUnsavedChangesConfirm(
+    isDirty,
+    onOpenChange,
+  );
   const { data: author, isLoading } = useQuery({
     queryKey: ["author", authorId],
     queryFn: () => getAuthor(authorId!),
@@ -86,7 +93,7 @@ export function AuthorDialog(
   };
 
   return (
-    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+    <ResponsiveDialog open={true} onOpenChange={guardedOnOpenChange}>
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
@@ -105,12 +112,14 @@ export function AuthorDialog(
               <AuthorForm
                 author={author}
                 isSaving={isSaving}
-                onOpenChange={onOpenChange}
+                onOpenChange={guardedOnOpenChange}
                 onSubmit={onSubmit}
                 onDelete={onDelete}
+                onDirtyChange={setIsDirty}
               />
             )}
         </div>
+        {confirmDialog}
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

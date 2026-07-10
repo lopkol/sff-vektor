@@ -14,6 +14,8 @@ import { BookForm } from "./book-form";
 import { CreateBook } from "@/types/book";
 import { Genre } from "@/types/book-list";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
+import { useUnsavedChangesConfirm } from "@/hooks/use-unsaved-changes-confirm";
 
 interface BookDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -30,6 +32,11 @@ export function BookDialog(
   const t = useTranslations("BookList.Admin");
   const tTools = useTranslations("Tools");
   const queryClient = useQueryClient();
+  const [isDirty, setIsDirty] = useState(false);
+  const { guardedOnOpenChange, confirmDialog } = useUnsavedChangesConfirm(
+    isDirty,
+    onOpenChange,
+  );
   const { data: book, isLoading } = useQuery({
     queryKey: ["book", bookId],
     queryFn: () => getBook(bookId!),
@@ -85,7 +92,7 @@ export function BookDialog(
   };
 
   return (
-    <ResponsiveDialog open={true} onOpenChange={onOpenChange}>
+    <ResponsiveDialog open={true} onOpenChange={guardedOnOpenChange}>
       <ResponsiveDialogContent side="right">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>
@@ -106,12 +113,14 @@ export function BookDialog(
                 isSaving={isSaving}
                 defaultYear={defaultYear}
                 defaultGenre={defaultGenre}
-                onOpenChange={onOpenChange}
+                onOpenChange={guardedOnOpenChange}
                 onSubmit={onSubmit}
                 onDelete={onDelete}
+                onDirtyChange={setIsDirty}
               />
             )}
         </div>
+        {confirmDialog}
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );
