@@ -3,6 +3,7 @@ import { afterAll, afterEach, beforeAll, describe, it } from "@std/testing/bdd";
 import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
 import { clearDatabase } from "@/setup/clear_database.ts";
+import { seedReadingPlan } from "@/setup/seed.ts";
 import {
   type Author,
   type BookWithReadingPlan,
@@ -16,7 +17,7 @@ import {
   getReadingPlan,
   isReaderOfBookList,
   ReadingPlanStatus,
-  setReadingPlan,
+  upsertReadingPlan,
 } from "@sffvektor/lib";
 import type { CommonQueryMethods } from "slonik";
 
@@ -143,7 +144,7 @@ describe("reading plan db functions", () => {
         author: unapprovedAuthor,
       });
 
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: planned.id,
         status: ReadingPlanStatus.WillRead,
@@ -188,7 +189,7 @@ describe("reading plan db functions", () => {
         author,
       });
 
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: otherReader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
@@ -205,7 +206,7 @@ describe("reading plan db functions", () => {
     });
   });
 
-  describe("setReadingPlan", () => {
+  describe("upsertReadingPlan", () => {
     it("inserts a new reading plan", async () => {
       const pool = await getOrCreateDatabasePool();
       const reader = await createReader(pool, {
@@ -223,7 +224,7 @@ describe("reading plan db functions", () => {
         author,
       });
 
-      await setReadingPlan(pool, {
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.WillRead,
@@ -250,13 +251,13 @@ describe("reading plan db functions", () => {
         isApproved: true,
         author,
       });
-
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.WillRead,
       });
-      await setReadingPlan(pool, {
+
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
@@ -282,13 +283,13 @@ describe("reading plan db functions", () => {
         isApproved: true,
         author,
       });
-
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
       });
-      await setReadingPlan(pool, {
+
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.NoPlan,
@@ -296,6 +297,70 @@ describe("reading plan db functions", () => {
 
       const plan = await getReadingPlan(pool, reader.id, book.id);
       assertExists(plan);
+      assertEquals(plan?.status, ReadingPlanStatus.NoPlan);
+    });
+
+    it("promotes an existing manual status to molyRead (sync promote)", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://example.com/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const book = await createBookWithAuthor(pool, {
+        title: "Book",
+        isApproved: true,
+        author,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.WillRead,
+      });
+
+      await upsertReadingPlan(pool, {
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      const plan = await getReadingPlan(pool, reader.id, book.id);
+      assertEquals(plan?.status, ReadingPlanStatus.MolyRead);
+    });
+
+    it("downgrades a molyRead status to noPlan (sync downgrade)", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://example.com/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const book = await createBookWithAuthor(pool, {
+        title: "Book",
+        isApproved: true,
+        author,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      await upsertReadingPlan(pool, {
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.NoPlan,
+      });
+
+      const plan = await getReadingPlan(pool, reader.id, book.id);
       assertEquals(plan?.status, ReadingPlanStatus.NoPlan);
     });
   });

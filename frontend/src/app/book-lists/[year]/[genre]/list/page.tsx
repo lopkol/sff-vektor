@@ -26,9 +26,12 @@ import { useBookListGenre } from "../book-list-genre-provider";
 import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
 import { toast } from "sonner";
 import { MolyLink } from "@/components/moly-link";
+import { LockIcon } from "lucide-react";
 import { BookWithReadingPlan } from "@/types/book";
 import { ReadingPlanStatus } from "@/types/reading-plan";
 
+// Statuses a reader can set by hand. `molyRead` is intentionally excluded: it is
+// synced from Moly and locked, so it never appears as a selectable option.
 const READING_PLAN_STATUSES: ReadingPlanStatus[] = [
   "noPlan",
   "willRead",
@@ -40,6 +43,7 @@ const READING_PLAN_EMOJI: Record<ReadingPlanStatus, string> = {
   noPlan: "🤔",
   willRead: "🔖",
   read: "✅",
+  molyRead: "✅",
   willNotRead: "🚫",
 };
 
@@ -127,25 +131,35 @@ export default function Page() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Select
-                    value={book.readingPlanStatus ?? "noPlan"}
-                    onValueChange={(value) =>
-                      updateReadingPlan({
-                        bookId: book.id,
-                        status: value as ReadingPlanStatus,
-                      })}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {READING_PLAN_STATUSES.map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {READING_PLAN_EMOJI[status]} {t(`statuses.${status}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {book.readingPlanStatus === "molyRead"
+                    ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 text-muted-foreground">
+                        {READING_PLAN_EMOJI.molyRead} {t("statuses.molyRead")}
+                        <LockIcon className="size-3.5" />
+                      </span>
+                    )
+                    : (
+                      <Select
+                        value={book.readingPlanStatus ?? "noPlan"}
+                        onValueChange={(value) =>
+                          updateReadingPlan({
+                            bookId: book.id,
+                            status: value as ReadingPlanStatus,
+                          })}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {READING_PLAN_STATUSES.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {READING_PLAN_EMOJI[status]}{" "}
+                              {t(`statuses.${status}`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                 </TableCell>
               </TableRow>
             ))}

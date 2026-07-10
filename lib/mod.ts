@@ -31,3 +31,4 @@ export * from "@/helpers/logger.ts";
 
 export * from "@/services/moly/book-list.ts";
 export * from "@/services/moly/book.ts";
+export * from "@/services/reading-plan.ts";

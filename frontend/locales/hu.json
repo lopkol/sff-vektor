@@ -157,6 +157,7 @@
       },
       "statuses": {
         "read": "olvastam",
+        "molyRead": "olvastam (moly)",
         "willRead": "olvasni fogom",
         "willNotRead": "nem olvasom",
         "noPlan": "még nem tudom"

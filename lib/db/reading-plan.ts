@@ -27,7 +27,7 @@ export async function getReadingPlan(
   return result.rowCount ? result.rows[0] : null;
 }
 
-export async function setReadingPlan(
+export async function upsertReadingPlan(
   db: CommonQueryMethods,
   props: { readerId: string; bookId: string; status: ReadingPlanStatus },
 ): Promise<void> {

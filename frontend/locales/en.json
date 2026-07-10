@@ -178,6 +178,7 @@
       },
       "statuses": {
         "read": "Read",
+        "molyRead": "Read (Moly)",
         "willRead": "Will read",
         "willNotRead": "Will not read",
         "noPlan": "No plan yet"
