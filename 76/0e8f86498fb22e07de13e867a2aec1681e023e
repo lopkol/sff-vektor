@@ -1,0 +1,57 @@
+int-tests/setup/seed.ts
+  s_39d98c00fb89ff::t_9e44a1be1678d1 1-4
+  s_39d98c00fb89ff::t_e9264d5d66bc7c 5-21
+lib/mod.ts
+  s_39d98c00fb89ff::t_94ce47eafff9f3 34
+frontend/src/app/book-lists/[year]/[genre]/list/page.tsx
+  s_39d98c00fb89ff::t_c098c5b28a2646 29,33-34,46
+  s_39d98c00fb89ff::t_4d12445f39e00b 134-162
+frontend/locales/en.json
+  s_39d98c00fb89ff::t_50ad0bd9e608b6 181
+frontend/src/types/reading-plan.ts
+  s_39d98c00fb89ff::t_bc4cc04f6e76b3 1-6
+lib/services/reading-plan.ts
+  s_39d98c00fb89ff::t_034336573f51fd 2
+  s_39d98c00fb89ff::t_68f19cd3fabe5e 1,3-23
+frontend/locales/hu.json
+  s_39d98c00fb89ff::t_55d34994357236 160
+lib/db/reading-plan.ts
+  s_39d98c00fb89ff::t_81f300eae8cb87 30
+lib/schema/reading-plan.ts
+  s_39d98c00fb89ff::t_15591cc9738a4d 5-7
+  s_39d98c00fb89ff::t_3e69e04748fee4 23-24,27-32
+int-tests/lib/db/reading-plan_test.ts
+  s_39d98c00fb89ff::t_82270ce621c839 6
+  s_39d98c00fb89ff::t_11594f66bcb2b8 20
+  s_39d98c00fb89ff::t_04d1ac64743a03 209,227,260,292
+  s_39d98c00fb89ff::t_d7c2a56aeecbe3 254,259,286,291,303,319,324,326-351,362-364
+  s_39d98c00fb89ff::t_d3d042e359105c 192
+  s_39d98c00fb89ff::t_2899d7ec64376b 302,304-318,320-323,325,352-361,365
+  s_39d98c00fb89ff::t_2ab6986b78c4f6 147
+int-tests/lib/services/reading-plan_test.ts
+  s_39d98c00fb89ff::t_b933bb35985f83 85,90
+  s_39d98c00fb89ff::t_b7d34472c83cb4 113-114
+  s_39d98c00fb89ff::t_ab1d3d4ab56371 6
+  s_39d98c00fb89ff::t_9adf4569328d24 1-5,7-84,86-89,91-112,115-135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "760e8f86498fb22e07de13e867a2aec1681e023e",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
