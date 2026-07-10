@@ -1,0 +1,65 @@
+frontend/src/hooks/use-unsaved-changes-confirm.tsx
+  s_39d98c00fb89ff::t_3c7f10c41092d4 1-59
+frontend/src/app/admin/users/user-form.tsx
+  s_39d98c00fb89ff::t_c03db097fdcf5b 64-68
+  s_39d98c00fb89ff::t_349e3595a1beec 25,32,36
+frontend/locales/hu.json
+  h_b221bcce5c2edf 17-18
+  s_39d98c00fb89ff::t_7d26f8e180d4b1 19-20
+frontend/src/components/authors/author-dialog.tsx
+  s_39d98c00fb89ff::t_fd1f8175b5bbb5 21-22
+  s_39d98c00fb89ff::t_98d37aa528abe2 115,118,122
+  s_39d98c00fb89ff::t_06d1ea085c1872 37-41
+  s_39d98c00fb89ff::t_30a79a9ecbfb0b 96
+frontend/src/components/authors/author-form.tsx
+  s_39d98c00fb89ff::t_ed1d183a25d536 18
+  s_39d98c00fb89ff::t_ae66b4fffa1729 73-77
+  s_39d98c00fb89ff::t_9dfec7bb9ca80d 37,46
+frontend/src/components/books/book-dialog.tsx
+  s_39d98c00fb89ff::t_158ee1b0f6e10c 17-18
+  s_39d98c00fb89ff::t_19ba1a4fc8ba1b 95
+  s_39d98c00fb89ff::t_f834093f64b64b 116,119,123
+  s_39d98c00fb89ff::t_c93b7a4bf38714 35-39
+frontend/src/app/admin/book-lists/book-list-dialog.tsx
+  s_39d98c00fb89ff::t_acc2028e8bbdbc 38-42
+  s_39d98c00fb89ff::t_19dff3658ca266 23-24
+  s_39d98c00fb89ff::t_3f7d0f0a1b7e9d 124,127,131
+  s_39d98c00fb89ff::t_5f30abf120bce3 105
+frontend/src/components/books/book-form.tsx
+  s_39d98c00fb89ff::t_9b884148e48e9e 18
+  s_39d98c00fb89ff::t_6e88cf4f6acb34 51,62
+  s_39d98c00fb89ff::t_7e3480cf21806b 119-123
+frontend/locales/en.json
+  s_39d98c00fb89ff::t_ce3a81ab30e2a4 18-20
+  h_b221bcce5c2edf 17
+frontend/src/app/admin/users/user-dialog.tsx
+  s_39d98c00fb89ff::t_6e0ba4291264d4 17-18
+  s_39d98c00fb89ff::t_ef1d8c3a979bc8 71
+  s_39d98c00fb89ff::t_bfffd44820a6f6 90,92,96
+  s_39d98c00fb89ff::t_ec17bdd03501ae 26-27,29-33
+frontend/src/app/admin/book-lists/book-list-form.tsx
+  s_39d98c00fb89ff::t_5ef5ca5f24fa7f 48,52-53
+  s_39d98c00fb89ff::t_9e721d25e04fb4 99-103
+  s_39d98c00fb89ff::t_f10af25e074c1a 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c46e6a7abf341c9167fd6a65c68e7608cf562a45",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
