@@ -210,74 +210,74 @@ jobs:
           DIGEST: ${{ steps.build-and-push-frontend.outputs.digest }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
 
-  # argocd-sync:
-  #   needs: [build-api, build-scheduler, build-frontend]
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: write
-  #   steps:
-  #     - name: Check out apps-deployment repo
-  #       uses: actions/checkout@v4
-  #       with:
-  #         repository: ${{ env.APPS_DEPLOYMENT_REPO }}
-  #         ref: master
-  #         token: ${{ secrets.APPS_DEPLOYMENT_REPO_TOKEN }}
-  #     - name: Git user setup
-  #       run: |
-  #         git config user.name "GitHub Actions"
-  #         git config user.email "actions@github.com"
-  #     - name: Env setup (lowercase)
-  #       env:
-  #         API_IMAGE_NAME_RAW: ${{ needs.build-api.outputs.api_docker_image_name }}
-  #         API_FULL_IMAGE_RAW: "${{ needs.build-api.outputs.api_docker_image_name }}@${{ needs.build-api.outputs.api_docker_image_sha256 }}"
-  #         SCHEDULER_IMAGE_NAME_RAW: ${{ needs.build-scheduler.outputs.scheduler_docker_image_name }}
-  #         SCHEDULER_FULL_IMAGE_RAW: "${{ needs.build-scheduler.outputs.scheduler_docker_image_name }}@${{ needs.build-scheduler.outputs.scheduler_docker_image_sha256 }}"
-  #         FRONTEND_IMAGE_NAME_RAW: ${{ needs.build-frontend.outputs.frontend_docker_image_name }}
-  #         FRONTEND_FULL_IMAGE_RAW: "${{ needs.build-frontend.outputs.frontend_docker_image_name }}@${{ needs.build-frontend.outputs.frontend_docker_image_sha256 }}"
-  #       run: |
-  #         echo "API_IMAGE_NAME=${API_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
-  #         echo "API_FULL_IMAGE=${API_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
-  #         echo "SCHEDULER_IMAGE_NAME=${SCHEDULER_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
-  #         echo "SCHEDULER_FULL_IMAGE=${SCHEDULER_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
-  #         echo "FRONTEND_IMAGE_NAME=${FRONTEND_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
-  #         echo "FRONTEND_FULL_IMAGE=${FRONTEND_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
-  #     - name: Update api image
-  #       env:
-  #         IMAGE_NAME: ${{ env.API_IMAGE_NAME }}
-  #         FULL_IMAGE: "${{ env.API_FULL_IMAGE }}"
-  #         DEPLOYMENT_FILE: sff-vektor/api-deployment.yaml
-  #       run: |
-  #         sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
-  #         git add "${DEPLOYMENT_FILE}"
-  #         (git commit -m "deploy: sff-vektor api image (${FULL_IMAGE})" && git push) || true
-  #     - name: Update scheduler image
-  #       env:
-  #         IMAGE_NAME: ${{ env.SCHEDULER_IMAGE_NAME }}
-  #         FULL_IMAGE: "${{ env.SCHEDULER_FULL_IMAGE }}"
-  #         DEPLOYMENT_FILE: sff-vektor/scheduler-cronjob.yaml
-  #       run: |
-  #         sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
-  #         git add "${DEPLOYMENT_FILE}"
-  #         (git commit -m "deploy: sff-vektor scheduler image (${FULL_IMAGE})" && git push) || true
-  #     - name: Update frontend image
-  #       env:
-  #         IMAGE_NAME: ${{ env.FRONTEND_IMAGE_NAME }}
-  #         FULL_IMAGE: "${{ env.FRONTEND_FULL_IMAGE }}"
-  #         DEPLOYMENT_FILE: sff-vektor/frontend-deployment.yaml
-  #       run: |
-  #         sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
-  #         git add "${DEPLOYMENT_FILE}"
-  #         (git commit -m "deploy: sff-vektor frontend image (${FULL_IMAGE})" && git push) || true
-  #     - name: Install ArgoCD CLI
-  #       run: |
-  #         curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
-  #         chmod +x argocd
-  #         sudo mv argocd /usr/local/bin/
-  #     - name: Login to ArgoCD
-  #       run: |
-  #         argocd login ${{ secrets.ARGOCD_SERVER }} \
-  #           --username ${{ secrets.ARGOCD_USERNAME }} \
-  #           --password ${{ secrets.ARGOCD_PASSWORD }}
-  #     - name: Sync ArgoCD Application
-  #       run: |
-  #         argocd app sync ${{ env.ARGOCD_APP_NAME }}
+  argocd-sync:
+    needs: [build-api, build-scheduler, build-frontend]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out apps-deployment repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.APPS_DEPLOYMENT_REPO }}
+          ref: master
+          token: ${{ secrets.APPS_DEPLOYMENT_REPO_TOKEN }}
+      - name: Git user setup
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Env setup (lowercase)
+        env:
+          API_IMAGE_NAME_RAW: ${{ needs.build-api.outputs.api_docker_image_name }}
+          API_FULL_IMAGE_RAW: "${{ needs.build-api.outputs.api_docker_image_name }}@${{ needs.build-api.outputs.api_docker_image_sha256 }}"
+          SCHEDULER_IMAGE_NAME_RAW: ${{ needs.build-scheduler.outputs.scheduler_docker_image_name }}
+          SCHEDULER_FULL_IMAGE_RAW: "${{ needs.build-scheduler.outputs.scheduler_docker_image_name }}@${{ needs.build-scheduler.outputs.scheduler_docker_image_sha256 }}"
+          FRONTEND_IMAGE_NAME_RAW: ${{ needs.build-frontend.outputs.frontend_docker_image_name }}
+          FRONTEND_FULL_IMAGE_RAW: "${{ needs.build-frontend.outputs.frontend_docker_image_name }}@${{ needs.build-frontend.outputs.frontend_docker_image_sha256 }}"
+        run: |
+          echo "API_IMAGE_NAME=${API_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
+          echo "API_FULL_IMAGE=${API_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
+          echo "SCHEDULER_IMAGE_NAME=${SCHEDULER_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
+          echo "SCHEDULER_FULL_IMAGE=${SCHEDULER_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
+          echo "FRONTEND_IMAGE_NAME=${FRONTEND_IMAGE_NAME_RAW,,}" >> "${GITHUB_ENV}"
+          echo "FRONTEND_FULL_IMAGE=${FRONTEND_FULL_IMAGE_RAW,,}" >> "${GITHUB_ENV}"
+      - name: Update api image
+        env:
+          IMAGE_NAME: ${{ env.API_IMAGE_NAME }}
+          FULL_IMAGE: "${{ env.API_FULL_IMAGE }}"
+          DEPLOYMENT_FILE: sff-vektor/api-deployment.yaml
+        run: |
+          sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
+          git add "${DEPLOYMENT_FILE}"
+          (git commit -m "deploy: sff-vektor api image (${FULL_IMAGE})" && git push) || true
+      - name: Update scheduler image
+        env:
+          IMAGE_NAME: ${{ env.SCHEDULER_IMAGE_NAME }}
+          FULL_IMAGE: "${{ env.SCHEDULER_FULL_IMAGE }}"
+          DEPLOYMENT_FILE: sff-vektor/scheduler-cronjob.yaml
+        run: |
+          sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
+          git add "${DEPLOYMENT_FILE}"
+          (git commit -m "deploy: sff-vektor scheduler image (${FULL_IMAGE})" && git push) || true
+      - name: Update frontend image
+        env:
+          IMAGE_NAME: ${{ env.FRONTEND_IMAGE_NAME }}
+          FULL_IMAGE: "${{ env.FRONTEND_FULL_IMAGE }}"
+          DEPLOYMENT_FILE: sff-vektor/frontend-deployment.yaml
+        run: |
+          sed -i "s|image: ${IMAGE_NAME}.*|image: ${FULL_IMAGE}|g" "${DEPLOYMENT_FILE}"
+          git add "${DEPLOYMENT_FILE}"
+          (git commit -m "deploy: sff-vektor frontend image (${FULL_IMAGE})" && git push) || true
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x argocd
+          sudo mv argocd /usr/local/bin/
+      - name: Login to ArgoCD
+        run: |
+          argocd login ${{ secrets.ARGOCD_SERVER }} \
+            --username ${{ secrets.ARGOCD_USERNAME }} \
+            --password ${{ secrets.ARGOCD_PASSWORD }}
+      - name: Sync ArgoCD Application
+        run: |
+          argocd app sync ${{ env.ARGOCD_APP_NAME }}
