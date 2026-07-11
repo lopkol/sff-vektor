@@ -1,0 +1,14 @@
+.github/workflows/cd.yaml
+  h_c79d0d58c8ed87 15,283
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "e89a4cd2be932cfd32adc61cf3b45e2abd624f16",
+  "prompts": {},
+  "humans": {
+    "h_c79d0d58c8ed87": {
+      "author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  }
+}
