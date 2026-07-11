@@ -7,3 +7,7 @@ export async function setReadingPlan(
 ): Promise<void> {
   await http.put("/reading-plans", { bookId, status });
 }
+
+export async function syncReadingsFromMoly(): Promise<void> {
+  await http.post("/reading-plans/sync-from-moly");
+}

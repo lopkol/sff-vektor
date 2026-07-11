@@ -87,6 +87,13 @@
         "title": "Könyvlisták",
         "addNew": "Új lista"
       },
+      "sync": {
+        "bookLists": "Könyvek frissítése molyról",
+        "readings": "Olvasások frissítése molyról",
+        "bookListsSuccess": "Könyvek sikeresen frissítve molyról",
+        "readingsSuccess": "Olvasások sikeresen frissítve molyról",
+        "error": "A molyról való frissítés sikertelen"
+      },
       "dialog": {
         "createTitle": "Új könyvlista",
         "editTitle": "Könyvlista szerkesztése",

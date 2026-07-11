@@ -15,7 +15,11 @@ import {
 } from "@/helpers/moly/book-list.ts";
 import type { Genre } from "@/schema/book.ts";
 import { getOrCreateDatabasePool } from "@/config/database.ts";
-import { getBookList, getBookListsByYear } from "@/db/book-list.ts";
+import {
+  getAllBookLists,
+  getBookList,
+  getBookListsByYear,
+} from "@/db/book-list.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { createOrUpdateBookFromMoly } from "@/services/moly/book.ts";
 import { logger } from "@sffvektor/lib";
@@ -134,4 +138,16 @@ export async function createOrUpdateBooksFromMoly(
   }
 
   logger.info("Books updated for year", { year });
+}
+
+// Runs the book sync for every book list, across all years and genres.
+export async function syncAllBookListsFromMoly(): Promise<void> {
+  const db = await getOrCreateDatabasePool();
+  const bookLists = await getAllBookLists(db);
+
+  for (const bookList of bookLists) {
+    await createOrUpdateBooksOfListFromMoly(db, bookList.year, bookList.genre);
+  }
+
+  logger.info("Books updated for all book lists", { count: bookLists.length });
 }

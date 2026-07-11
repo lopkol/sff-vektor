@@ -1,7 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { getBookLists } from "@/services/book-lists";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getBookLists, syncBookListsFromMoly } from "@/services/book-lists";
+import { syncReadingsFromMoly } from "@/services/reading-plans";
 import {
   Table,
   TableBody,
@@ -17,6 +18,8 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShortBookList } from "@/types/book-list";
 import { PageSkeleton } from "@/components/page-skeleton";
+import { RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 export default function BookListsPage() {
   const t = useTranslations("Admin.BookLists");
@@ -26,10 +29,33 @@ export default function BookListsPage() {
     null,
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: bookLists, isLoading } = useQuery({
     queryKey: ["book-lists"],
     queryFn: getBookLists,
+  });
+
+  const { mutate: syncBookLists, isPending: isSyncingBookLists } = useMutation({
+    mutationFn: syncBookListsFromMoly,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["book-lists"] });
+      queryClient.invalidateQueries({ queryKey: ["books"] });
+      toast.success(t("sync.bookListsSuccess"));
+    },
+    onError: () => {
+      toast.error(t("sync.error"));
+    },
+  });
+
+  const { mutate: syncReadings, isPending: isSyncingReadings } = useMutation({
+    mutationFn: syncReadingsFromMoly,
+    onSuccess: () => {
+      toast.success(t("sync.readingsSuccess"));
+    },
+    onError: () => {
+      toast.error(t("sync.error"));
+    },
   });
 
   if (isLoading) {
@@ -49,8 +75,36 @@ export default function BookListsPage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex justify-between">
-          <h1 className="text-2xl font-bold">{t("table.title")}</h1>
+        <CardTitle className="flex flex-wrap items-center gap-2">
+          <h1 className="mr-auto text-2xl font-bold">{t("table.title")}</h1>
+          {/* The two sync buttons stay inline on large screens, but drop to a
+              full-width second line together once they no longer fit. */}
+          <div className="order-last flex w-full flex-wrap justify-end gap-2 lg:order-none lg:w-auto">
+            <Button
+              variant="outline"
+              onClick={() => syncBookLists()}
+              disabled={isSyncingBookLists}
+            >
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${
+                  isSyncingBookLists ? "animate-spin" : ""
+                }`}
+              />
+              {t("sync.bookLists")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => syncReadings()}
+              disabled={isSyncingReadings}
+            >
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${
+                  isSyncingReadings ? "animate-spin" : ""
+                }`}
+              />
+              {t("sync.readings")}
+            </Button>
+          </div>
           <Button onClick={handleCreateClick}>{t("table.addNew")}</Button>
         </CardTitle>
       </CardHeader>

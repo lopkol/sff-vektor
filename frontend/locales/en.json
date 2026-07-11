@@ -98,6 +98,13 @@
         "title": "Book lists",
         "addNew": "Add new"
       },
+      "sync": {
+        "bookLists": "Sync books from Moly",
+        "readings": "Sync readings from Moly",
+        "bookListsSuccess": "Books synced from Moly",
+        "readingsSuccess": "Readings synced from Moly",
+        "error": "Sync from Moly failed"
+      },
       "dialog": {
         "createTitle": "Add new book list",
         "editTitle": "Edit book list",

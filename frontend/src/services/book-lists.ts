@@ -53,3 +53,7 @@ export async function deleteBookList(
 ): Promise<void> {
   await http.delete(`/book-lists/${year}/${genre}`);
 }
+
+export async function syncBookListsFromMoly(): Promise<void> {
+  await http.post("/book-lists/sync-from-moly");
+}
