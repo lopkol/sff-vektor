@@ -158,6 +158,45 @@ describe("reader db functions", () => {
         "userless",
       ]);
     });
+
+    it("excludes readers assigned only to archived book lists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const activeListReader = await createReader(pool, {
+        molyUsername: "active_list",
+        molyUrl: "https://moly.hu/tagok/active_list",
+      });
+      const archivedOnlyReader = await createReader(pool, {
+        molyUsername: "archived_only",
+        molyUrl: "https://moly.hu/tagok/archived_only",
+      });
+      const bothReader = await createReader(pool, {
+        molyUsername: "both",
+        molyUrl: "https://moly.hu/tagok/both",
+      });
+
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [activeListReader.id, bothReader.id],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [archivedOnlyReader.id, bothReader.id],
+      });
+
+      const usernames = (await getReadersInBookLists(pool)).map(
+        (reader) => reader.molyUsername,
+      );
+      assertEquals(usernames.includes("active_list"), true);
+      assertEquals(usernames.includes("both"), true);
+      assertEquals(usernames.includes("archived_only"), false);
+    });
   });
 
   describe("deleteReader", () => {

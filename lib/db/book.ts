@@ -196,9 +196,10 @@ export async function getApprovedBooksWithReadingPlan(
   return mutable(books.rows);
 }
 
-// Books that have a molyId and belong to one of the reader's assigned book
-// lists. Used by the Moly sync to match a reader's read books against the lists
-// they are a jury member of. Books are linked to a list by (year, genre).
+// Books that have a molyId and belong to one of the reader's assigned,
+// non-archived book lists. Used by the Moly sync to match a reader's read books
+// against the lists they are a jury member of. Books are linked to a list by
+// (year, genre); archived lists are frozen and excluded.
 export async function getBooksWithMolyIdForReader(
   db: CommonQueryMethods,
   readerId: string,
@@ -208,7 +209,11 @@ export async function getBooksWithMolyIdForReader(
     from "book" b
     join "book_list_reader" blr
       on blr."bookListYear" = b."year" and blr."bookListGenre" = b."genre"
-    where blr."readerId" = ${readerId} and b."molyId" is not null
+    join "book_list" bl
+      on bl."year" = b."year" and bl."genre" = b."genre"
+    where blr."readerId" = ${readerId}
+      and b."molyId" is not null
+      and bl."archivedAt" is null
   `);
 
   return mutable(result.rows);

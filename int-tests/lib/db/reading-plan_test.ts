@@ -252,6 +252,65 @@ describe("reading plan db functions", () => {
       assertEquals(result[0].bookId, syncedBook.id);
       assertEquals(result[0].molyId, "111");
     });
+
+    it("excludes molyRead plans in archived book lists so they stay frozen", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [reader.id],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [reader.id],
+      });
+
+      const activeBook = await createBookWithAuthor(pool, {
+        title: "Active",
+        isApproved: true,
+        author,
+        year: 2024,
+        molyId: "111",
+      });
+      const archivedBook = await createBookWithAuthor(pool, {
+        title: "Archived",
+        isApproved: true,
+        author,
+        year: 2023,
+        molyId: "222",
+      });
+
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: activeBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: archivedBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      const result = await getMolyReadPlansForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].bookId, activeBook.id);
+    });
   });
 
   describe("upsertReadingPlan", () => {

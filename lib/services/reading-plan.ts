@@ -1,5 +1,6 @@
 import type { CommonQueryMethods } from "slonik";
 import { getReadingPlan, upsertReadingPlan } from "@/db/reading-plan.ts";
+import { isBookListArchivedForBook } from "@/db/book-list.ts";
 import { ReadingPlanStatus } from "@/schema/reading-plan.ts";
 import { ForbiddenException } from "@/exceptions/forbidden.exception.ts";
 
@@ -16,6 +17,13 @@ export async function setReadingPlan(
     throw new ForbiddenException(
       "This reading status was synced from Moly and cannot be changed by hand",
       "READING_PLAN_LOCKED",
+    );
+  }
+
+  if (await isBookListArchivedForBook(db, props.bookId)) {
+    throw new ForbiddenException(
+      "This book list is archived and its reading plans can no longer be edited",
+      "BOOK_LIST_ARCHIVED",
     );
   }
 

@@ -62,16 +62,19 @@ export async function deleteReader(
   `);
 }
 
-// Readers that should be synced from Moly: assigned to at least one book list.
-// They do not need to be linked to a user (let alone an active one). Each reader
-// is returned once, even if assigned to several book lists.
+// Readers that should be synced from Moly: assigned to at least one non-archived
+// book list. They do not need to be linked to a user.
+// Each reader is returned once, even if assigned to several book lists.
 export async function getReadersInBookLists(
   db: CommonQueryMethods,
 ): Promise<Reader[]> {
   const readerResult = await db.query(sql.typeAlias("reader")`
     select r.* from "reader" r
     where exists (
-      select 1 from "book_list_reader" blr where blr."readerId" = r."id"
+      select 1 from "book_list_reader" blr
+      join "book_list" bl
+        on bl."year" = blr."bookListYear" and bl."genre" = blr."bookListGenre"
+      where blr."readerId" = r."id" and bl."archivedAt" is null
     )
     order by lower(r."molyUsername") asc
   `);

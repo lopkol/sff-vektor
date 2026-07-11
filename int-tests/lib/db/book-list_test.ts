@@ -9,17 +9,21 @@ import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
 import { clearDatabase } from "@/setup/clear_database.ts";
 import {
+  createAuthor,
+  createBook,
   createBookList,
   createReader,
   deleteBookList,
   EntityNotFoundException,
   Genre,
+  getActiveBookLists,
   getAllBookLists,
   getBookList,
   getBookListsByYear,
   getBookListsForReader,
   getOrCreateDatabasePool,
   InvalidArgumentException,
+  isBookListArchivedForBook,
   UniqueConstraintException,
   updateBookList,
 } from "@sffvektor/lib";
@@ -57,6 +61,7 @@ describe("book list db functions", () => {
         bookListInDb.pendingUrl,
         "https://example.com/book-list-pending",
       );
+      assertEquals(bookListInDb.archivedAt, null);
       assertEquals(bookListInDb.readers.length, 0);
     });
 
@@ -219,24 +224,28 @@ describe("book list db functions", () => {
         genre: Genre.SciFi,
         url: "https://example.com/book-list4",
         pendingUrl: "https://example.com/book-list-pending4",
+        archivedAt: null,
       });
       assertEquals(result[1], {
         year: 2023,
         genre: Genre.SciFi,
         url: "https://example.com/book-list3",
         pendingUrl: "https://example.com/book-list-pending3",
+        archivedAt: null,
       });
       assertEquals(result[2], {
         year: 2023,
         genre: Genre.Fantasy,
         url: "https://example.com/book-list2",
         pendingUrl: "https://example.com/book-list-pending2",
+        archivedAt: null,
       });
       assertEquals(result[3], {
         year: 2022,
         genre: Genre.Fantasy,
         url: "https://example.com/book-list1",
         pendingUrl: "https://example.com/book-list-pending1",
+        archivedAt: null,
       });
     });
   });
@@ -391,6 +400,27 @@ describe("book list db functions", () => {
       );
     });
 
+    it("archives and unarchives a book list", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/book-list",
+        pendingUrl: null,
+        readers: [],
+      });
+
+      const archived = await updateBookList(pool, 2024, Genre.Fantasy, {
+        archivedAt: "2020-01-01T00:00:00.000Z",
+      });
+      assertExists(archived.archivedAt);
+
+      const unarchived = await updateBookList(pool, 2024, Genre.Fantasy, {
+        archivedAt: null,
+      });
+      assertEquals(unarchived.archivedAt, null);
+    });
+
     it("updates a book list with readers", async () => {
       const pool = await getOrCreateDatabasePool();
       const reader1 = await createReader(pool, {
@@ -504,6 +534,95 @@ describe("book list db functions", () => {
         () => getBookList(pool, 2024, Genre.Fantasy),
         EntityNotFoundException,
       );
+    });
+  });
+
+  describe("getActiveBookLists", () => {
+    it("returns only the book lists that are not archived", async () => {
+      const pool = await getOrCreateDatabasePool();
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [],
+      });
+
+      const result = await getActiveBookLists(pool);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].year, 2024);
+      assertEquals(result[0].archivedAt, null);
+    });
+  });
+
+  describe("isBookListArchivedForBook", () => {
+    it("is true only when the book's list is archived", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [],
+      });
+
+      const activeBook = await createBook(pool, {
+        title: "Active",
+        year: 2024,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [author.id],
+      });
+      const archivedBook = await createBook(pool, {
+        title: "Archived",
+        year: 2023,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [author.id],
+      });
+      // book with no matching list
+      const orphanBook = await createBook(pool, {
+        title: "Orphan",
+        year: 1999,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [author.id],
+      });
+
+      assertEquals(
+        await isBookListArchivedForBook(pool, archivedBook.id),
+        true,
+      );
+      assertEquals(await isBookListArchivedForBook(pool, activeBook.id), false);
+      assertEquals(await isBookListArchivedForBook(pool, orphanBook.id), false);
     });
   });
 });

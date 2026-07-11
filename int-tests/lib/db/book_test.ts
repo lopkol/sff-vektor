@@ -1087,5 +1087,55 @@ describe("book db functions", () => {
       assertEquals(result[0].id, matching.id);
       assertEquals(result[0].molyId, "111");
     });
+
+    it("excludes books in archived book lists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [reader.id],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [reader.id],
+      });
+
+      const activeBook = await createBook(pool, {
+        molyId: "111",
+        title: "Active",
+        year: 2024,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+      // in the reader's archived list -> excluded
+      await createBook(pool, {
+        molyId: "222",
+        title: "Archived",
+        year: 2023,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+
+      const result = await getBooksWithMolyIdForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].id, activeBook.id);
+    });
   });
 });

@@ -33,7 +33,8 @@ export async function getReadingPlan(
 
 // The reader's current molyRead rows together with the book's molyId, so the
 // Moly sync can decide which locked statuses are stale (no longer read on Moly)
-// and should be downgraded.
+// and should be downgraded. Rows belonging to archived lists are excluded so
+// those plans stay frozen.
 export async function getMolyReadPlansForReader(
   db: CommonQueryMethods,
   readerId: string,
@@ -42,7 +43,10 @@ export async function getMolyReadPlansForReader(
     select rp."bookId", b."molyId"
     from "reading_plan" rp
     join "book" b on b."id" = rp."bookId"
-    where rp."readerId" = ${readerId} and rp."status" = 'molyRead'
+    left join "book_list" bl on bl."year" = b."year" and bl."genre" = b."genre"
+    where rp."readerId" = ${readerId}
+      and rp."status" = 'molyRead'
+      and bl."archivedAt" is null
   `);
 
   return [...result.rows];

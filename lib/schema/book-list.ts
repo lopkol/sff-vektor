@@ -7,6 +7,7 @@ export const bookListSchema = z.object({
   genre: z.nativeEnum(Genre),
   url: z.string(),
   pendingUrl: z.string().nullable().optional(),
+  archivedAt: z.string().nullable().optional(),
   readers: z.array(
     z.string().refine((readerId: string) => isUuidv7(readerId), {
       message: "Invalid reader id",
@@ -30,6 +31,7 @@ export const shortBookListSchema = bookListSchema.pick({
   genre: true,
   url: true,
   pendingUrl: true,
+  archivedAt: true,
 });
 
 export type ShortBookList = z.infer<typeof shortBookListSchema>;

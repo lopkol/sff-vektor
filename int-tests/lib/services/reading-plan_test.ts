@@ -8,6 +8,7 @@ import {
   type Author,
   createAuthor,
   createBook,
+  createBookList,
   createReader,
   ForbiddenException,
   Genre,
@@ -130,6 +131,43 @@ describe("reading plan service", () => {
 
       const plan = await getReadingPlan(pool, reader.id, book.id);
       assertEquals(plan?.status, ReadingPlanStatus.MolyRead);
+    });
+
+    it("throws BOOK_LIST_ARCHIVED when the book's list is archived", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://example.com/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const book = await createBookWithAuthor(pool, { title: "Book", author });
+      // The book's list (2024, Fantasy) is archived -> frozen.
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [reader.id],
+      });
+
+      const error = await assertRejects(
+        () =>
+          setReadingPlan(pool, {
+            readerId: reader.id,
+            bookId: book.id,
+            status: ReadingPlanStatus.WillRead,
+          }),
+        ForbiddenException,
+      );
+      assertEquals((error as ForbiddenException).code, "BOOK_LIST_ARCHIVED");
+
+      // no plan row was created
+      assertEquals(await getReadingPlan(pool, reader.id, book.id), null);
     });
   });
 });
