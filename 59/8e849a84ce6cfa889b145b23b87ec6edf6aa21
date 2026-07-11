@@ -1,0 +1,48 @@
+api/routes/book-lists.ts
+  s_39d98c00fb89ff::t_489275b8d9bda6 62-69
+  s_39d98c00fb89ff::t_91879cace3b047 14
+  s_39d98c00fb89ff::t_ebd06090b54e14 61
+frontend/locales/hu.json
+  h_b221bcce5c2edf 91,93
+  s_39d98c00fb89ff::t_af5b2e12b6739f 90,92,94-96
+api/routes/reading-plans.ts
+  s_39d98c00fb89ff::t_fc0c165bb9c9cc 10,13
+  s_39d98c00fb89ff::t_e528df94de6ee6 50-58
+frontend/src/app/admin/book-lists/page.tsx
+  s_39d98c00fb89ff::t_f3239bdaeff243 32,39-59
+  s_39d98c00fb89ff::t_b954e7e91a00cf 78-82,89,93,101,105
+  s_39d98c00fb89ff::t_e43ce8079f26db 83-88,90-92,94-100,102-104,106-107
+  s_39d98c00fb89ff::t_0f42d79dc7f58b 3-5,21-22
+  s_39d98c00fb89ff::t_082ebf73fcf5f1 60
+frontend/locales/en.json
+  s_39d98c00fb89ff::t_461e24c7a87683 101,103,105-107
+  h_b221bcce5c2edf 102,104
+lib/services/moly/book-list.ts
+  s_39d98c00fb89ff::t_5185c5a40ddfa5 142-153
+  s_39d98c00fb89ff::t_0ac599cc0a16c6 18-22
+frontend/src/services/reading-plans.ts
+  s_39d98c00fb89ff::t_09df8940007053 10-13
+frontend/src/services/book-lists.ts
+  s_39d98c00fb89ff::t_57bf70df1a2fb1 56-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "598e849a84ce6cfa889b145b23b87ec6edf6aa21",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
