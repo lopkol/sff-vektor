@@ -1,0 +1,16 @@
+frontend/.nvmrc
+  h_c79d0d58c8ed87 1
+Dockerfile
+  h_c79d0d58c8ed87 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "ac72efd1a9cf834ebf0440242c11b102b13fcc43",
+  "prompts": {},
+  "humans": {
+    "h_c79d0d58c8ed87": {
+      "author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  }
+}
