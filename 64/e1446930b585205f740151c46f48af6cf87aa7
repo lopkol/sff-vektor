@@ -1,0 +1,72 @@
+frontend/src/app/book-lists/[year]/[genre]/list/page.tsx
+  s_39d98c00fb89ff::t_1b4cd3c47e3fe6 123-130
+  s_39d98c00fb89ff::t_4c09eab5ee355d 7
+  s_39d98c00fb89ff::t_fdc83c57fa66bb 161
+  s_39d98c00fb89ff::t_88dbfdbb23cd91 64-72
+frontend/src/lib/menu-item.ts
+  s_39d98c00fb89ff::t_6f45153c5b10ee 6-7
+frontend/src/types/book-list.ts
+  s_39d98c00fb89ff::t_22f8cf6a22bdb3 8,16
+frontend/locales/en.json
+  s_39d98c00fb89ff::t_bdc5910dc66ec9 92-93
+  s_39d98c00fb89ff::t_c16596167dd7a7 204
+  s_39d98c00fb89ff::t_5f73dc5a734342 96-97
+  s_39d98c00fb89ff::t_439b91aae527e6 198-199
+frontend/src/services/book-lists.ts
+  s_39d98c00fb89ff::t_ff3a9360ec1fe5 44
+frontend/src/app/book-lists/[year]/books/page.tsx
+  s_39d98c00fb89ff::t_9513032e48b39f 5
+  s_39d98c00fb89ff::t_17975e31b169f8 55-63
+  s_39d98c00fb89ff::t_d7cdef246189e5 179
+frontend/src/components/app-sidebar.tsx
+  s_39d98c00fb89ff::t_1b71bc6b3bf412 246-250
+  s_39d98c00fb89ff::t_f73c120c4b80e4 231
+  s_39d98c00fb89ff::t_bc7dc3abda374b 108-113,120
+  s_39d98c00fb89ff::t_8cce9c9ec2f0a0 264-268
+  s_39d98c00fb89ff::t_574482bd8cbe7e 87,102
+frontend/src/app/book-lists/[year]/[genre]/admin/page.tsx
+  s_39d98c00fb89ff::t_bda3b1971e86c1 33-41
+  s_39d98c00fb89ff::t_d9646892bdb4b9 5
+  s_39d98c00fb89ff::t_95a29d96614d5d 80,82-86,92
+frontend/src/app/admin/book-lists/page.tsx
+  s_39d98c00fb89ff::t_a186b39358a07d 123
+  s_39d98c00fb89ff::t_4b5fea07ede985 21
+  s_39d98c00fb89ff::t_2591561f3263fb 159-160
+  s_39d98c00fb89ff::t_3d569ec0f86a32 161
+frontend/locales/hu.json
+  s_39d98c00fb89ff::t_0f3579e484889f 183
+  s_39d98c00fb89ff::t_3255b5ea3dfefc 177-178
+  s_39d98c00fb89ff::t_61692f49df2782 81-82
+  h_b221bcce5c2edf 86
+  s_39d98c00fb89ff::t_650ffc265e6dd1 85
+frontend/src/app/admin/book-lists/book-list-form.tsx
+  s_39d98c00fb89ff::t_7c1ba3bd749e93 98
+  s_39d98c00fb89ff::t_d087f988b79ed5 71
+  s_39d98c00fb89ff::t_a14c3858b6eeee 22
+  s_39d98c00fb89ff::t_1f0ef2ca2b851f 209-215
+  s_39d98c00fb89ff::t_5011fac361b0ed 7
+  s_39d98c00fb89ff::t_3867e9ec70e9da 207-208,216-224
+  s_39d98c00fb89ff::t_a331978e60bea2 205-206
+  s_39d98c00fb89ff::t_7ccf8638a8b7be 225-227
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "64e1446930b585205f740151c46f48af6cf87aa7",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
