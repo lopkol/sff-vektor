@@ -13,6 +13,7 @@ import {
   createReader,
   Genre,
   getApprovedBooksWithReadingPlan,
+  getMolyReadPlansForReader,
   getOrCreateDatabasePool,
   getReadingPlan,
   isReaderOfBookList,
@@ -29,9 +30,11 @@ async function createBookWithAuthor(
     author: Author;
     year?: number;
     genre?: Genre;
+    molyId?: string;
   },
 ) {
   return await createBook(db, {
+    molyId: props.molyId ?? null,
     title: props.title,
     year: props.year ?? 2024,
     genre: props.genre ?? Genre.Fantasy,
@@ -203,6 +206,51 @@ describe("reading plan db functions", () => {
 
       assertEquals(result.length, 1);
       assertEquals(result[0].readingPlanStatus, null);
+    });
+  });
+
+  describe("getMolyReadPlansForReader", () => {
+    it("returns only the reader's molyRead plans, each with the book's molyId", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const syncedBook = await createBookWithAuthor(pool, {
+        title: "Synced",
+        isApproved: true,
+        author,
+        molyId: "111",
+      });
+      const manualBook = await createBookWithAuthor(pool, {
+        title: "Manual",
+        isApproved: true,
+        author,
+        molyId: "222",
+      });
+
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: syncedBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+      // a manual status must not be returned
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: manualBook.id,
+        status: ReadingPlanStatus.Read,
+      });
+
+      const result = await getMolyReadPlansForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].bookId, syncedBook.id);
+      assertEquals(result[0].molyId, "111");
     });
   });
 

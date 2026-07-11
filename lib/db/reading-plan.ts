@@ -10,6 +10,10 @@ const sql = createSqlTag({
   typeAliases: {
     readingPlan: readingPlanSchema,
     void: z.void(),
+    molyReadPlan: z.object({
+      bookId: z.string(),
+      molyId: z.string().nullable(),
+    }),
   },
 });
 
@@ -25,6 +29,23 @@ export async function getReadingPlan(
   `);
 
   return result.rowCount ? result.rows[0] : null;
+}
+
+// The reader's current molyRead rows together with the book's molyId, so the
+// Moly sync can decide which locked statuses are stale (no longer read on Moly)
+// and should be downgraded.
+export async function getMolyReadPlansForReader(
+  db: CommonQueryMethods,
+  readerId: string,
+): Promise<{ bookId: string; molyId: string | null }[]> {
+  const result = await db.query(sql.typeAlias("molyReadPlan")`
+    select rp."bookId", b."molyId"
+    from "reading_plan" rp
+    join "book" b on b."id" = rp."bookId"
+    where rp."readerId" = ${readerId} and rp."status" = 'molyRead'
+  `);
+
+  return [...result.rows];
 }
 
 export async function upsertReadingPlan(

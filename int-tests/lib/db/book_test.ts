@@ -6,6 +6,8 @@ import { clearDatabase } from "@/setup/clear_database.ts";
 import {
   createAuthor,
   createBook,
+  createBookList,
+  createReader,
   deleteBook,
   EntityNotFoundException,
   Genre,
@@ -13,6 +15,7 @@ import {
   getBookByMolyId,
   getBookByUrl,
   getBooks,
+  getBooksWithMolyIdForReader,
   getOrCreateDatabasePool,
   InvalidArgumentException,
   updateBook,
@@ -1015,6 +1018,74 @@ describe("book db functions", () => {
         async () => await getBookById(pool, book.id),
         EntityNotFoundException,
       );
+    });
+  });
+
+  describe("getBooksWithMolyIdForReader", () => {
+    it("returns books with a molyId that are in the reader's assigned book lists", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      const otherReader = await createReader(pool, {
+        molyUsername: "r2",
+        molyUrl: "https://moly.hu/tagok/r2",
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/fantasy",
+        pendingUrl: null,
+        readers: [reader.id],
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.SciFi,
+        url: "https://example.com/scifi",
+        pendingUrl: null,
+        readers: [otherReader.id],
+      });
+
+      // in the reader's list, has a molyId -> included
+      const matching = await createBook(pool, {
+        molyId: "111",
+        title: "Matching",
+        year: 2024,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+      // in the reader's list, but has no molyId -> excluded
+      await createBook(pool, {
+        molyId: null,
+        title: "No molyId",
+        year: 2024,
+        genre: Genre.Fantasy,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+      // has a molyId, but in a list the reader is not assigned to -> excluded
+      await createBook(pool, {
+        molyId: "222",
+        title: "Other list",
+        year: 2024,
+        genre: Genre.SciFi,
+        isApproved: true,
+        isPending: false,
+        alternatives: [],
+        authors: [],
+      });
+
+      const result = await getBooksWithMolyIdForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].id, matching.id);
+      assertEquals(result[0].molyId, "111");
     });
   });
 });
