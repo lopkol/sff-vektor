@@ -40,8 +40,7 @@ async function getBooksFromList(url: string): Promise<BookFromList[]> {
 
     return books.concat(...otherPagesBooks);
   } catch (error) {
-    // TODO: logging
-    console.error(error);
+    logger.error("Failed to get books from Moly list", { url, error });
     throw new Error(`failed to get books from list ${url}`);
   }
 }
@@ -66,8 +65,7 @@ async function getBooksFromPendingShelf(url: string): Promise<BookFromShelf[]> {
 
     return books.concat(...otherPagesBooks);
   } catch (error) {
-    // TODO: logging
-    console.error(error);
+    logger.error("Failed to get books from Moly shelf", { url, error });
     throw new Error(`failed to get books from shelf ${url}`);
   }
 }
@@ -113,7 +111,6 @@ async function createOrUpdateBooksOfListFromMoly(
     }));
   }
 
-  // TODO: logging
   logger.info("Books updated for list", { year, genre });
 }
 
@@ -136,6 +133,5 @@ export async function createOrUpdateBooksFromMoly(
     await createOrUpdateBooksOfListFromMoly(db, year, bookList.genre);
   }
 
-  // TODO: logging
   logger.info("Books updated for year", { year });
 }
