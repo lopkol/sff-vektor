@@ -44,16 +44,16 @@ export interface VpcEndpointRestrictionState {
     /**
      * A descriptive label for the VPC endpoint.
      */
-    label?: pulumi.Input<string>;
+    label?: pulumi.Input<string | undefined>;
     /**
      * The Neon project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
     /**
      * The VPC endpoint ID.
      */
-    vpcEndpointId?: pulumi.Input<string>;
-    vpcEndpointRestrictionId?: pulumi.Input<string>;
+    vpcEndpointId?: pulumi.Input<string | undefined>;
+    vpcEndpointRestrictionId?: pulumi.Input<string | undefined>;
 }
 /**
  * The set of arguments for constructing a VpcEndpointRestriction resource.
@@ -71,5 +71,6 @@ export interface VpcEndpointRestrictionArgs {
      * The VPC endpoint ID.
      */
     vpcEndpointId: pulumi.Input<string>;
-    vpcEndpointRestrictionId?: pulumi.Input<string>;
+    vpcEndpointRestrictionId?: pulumi.Input<string | undefined>;
 }
+//# sourceMappingURL=vpcEndpointRestriction.d.ts.map

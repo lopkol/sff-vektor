@@ -75,11 +75,11 @@ export interface ApiKeyState {
     /**
      * The generated 64-bit token required to access the Neon API.
      */
-    key?: pulumi.Input<string>;
+    key?: pulumi.Input<string | undefined>;
     /**
      * The name of the API Key.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -89,5 +89,5 @@ export interface ApiKeyArgs {
     /**
      * The name of the API Key.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
 }

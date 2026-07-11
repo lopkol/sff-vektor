@@ -112,28 +112,28 @@ export interface JwksUrlState {
     /**
      * Branch ID.
      */
-    branchId?: pulumi.Input<string>;
+    branchId?: pulumi.Input<string | undefined>;
     /**
      * The URL that lists the JWKS.
      */
-    jwksUrl?: pulumi.Input<string>;
-    jwksUrlId?: pulumi.Input<string>;
+    jwksUrl?: pulumi.Input<string | undefined>;
+    jwksUrlId?: pulumi.Input<string | undefined>;
     /**
      * The name of the required JWT Audience to be used.
      */
-    jwtAudience?: pulumi.Input<string>;
+    jwtAudience?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
     /**
      * The name of the authentication provider.
      */
-    providerName?: pulumi.Input<string>;
+    providerName?: pulumi.Input<string | undefined>;
     /**
      * The roles the JWKS should be mapped to.
      */
-    roleNames?: pulumi.Input<pulumi.Input<string>[]>;
+    roleNames?: pulumi.Input<pulumi.Input<string>[] | undefined>;
 }
 
 /**
@@ -143,16 +143,16 @@ export interface JwksUrlArgs {
     /**
      * Branch ID.
      */
-    branchId?: pulumi.Input<string>;
+    branchId?: pulumi.Input<string | undefined>;
     /**
      * The URL that lists the JWKS.
      */
     jwksUrl: pulumi.Input<string>;
-    jwksUrlId?: pulumi.Input<string>;
+    jwksUrlId?: pulumi.Input<string | undefined>;
     /**
      * The name of the required JWT Audience to be used.
      */
-    jwtAudience?: pulumi.Input<string>;
+    jwtAudience?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */

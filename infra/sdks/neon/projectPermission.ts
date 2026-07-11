@@ -79,11 +79,11 @@ export interface ProjectPermissionState {
     /**
      * Email of the user whom to grant project permission.
      */
-    grantee?: pulumi.Input<string>;
+    grantee?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
 }
 
 /**

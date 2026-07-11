@@ -42,6 +42,6 @@ export function getBranchesOutput(args: GetBranchesOutputArgs, opts?: pulumi.Inv
  * A collection of arguments for invoking getBranches.
  */
 export interface GetBranchesOutputArgs {
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
 }

@@ -28,3 +28,4 @@ export declare function getProjectOutput(args: GetProjectOutputArgs, opts?: pulu
 export interface GetProjectOutputArgs {
     id: pulumi.Input<string>;
 }
+//# sourceMappingURL=getProject.d.ts.map

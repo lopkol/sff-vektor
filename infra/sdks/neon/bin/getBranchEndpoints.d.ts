@@ -26,7 +26,8 @@ export declare function getBranchEndpointsOutput(args: GetBranchEndpointsOutputA
  */
 export interface GetBranchEndpointsOutputArgs {
     branchId: pulumi.Input<string>;
-    endpoints?: pulumi.Input<pulumi.Input<inputs.GetBranchEndpointsEndpointArgs>[]>;
-    id?: pulumi.Input<string>;
+    endpoints?: pulumi.Input<pulumi.Input<inputs.GetBranchEndpointsEndpointArgs>[] | undefined>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
 }
+//# sourceMappingURL=getBranchEndpoints.d.ts.map

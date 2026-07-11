@@ -50,7 +50,7 @@ export function getBranchRolesOutput(args: GetBranchRolesOutputArgs, opts?: pulu
  */
 export interface GetBranchRolesOutputArgs {
     branchId: pulumi.Input<string>;
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
-    roles?: pulumi.Input<pulumi.Input<inputs.GetBranchRolesRoleArgs>[]>;
+    roles?: pulumi.Input<pulumi.Input<inputs.GetBranchRolesRoleArgs>[] | undefined>;
 }

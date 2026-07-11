@@ -25,7 +25,8 @@ export declare function getBranchRolePasswordOutput(args: GetBranchRolePasswordO
  */
 export interface GetBranchRolePasswordOutputArgs {
     branchId: pulumi.Input<string>;
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
     roleName: pulumi.Input<string>;
 }
+//# sourceMappingURL=getBranchRolePassword.d.ts.map

@@ -52,7 +52,7 @@ export interface ProjectBranch {
      */
     id: string;
     /**
-     * The name of the default branch provisioned upon creation of new project. 
+     * The name of the default branch provisioned upon creation of new project.
      * If not specified, the default branch name will be used.
      */
     name: string;
@@ -77,6 +77,21 @@ export interface ProjectDefaultEndpointSettings {
      * The maximum value is 604800 seconds (1 week)
      */
     suspendTimeoutSeconds: number;
+}
+
+export interface ProjectMaintenanceWindow {
+    /**
+     * End time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    endTime: string;
+    /**
+     * Start time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    startTime: string;
+    /**
+     * A list of weekdays when the maintenance window is active. Encoded as ints, where 1 - Monday, and 7 - Sunday.
+     */
+    weekdays: number[];
 }
 
 export interface ProjectQuota {

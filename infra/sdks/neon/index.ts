@@ -55,6 +55,11 @@ export type JwksUrl = import("./jwksUrl").JwksUrl;
 export const JwksUrl: typeof import("./jwksUrl").JwksUrl = null as any;
 utilities.lazyLoad(exports, ["JwksUrl"], () => require("./jwksUrl"));
 
+export { OrgApiKeyArgs, OrgApiKeyState } from "./orgApiKey";
+export type OrgApiKey = import("./orgApiKey").OrgApiKey;
+export const OrgApiKey: typeof import("./orgApiKey").OrgApiKey = null as any;
+utilities.lazyLoad(exports, ["OrgApiKey"], () => require("./orgApiKey"));
+
 export { ProjectArgs, ProjectState } from "./project";
 export type Project = import("./project").Project;
 export const Project: typeof import("./project").Project = null as any;
@@ -107,6 +112,8 @@ const _module = {
                 return new Endpoint(name, <any>undefined, { urn })
             case "neon:index/jwksUrl:JwksUrl":
                 return new JwksUrl(name, <any>undefined, { urn })
+            case "neon:index/orgApiKey:OrgApiKey":
+                return new OrgApiKey(name, <any>undefined, { urn })
             case "neon:index/project:Project":
                 return new Project(name, <any>undefined, { urn })
             case "neon:index/projectPermission:ProjectPermission":
@@ -127,6 +134,7 @@ pulumi.runtime.registerResourceModule("neon", "index/branch", _module)
 pulumi.runtime.registerResourceModule("neon", "index/database", _module)
 pulumi.runtime.registerResourceModule("neon", "index/endpoint", _module)
 pulumi.runtime.registerResourceModule("neon", "index/jwksUrl", _module)
+pulumi.runtime.registerResourceModule("neon", "index/orgApiKey", _module)
 pulumi.runtime.registerResourceModule("neon", "index/project", _module)
 pulumi.runtime.registerResourceModule("neon", "index/projectPermission", _module)
 pulumi.runtime.registerResourceModule("neon", "index/role", _module)

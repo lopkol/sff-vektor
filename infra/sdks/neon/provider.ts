@@ -65,7 +65,7 @@ export interface ProviderArgs {
     /**
      * API access key. Default is read from the environment variable `NEON_API_KEY`.
      */
-    apiKey?: pulumi.Input<string>;
+    apiKey?: pulumi.Input<string | undefined>;
 }
 
 export namespace Provider {

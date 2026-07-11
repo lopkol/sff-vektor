@@ -45,6 +45,16 @@ export class Project extends pulumi.CustomResource {
      * Note that the feature is available to the Neon Scale plans only.
      */
     declare public readonly allowedIpsProtectedBranchesOnly: pulumi.Output<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections from public internet. This supersedes the AllowedIPs list.
+     */
+    declare public readonly blockPublicConnections: pulumi.Output<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections that use VPC endpoints.
+     */
+    declare public readonly blockVpcConnections: pulumi.Output<string | undefined>;
     declare public readonly branch: pulumi.Output<outputs.ProjectBranch | undefined>;
     /**
      * Provisioner The Neon compute provisioner.
@@ -101,6 +111,10 @@ export class Project extends pulumi.CustomResource {
      */
     declare public readonly historyRetentionSeconds: pulumi.Output<number | undefined>;
     /**
+     * A time period during which Neon may perform maintenance on the project's infrastructure. During this time, the project's compute endpoints may be unavailable and existing connections can be interrupted.
+     */
+    declare public readonly maintenanceWindow: pulumi.Output<outputs.ProjectMaintenanceWindow | undefined>;
+    /**
      * Project name.
      */
     declare public readonly name: pulumi.Output<string>;
@@ -153,6 +167,8 @@ export class Project extends pulumi.CustomResource {
             const state = argsOrState as ProjectState | undefined;
             resourceInputs["allowedIps"] = state?.allowedIps;
             resourceInputs["allowedIpsProtectedBranchesOnly"] = state?.allowedIpsProtectedBranchesOnly;
+            resourceInputs["blockPublicConnections"] = state?.blockPublicConnections;
+            resourceInputs["blockVpcConnections"] = state?.blockVpcConnections;
             resourceInputs["branch"] = state?.branch;
             resourceInputs["computeProvisioner"] = state?.computeProvisioner;
             resourceInputs["connectionUri"] = state?.connectionUri;
@@ -167,6 +183,7 @@ export class Project extends pulumi.CustomResource {
             resourceInputs["defaultEndpointSettings"] = state?.defaultEndpointSettings;
             resourceInputs["enableLogicalReplication"] = state?.enableLogicalReplication;
             resourceInputs["historyRetentionSeconds"] = state?.historyRetentionSeconds;
+            resourceInputs["maintenanceWindow"] = state?.maintenanceWindow;
             resourceInputs["name"] = state?.name;
             resourceInputs["orgId"] = state?.orgId;
             resourceInputs["pgVersion"] = state?.pgVersion;
@@ -177,11 +194,14 @@ export class Project extends pulumi.CustomResource {
             const args = argsOrState as ProjectArgs | undefined;
             resourceInputs["allowedIps"] = args?.allowedIps;
             resourceInputs["allowedIpsProtectedBranchesOnly"] = args?.allowedIpsProtectedBranchesOnly;
+            resourceInputs["blockPublicConnections"] = args?.blockPublicConnections;
+            resourceInputs["blockVpcConnections"] = args?.blockVpcConnections;
             resourceInputs["branch"] = args?.branch;
             resourceInputs["computeProvisioner"] = args?.computeProvisioner;
             resourceInputs["defaultEndpointSettings"] = args?.defaultEndpointSettings;
             resourceInputs["enableLogicalReplication"] = args?.enableLogicalReplication;
             resourceInputs["historyRetentionSeconds"] = args?.historyRetentionSeconds;
+            resourceInputs["maintenanceWindow"] = args?.maintenanceWindow;
             resourceInputs["name"] = args?.name;
             resourceInputs["orgId"] = args?.orgId;
             resourceInputs["pgVersion"] = args?.pgVersion;
@@ -213,80 +233,94 @@ export interface ProjectState {
      * A list of IP addresses that are allowed to connect to the endpoints.
      * Note that the feature is available to the Neon Scale plans only. Details: https://neon.tech/docs/manage/projects#configure-ip-allow
      */
-    allowedIps?: pulumi.Input<pulumi.Input<string>[]>;
+    allowedIps?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Apply the allow-list to the protected branches only.
      * Note that the feature is available to the Neon Scale plans only.
      */
-    allowedIpsProtectedBranchesOnly?: pulumi.Input<string>;
-    branch?: pulumi.Input<inputs.ProjectBranch>;
+    allowedIpsProtectedBranchesOnly?: pulumi.Input<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections from public internet. This supersedes the AllowedIPs list.
+     */
+    blockPublicConnections?: pulumi.Input<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections that use VPC endpoints.
+     */
+    blockVpcConnections?: pulumi.Input<string | undefined>;
+    branch?: pulumi.Input<inputs.ProjectBranch | undefined>;
     /**
      * Provisioner The Neon compute provisioner.
      * Specify the k8s-neonvm provisioner to create a compute endpoint that supports Autoscaling.
      */
-    computeProvisioner?: pulumi.Input<string>;
+    computeProvisioner?: pulumi.Input<string | undefined>;
     /**
      * Default connection uri. **Note** that it contains access credentials.
      */
-    connectionUri?: pulumi.Input<string>;
+    connectionUri?: pulumi.Input<string | undefined>;
     /**
      * Default connection uri with the traffic via pooler. **Note** that it contains access credentials.
      */
-    connectionUriPooler?: pulumi.Input<string>;
+    connectionUriPooler?: pulumi.Input<string | undefined>;
     /**
      * Default database host.
      */
-    databaseHost?: pulumi.Input<string>;
+    databaseHost?: pulumi.Input<string | undefined>;
     /**
      * Default endpoint host via pooler.
      */
-    databaseHostPooler?: pulumi.Input<string>;
+    databaseHostPooler?: pulumi.Input<string | undefined>;
     /**
      * Default database name.
      */
-    databaseName?: pulumi.Input<string>;
+    databaseName?: pulumi.Input<string | undefined>;
     /**
      * Default database access password.
      */
-    databasePassword?: pulumi.Input<string>;
+    databasePassword?: pulumi.Input<string | undefined>;
     /**
      * Default database role.
      */
-    databaseUser?: pulumi.Input<string>;
+    databaseUser?: pulumi.Input<string | undefined>;
     /**
      * Default branch ID.
      */
-    defaultBranchId?: pulumi.Input<string>;
+    defaultBranchId?: pulumi.Input<string | undefined>;
     /**
      * Default endpoint ID.
      */
-    defaultEndpointId?: pulumi.Input<string>;
-    defaultEndpointSettings?: pulumi.Input<inputs.ProjectDefaultEndpointSettings>;
+    defaultEndpointId?: pulumi.Input<string | undefined>;
+    defaultEndpointSettings?: pulumi.Input<inputs.ProjectDefaultEndpointSettings | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Sets wal_level=logical for all compute endpoints in this project.
      * All active endpoints will be suspended. Once enabled, logical replication cannot be disabled.
      * See details: https://neon.tech/docs/introduction/logical-replication
      */
-    enableLogicalReplication?: pulumi.Input<string>;
+    enableLogicalReplication?: pulumi.Input<string | undefined>;
     /**
      * The number of seconds to retain the point-in-time restore (PITR) backup history for this project.
      * Default: 1 day, see https://neon.tech/docs/reference/glossary#point-in-time-restore.
      */
-    historyRetentionSeconds?: pulumi.Input<number>;
+    historyRetentionSeconds?: pulumi.Input<number | undefined>;
+    /**
+     * A time period during which Neon may perform maintenance on the project's infrastructure. During this time, the project's compute endpoints may be unavailable and existing connections can be interrupted.
+     */
+    maintenanceWindow?: pulumi.Input<inputs.ProjectMaintenanceWindow | undefined>;
     /**
      * Project name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Identifier of the organisation to which this project belongs.
      */
-    orgId?: pulumi.Input<string>;
+    orgId?: pulumi.Input<string | undefined>;
     /**
      * Postgres version
      */
-    pgVersion?: pulumi.Input<number>;
+    pgVersion?: pulumi.Input<number | undefined>;
     /**
      * Per-project consumption quota. If the quota is exceeded, all active computes
      * are automatically suspended and it will not be possible to start them with
@@ -301,17 +335,17 @@ export interface ProjectState {
      *
      * The zero value per attributed means 'unlimited'.
      */
-    quota?: pulumi.Input<inputs.ProjectQuota>;
+    quota?: pulumi.Input<inputs.ProjectQuota | undefined>;
     /**
      * Deployment region: https://neon.tech/docs/introduction/regions
      */
-    regionId?: pulumi.Input<string>;
+    regionId?: pulumi.Input<string | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Whether or not passwords are stored for roles in the Neon project.
      * Storing passwords facilitates access to Neon features that require authorization.
      */
-    storePassword?: pulumi.Input<string>;
+    storePassword?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -322,44 +356,58 @@ export interface ProjectArgs {
      * A list of IP addresses that are allowed to connect to the endpoints.
      * Note that the feature is available to the Neon Scale plans only. Details: https://neon.tech/docs/manage/projects#configure-ip-allow
      */
-    allowedIps?: pulumi.Input<pulumi.Input<string>[]>;
+    allowedIps?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Apply the allow-list to the protected branches only.
      * Note that the feature is available to the Neon Scale plans only.
      */
-    allowedIpsProtectedBranchesOnly?: pulumi.Input<string>;
-    branch?: pulumi.Input<inputs.ProjectBranch>;
+    allowedIpsProtectedBranchesOnly?: pulumi.Input<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections from public internet. This supersedes the AllowedIPs list.
+     */
+    blockPublicConnections?: pulumi.Input<string | undefined>;
+    /**
+     * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
+     * Block connections that use VPC endpoints.
+     */
+    blockVpcConnections?: pulumi.Input<string | undefined>;
+    branch?: pulumi.Input<inputs.ProjectBranch | undefined>;
     /**
      * Provisioner The Neon compute provisioner.
      * Specify the k8s-neonvm provisioner to create a compute endpoint that supports Autoscaling.
      */
-    computeProvisioner?: pulumi.Input<string>;
-    defaultEndpointSettings?: pulumi.Input<inputs.ProjectDefaultEndpointSettings>;
+    computeProvisioner?: pulumi.Input<string | undefined>;
+    defaultEndpointSettings?: pulumi.Input<inputs.ProjectDefaultEndpointSettings | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Sets wal_level=logical for all compute endpoints in this project.
      * All active endpoints will be suspended. Once enabled, logical replication cannot be disabled.
      * See details: https://neon.tech/docs/introduction/logical-replication
      */
-    enableLogicalReplication?: pulumi.Input<string>;
+    enableLogicalReplication?: pulumi.Input<string | undefined>;
     /**
      * The number of seconds to retain the point-in-time restore (PITR) backup history for this project.
      * Default: 1 day, see https://neon.tech/docs/reference/glossary#point-in-time-restore.
      */
-    historyRetentionSeconds?: pulumi.Input<number>;
+    historyRetentionSeconds?: pulumi.Input<number | undefined>;
+    /**
+     * A time period during which Neon may perform maintenance on the project's infrastructure. During this time, the project's compute endpoints may be unavailable and existing connections can be interrupted.
+     */
+    maintenanceWindow?: pulumi.Input<inputs.ProjectMaintenanceWindow | undefined>;
     /**
      * Project name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Identifier of the organisation to which this project belongs.
      */
-    orgId?: pulumi.Input<string>;
+    orgId?: pulumi.Input<string | undefined>;
     /**
      * Postgres version
      */
-    pgVersion?: pulumi.Input<number>;
+    pgVersion?: pulumi.Input<number | undefined>;
     /**
      * Per-project consumption quota. If the quota is exceeded, all active computes
      * are automatically suspended and it will not be possible to start them with
@@ -374,15 +422,15 @@ export interface ProjectArgs {
      *
      * The zero value per attributed means 'unlimited'.
      */
-    quota?: pulumi.Input<inputs.ProjectQuota>;
+    quota?: pulumi.Input<inputs.ProjectQuota | undefined>;
     /**
      * Deployment region: https://neon.tech/docs/introduction/regions
      */
-    regionId?: pulumi.Input<string>;
+    regionId?: pulumi.Input<string | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Whether or not passwords are stored for roles in the Neon project.
      * Storing passwords facilitates access to Neon features that require authorization.
      */
-    storePassword?: pulumi.Input<string>;
+    storePassword?: pulumi.Input<string | undefined>;
 }

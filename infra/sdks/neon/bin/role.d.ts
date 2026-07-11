@@ -49,21 +49,21 @@ export interface RoleState {
     /**
      * Branch ID.
      */
-    branchId?: pulumi.Input<string>;
+    branchId?: pulumi.Input<string | undefined>;
     /**
      * Role name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Database authentication password.
      */
-    password?: pulumi.Input<string>;
+    password?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
-    protected?: pulumi.Input<boolean>;
-    roleId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
+    protected?: pulumi.Input<boolean | undefined>;
+    roleId?: pulumi.Input<string | undefined>;
 }
 /**
  * The set of arguments for constructing a Role resource.
@@ -76,10 +76,11 @@ export interface RoleArgs {
     /**
      * Role name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
     projectId: pulumi.Input<string>;
-    roleId?: pulumi.Input<string>;
+    roleId?: pulumi.Input<string | undefined>;
 }
+//# sourceMappingURL=role.d.ts.map

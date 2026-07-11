@@ -48,20 +48,20 @@ export interface DatabaseState {
     /**
      * Branch ID.
      */
-    branchId?: pulumi.Input<string>;
-    databaseId?: pulumi.Input<string>;
+    branchId?: pulumi.Input<string | undefined>;
+    databaseId?: pulumi.Input<string | undefined>;
     /**
      * Database name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Role name of the database owner.
      */
-    ownerName?: pulumi.Input<string>;
+    ownerName?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
 }
 /**
  * The set of arguments for constructing a Database resource.
@@ -71,11 +71,11 @@ export interface DatabaseArgs {
      * Branch ID.
      */
     branchId: pulumi.Input<string>;
-    databaseId?: pulumi.Input<string>;
+    databaseId?: pulumi.Input<string | undefined>;
     /**
      * Database name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * Role name of the database owner.
      */
@@ -85,3 +85,4 @@ export interface DatabaseArgs {
      */
     projectId: pulumi.Input<string>;
 }
+//# sourceMappingURL=database.d.ts.map

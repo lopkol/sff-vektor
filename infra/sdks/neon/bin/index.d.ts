@@ -28,6 +28,9 @@ export declare const getProjectOutput: typeof import("./getProject").getProjectO
 export { JwksUrlArgs, JwksUrlState } from "./jwksUrl";
 export type JwksUrl = import("./jwksUrl").JwksUrl;
 export declare const JwksUrl: typeof import("./jwksUrl").JwksUrl;
+export { OrgApiKeyArgs, OrgApiKeyState } from "./orgApiKey";
+export type OrgApiKey = import("./orgApiKey").OrgApiKey;
+export declare const OrgApiKey: typeof import("./orgApiKey").OrgApiKey;
 export { ProjectArgs, ProjectState } from "./project";
 export type Project = import("./project").Project;
 export declare const Project: typeof import("./project").Project;
@@ -47,3 +50,4 @@ export declare const VpcEndpointRestriction: typeof import("./vpcEndpointRestric
 import * as config from "./config";
 import * as types from "./types";
 export { config, types, };
+//# sourceMappingURL=index.d.ts.map

@@ -48,20 +48,20 @@ export interface VpcEndpointAssignmentState {
     /**
      * A descriptive label for the VPC endpoint.
      */
-    label?: pulumi.Input<string>;
+    label?: pulumi.Input<string | undefined>;
     /**
      * The Neon organization ID.
      */
-    orgId?: pulumi.Input<string>;
+    orgId?: pulumi.Input<string | undefined>;
     /**
      * The Neon region ID.
      */
-    regionId?: pulumi.Input<string>;
-    vpcEndpointAssignmentId?: pulumi.Input<string>;
+    regionId?: pulumi.Input<string | undefined>;
+    vpcEndpointAssignmentId?: pulumi.Input<string | undefined>;
     /**
      * The VPC endpoint ID.
      */
-    vpcEndpointId?: pulumi.Input<string>;
+    vpcEndpointId?: pulumi.Input<string | undefined>;
 }
 /**
  * The set of arguments for constructing a VpcEndpointAssignment resource.
@@ -79,9 +79,10 @@ export interface VpcEndpointAssignmentArgs {
      * The Neon region ID.
      */
     regionId: pulumi.Input<string>;
-    vpcEndpointAssignmentId?: pulumi.Input<string>;
+    vpcEndpointAssignmentId?: pulumi.Input<string | undefined>;
     /**
      * The VPC endpoint ID.
      */
     vpcEndpointId: pulumi.Input<string>;
 }
+//# sourceMappingURL=vpcEndpointAssignment.d.ts.map

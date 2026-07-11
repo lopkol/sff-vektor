@@ -21,6 +21,7 @@ export declare function getBranchesOutput(args: GetBranchesOutputArgs, opts?: pu
  * A collection of arguments for invoking getBranches.
  */
 export interface GetBranchesOutputArgs {
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
 }
+//# sourceMappingURL=getBranches.d.ts.map

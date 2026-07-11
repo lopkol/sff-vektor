@@ -67,6 +67,20 @@ export interface ProjectDefaultEndpointSettings {
      */
     suspendTimeoutSeconds: number;
 }
+export interface ProjectMaintenanceWindow {
+    /**
+     * End time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    endTime: string;
+    /**
+     * Start time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    startTime: string;
+    /**
+     * A list of weekdays when the maintenance window is active. Encoded as ints, where 1 - Monday, and 7 - Sunday.
+     */
+    weekdays: number[];
+}
 export interface ProjectQuota {
     /**
      * The total amount of wall-clock time allowed to be spent by the project's compute endpoints.
@@ -89,3 +103,4 @@ export interface ProjectQuota {
      */
     writtenDataBytes: number;
 }
+//# sourceMappingURL=output.d.ts.map

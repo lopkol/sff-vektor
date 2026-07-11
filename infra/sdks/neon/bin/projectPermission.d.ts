@@ -39,11 +39,11 @@ export interface ProjectPermissionState {
     /**
      * Email of the user whom to grant project permission.
      */
-    grantee?: pulumi.Input<string>;
+    grantee?: pulumi.Input<string | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
 }
 /**
  * The set of arguments for constructing a ProjectPermission resource.
@@ -58,3 +58,4 @@ export interface ProjectPermissionArgs {
      */
     projectId: pulumi.Input<string>;
 }
+//# sourceMappingURL=projectPermission.d.ts.map

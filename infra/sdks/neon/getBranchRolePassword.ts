@@ -49,7 +49,7 @@ export function getBranchRolePasswordOutput(args: GetBranchRolePasswordOutputArg
  */
 export interface GetBranchRolePasswordOutputArgs {
     branchId: pulumi.Input<string>;
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
     roleName: pulumi.Input<string>;
 }

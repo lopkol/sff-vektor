@@ -9,5 +9,8 @@
     "@pulumi/neon": "file:sdks/neon",
     "@pulumi/pulumi": "^3.0.0",
     "@pulumi/pulumiservice": "0.31.0"
+  },
+  "allowScripts": {
+    "file:sdks/neon": true
   }
 }

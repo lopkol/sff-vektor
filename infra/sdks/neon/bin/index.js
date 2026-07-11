@@ -12,13 +12,25 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.types = exports.config = exports.VpcEndpointRestriction = exports.VpcEndpointAssignment = exports.Role = exports.ProjectPermission = exports.Project = exports.JwksUrl = exports.getProjectOutput = exports.getProject = exports.getBranchesOutput = exports.getBranches = exports.getBranchRolesOutput = exports.getBranchRoles = exports.getBranchRolePasswordOutput = exports.getBranchRolePassword = exports.getBranchEndpointsOutput = exports.getBranchEndpoints = exports.Endpoint = exports.Database = exports.Branch = exports.ApiKey = void 0;
-const pulumi = require("@pulumi/pulumi");
-const utilities = require("./utilities");
+exports.types = exports.config = exports.VpcEndpointRestriction = exports.VpcEndpointAssignment = exports.Role = exports.ProjectPermission = exports.Project = exports.OrgApiKey = exports.JwksUrl = exports.getProjectOutput = exports.getProject = exports.getBranchesOutput = exports.getBranches = exports.getBranchRolesOutput = exports.getBranchRoles = exports.getBranchRolePasswordOutput = exports.getBranchRolePassword = exports.getBranchEndpointsOutput = exports.getBranchEndpoints = exports.Endpoint = exports.Database = exports.Branch = exports.ApiKey = void 0;
+const pulumi = __importStar(require("@pulumi/pulumi"));
+const utilities = __importStar(require("./utilities"));
 exports.ApiKey = null;
 utilities.lazyLoad(exports, ["ApiKey"], () => require("./apiKey"));
 exports.Branch = null;
@@ -44,6 +56,8 @@ exports.getProjectOutput = null;
 utilities.lazyLoad(exports, ["getProject", "getProjectOutput"], () => require("./getProject"));
 exports.JwksUrl = null;
 utilities.lazyLoad(exports, ["JwksUrl"], () => require("./jwksUrl"));
+exports.OrgApiKey = null;
+utilities.lazyLoad(exports, ["OrgApiKey"], () => require("./orgApiKey"));
 exports.Project = null;
 utilities.lazyLoad(exports, ["Project"], () => require("./project"));
 exports.ProjectPermission = null;
@@ -57,9 +71,9 @@ utilities.lazyLoad(exports, ["VpcEndpointAssignment"], () => require("./vpcEndpo
 exports.VpcEndpointRestriction = null;
 utilities.lazyLoad(exports, ["VpcEndpointRestriction"], () => require("./vpcEndpointRestriction"));
 // Export sub-modules:
-const config = require("./config");
+const config = __importStar(require("./config"));
 exports.config = config;
-const types = require("./types");
+const types = __importStar(require("./types"));
 exports.types = types;
 const _module = {
     version: utilities.getVersion(),
@@ -75,6 +89,8 @@ const _module = {
                 return new exports.Endpoint(name, undefined, { urn });
             case "neon:index/jwksUrl:JwksUrl":
                 return new exports.JwksUrl(name, undefined, { urn });
+            case "neon:index/orgApiKey:OrgApiKey":
+                return new exports.OrgApiKey(name, undefined, { urn });
             case "neon:index/project:Project":
                 return new exports.Project(name, undefined, { urn });
             case "neon:index/projectPermission:ProjectPermission":
@@ -95,6 +111,7 @@ pulumi.runtime.registerResourceModule("neon", "index/branch", _module);
 pulumi.runtime.registerResourceModule("neon", "index/database", _module);
 pulumi.runtime.registerResourceModule("neon", "index/endpoint", _module);
 pulumi.runtime.registerResourceModule("neon", "index/jwksUrl", _module);
+pulumi.runtime.registerResourceModule("neon", "index/orgApiKey", _module);
 pulumi.runtime.registerResourceModule("neon", "index/project", _module);
 pulumi.runtime.registerResourceModule("neon", "index/projectPermission", _module);
 pulumi.runtime.registerResourceModule("neon", "index/role", _module);

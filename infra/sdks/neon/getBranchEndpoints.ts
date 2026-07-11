@@ -50,7 +50,7 @@ export function getBranchEndpointsOutput(args: GetBranchEndpointsOutputArgs, opt
  */
 export interface GetBranchEndpointsOutputArgs {
     branchId: pulumi.Input<string>;
-    endpoints?: pulumi.Input<pulumi.Input<inputs.GetBranchEndpointsEndpointArgs>[]>;
-    id?: pulumi.Input<string>;
+    endpoints?: pulumi.Input<pulumi.Input<inputs.GetBranchEndpointsEndpointArgs>[] | undefined>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
 }

@@ -26,7 +26,8 @@ export declare function getBranchRolesOutput(args: GetBranchRolesOutputArgs, opt
  */
 export interface GetBranchRolesOutputArgs {
     branchId: pulumi.Input<string>;
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     projectId: pulumi.Input<string>;
-    roles?: pulumi.Input<pulumi.Input<inputs.GetBranchRolesRoleArgs>[]>;
+    roles?: pulumi.Input<pulumi.Input<inputs.GetBranchRolesRoleArgs>[] | undefined>;
 }
+//# sourceMappingURL=getBranchRoles.d.ts.map

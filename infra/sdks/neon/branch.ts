@@ -109,34 +109,34 @@ export interface BranchState {
     /**
      * Branch logical size in MB.
      */
-    logicalSize?: pulumi.Input<number>;
+    logicalSize?: pulumi.Input<number | undefined>;
     /**
      * Branch name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * ID of the branch to check out.
      */
-    parentId?: pulumi.Input<string>;
+    parentId?: pulumi.Input<string | undefined>;
     /**
      * Log Sequence Number (LSN) horizon for the data to be present in the new branch.
      * See details: https://neon.tech/docs/reference/glossary/#lsn
      */
-    parentLsn?: pulumi.Input<string>;
+    parentLsn?: pulumi.Input<string | undefined>;
     /**
      * Timestamp horizon for the data to be present in the new branch.
      * **Note**: it's defined as Unix epoch.'
      */
-    parentTimestamp?: pulumi.Input<number>;
+    parentTimestamp?: pulumi.Input<number | undefined>;
     /**
      * Project ID.
      */
-    projectId?: pulumi.Input<string>;
+    projectId?: pulumi.Input<string | undefined>;
     /**
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Set whether the branch is protected.
      */
-    protected?: pulumi.Input<string>;
+    protected?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -146,21 +146,21 @@ export interface BranchArgs {
     /**
      * Branch name.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * ID of the branch to check out.
      */
-    parentId?: pulumi.Input<string>;
+    parentId?: pulumi.Input<string | undefined>;
     /**
      * Log Sequence Number (LSN) horizon for the data to be present in the new branch.
      * See details: https://neon.tech/docs/reference/glossary/#lsn
      */
-    parentLsn?: pulumi.Input<string>;
+    parentLsn?: pulumi.Input<string | undefined>;
     /**
      * Timestamp horizon for the data to be present in the new branch.
      * **Note**: it's defined as Unix epoch.'
      */
-    parentTimestamp?: pulumi.Input<number>;
+    parentTimestamp?: pulumi.Input<number | undefined>;
     /**
      * Project ID.
      */
@@ -169,5 +169,5 @@ export interface BranchArgs {
      * Set to 'yes' to activate, 'no' to deactivate explicitly, and omit to keep the default value.
      * Set whether the branch is protected.
      */
-    protected?: pulumi.Input<string>;
+    protected?: pulumi.Input<string | undefined>;
 }

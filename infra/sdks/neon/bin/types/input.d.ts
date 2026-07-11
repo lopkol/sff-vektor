@@ -22,20 +22,20 @@ export interface GetBranchEndpointsEndpointArgs {
     /**
      * Endpoint URI.
      */
-    host?: pulumi.Input<string>;
+    host?: pulumi.Input<string | undefined>;
     /**
      * Endpoint ID.
      */
-    id?: pulumi.Input<string>;
-    proxyHost?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
+    proxyHost?: pulumi.Input<string | undefined>;
     /**
      * Deployment region: https://neon.tech/docs/introduction/regions
      */
-    regionId?: pulumi.Input<string>;
+    regionId?: pulumi.Input<string | undefined>;
     /**
      * Access type.
      */
-    type?: pulumi.Input<string>;
+    type?: pulumi.Input<string | undefined>;
 }
 export interface GetBranchRolesRole {
     /**
@@ -48,64 +48,79 @@ export interface GetBranchRolesRoleArgs {
     /**
      * Role name.
      */
-    name?: pulumi.Input<string>;
-    protected?: pulumi.Input<boolean>;
+    name?: pulumi.Input<string | undefined>;
+    protected?: pulumi.Input<boolean | undefined>;
 }
 export interface ProjectBranch {
     /**
      * The name of the default database provisioned upon creation of new project. It's owned by the default role (`role_name`).
      * If not specified, the default database name will be used.
      */
-    databaseName?: pulumi.Input<string>;
+    databaseName?: pulumi.Input<string | undefined>;
     /**
      * Branch ID.
      */
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     /**
      * The name of the default branch provisioned upon creation of new project.
      * If not specified, the default branch name will be used.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * The name of the default role provisioned upon creation of new project.
      * If not specified, the default role name will be used.
      */
-    roleName?: pulumi.Input<string>;
+    roleName?: pulumi.Input<string | undefined>;
 }
 export interface ProjectDefaultEndpointSettings {
-    autoscalingLimitMaxCu?: pulumi.Input<number>;
-    autoscalingLimitMinCu?: pulumi.Input<number>;
+    autoscalingLimitMaxCu?: pulumi.Input<number | undefined>;
+    autoscalingLimitMinCu?: pulumi.Input<number | undefined>;
     /**
      * Endpoint ID.
      */
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     /**
      * Duration of inactivity in seconds after which the compute endpoint is automatically suspended.
      * The value 0 means use the global default.
      * The value -1 means never suspend. The default value is 300 seconds (5 minutes).
      * The maximum value is 604800 seconds (1 week)
      */
-    suspendTimeoutSeconds?: pulumi.Input<number>;
+    suspendTimeoutSeconds?: pulumi.Input<number | undefined>;
+}
+export interface ProjectMaintenanceWindow {
+    /**
+     * End time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    endTime: pulumi.Input<string>;
+    /**
+     * Start time of the maintenance window, in the format of "HH:MM". Uses UTC.
+     */
+    startTime: pulumi.Input<string>;
+    /**
+     * A list of weekdays when the maintenance window is active. Encoded as ints, where 1 - Monday, and 7 - Sunday.
+     */
+    weekdays: pulumi.Input<pulumi.Input<number>[]>;
 }
 export interface ProjectQuota {
     /**
      * The total amount of wall-clock time allowed to be spent by the project's compute endpoints.
      */
-    activeTimeSeconds?: pulumi.Input<number>;
+    activeTimeSeconds?: pulumi.Input<number | undefined>;
     /**
      * The total amount of CPU seconds allowed to be spent by the project's compute endpoints.
      */
-    computeTimeSeconds?: pulumi.Input<number>;
+    computeTimeSeconds?: pulumi.Input<number | undefined>;
     /**
      * Total amount of data transferred from all of a project's branches using the proxy.
      */
-    dataTransferBytes?: pulumi.Input<number>;
+    dataTransferBytes?: pulumi.Input<number | undefined>;
     /**
      * Limit on the logical size of every project's branch.
      */
-    logicalSizeBytes?: pulumi.Input<number>;
+    logicalSizeBytes?: pulumi.Input<number | undefined>;
     /**
      * Total amount of data written to all of a project's branches.
      */
-    writtenDataBytes?: pulumi.Input<number>;
+    writtenDataBytes?: pulumi.Input<number | undefined>;
 }
+//# sourceMappingURL=input.d.ts.map
