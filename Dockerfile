@@ -1,4 +1,4 @@
-ARG DENO_VERSION=2.2.6
+ARG DENO_VERSION=2.9.2
 
 #
 # Base stage
