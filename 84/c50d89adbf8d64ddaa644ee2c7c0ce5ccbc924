@@ -1,0 +1,70 @@
+int-tests/lib/db/reader_test.ts
+  s_39d98c00fb89ff::t_c003bb81866313 161-199
+lib/db/book-list.ts
+  s_39d98c00fb89ff::t_bf958fe03086e7 127,130,153,167,178-194
+  s_39d98c00fb89ff::t_4d641dbde7237a 136-139,141
+  s_39d98c00fb89ff::t_097051cd814be1 210
+  s_39d98c00fb89ff::t_874563eada7314 56-57
+  s_39d98c00fb89ff::t_82e3f6df75786e 42-44
+  h_b221bcce5c2edf 135
+  s_39d98c00fb89ff::t_1c9f83d46d7225 128-129
+  s_39d98c00fb89ff::t_c96112f7d9f976 195-196
+lib/schema/book-list.ts
+  s_39d98c00fb89ff::t_98b205fa1b0954 10
+  s_39d98c00fb89ff::t_01056229209d05 34
+lib/services/reading-plan.ts
+  s_39d98c00fb89ff::t_17ab9a8203e8c4 3
+  s_39d98c00fb89ff::t_98ade369e6c940 23-29
+int-tests/lib/db/book-list_test.ts
+  s_39d98c00fb89ff::t_0416a97312a99a 620-623
+  s_39d98c00fb89ff::t_0a95537f06fb85 541-558,560-566
+  s_39d98c00fb89ff::t_0e283eb429f505 19
+  h_b221bcce5c2edf 540,559
+  s_39d98c00fb89ff::t_b91c23e8d62d2c 227,234,241,248
+  s_39d98c00fb89ff::t_5036712b3893be 12-13,26
+  s_39d98c00fb89ff::t_72a507316276f1 403-423
+  s_39d98c00fb89ff::t_e8cb99af31559c 539,567-619,624-627
+  s_39d98c00fb89ff::t_9c11fbd7c6ed61 64
+lib/db/reading-plan.ts
+  s_39d98c00fb89ff::t_c35d6ff36dcb3d 36-37,47-49
+  s_39d98c00fb89ff::t_61fa7f5a8bff62 46
+lib/db/reader.ts
+  s_39d98c00fb89ff::t_fe5000afdbdd60 65,67,74-77
+  h_b221bcce5c2edf 66
+int-tests/lib/services/reading-plan_test.ts
+  s_39d98c00fb89ff::t_822ae27ffde550 135-171
+  s_39d98c00fb89ff::t_141e2a5bfefb75 11
+int-tests/lib/db/reading-plan_test.ts
+  s_39d98c00fb89ff::t_1f3d5670f78436 255-313
+lib/db/book.ts
+  s_39d98c00fb89ff::t_3666e45487bd88 199-202,212-216
+int-tests/lib/db/book_test.ts
+  s_39d98c00fb89ff::t_eedaaabaf5d1f2 1090-1139
+lib/services/moly/book-list.ts
+  s_39d98c00fb89ff::t_538c13df3f14d2 149
+  h_b221bcce5c2edf 21,150,153
+  s_39d98c00fb89ff::t_4b6b3d07b5f6cd 90-95
+api/migrations/20260711120000_AddArchivedAtToBookList.sql
+  s_39d98c00fb89ff::t_a4ce07fdc38b04 1-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "84c50d89adbf8d64ddaa644ee2c7c0ce5ccbc924",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
