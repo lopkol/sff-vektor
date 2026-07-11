@@ -8,7 +8,6 @@ WORKDIR /app
 COPY deno.json .
 COPY deno.lock .
 COPY lib lib
-COPY slonik-pg-driver slonik-pg-driver
 COPY .env .env
 # Change ownership of the files to the deno user
 RUN chown -R deno:deno /app
