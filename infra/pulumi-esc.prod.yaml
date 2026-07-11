@@ -15,3 +15,5 @@ values:
     NEXTAUTH_URL: ${stackRefs.sff-vektor.frontendEndpoint}
     NEXT_PUBLIC_API_URL: ${stackRefs.sff-vektor.apiEndpoint}/api
     NEXTAUTH_SECRET: ${stackRefs.sff-vektor.nextAuthSecret}
+    MOLY_USERNAME: ${stackRefs.sff-vektor.molyUsername}
+    MOLY_PASSWORD: ${stackRefs.sff-vektor.molyPassword}

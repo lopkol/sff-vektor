@@ -19,3 +19,7 @@ config:
   sff-vektor:githubContainerRegistryUsername: sylvainmarty
   sff-vektor:githubPatReadContainerRegistry:
     secure: AAABAPA/7X/l8HxECe9BnG9pnaP89/CcJg6fQbxuT201R4DGcsrEud1yuB4pJ/uLBSUDtVU+yluSl6zx3n1v9MbX7llBPhhm
+  sff-vektor:molyUsername:
+    secure: AAABAJ7A3UNILlNVrzZ+wkH5d31PSJ68HWKd+atu5iDQaElbGarga1jXDTLPfTimCnJSfzK55ns=
+  sff-vektor:molyPassword:
+    secure: AAABAPXm627P2WaKfObtNY0DP7wHNFshwHSGLm4/7uiva8HpC7AItWrtvGZDb7g5eKKx
