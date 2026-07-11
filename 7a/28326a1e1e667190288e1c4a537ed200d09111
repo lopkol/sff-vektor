@@ -1,0 +1,83 @@
+int-tests/lib/services/moly/reading-plan_test.ts
+  s_39d98c00fb89ff::t_20469c6724dfaa 39-42,51-52
+  s_39d98c00fb89ff::t_56f43ca9457651 228,234-235,239,243-246,275,283,289,305,309,313,318,327,329,335,339
+  s_39d98c00fb89ff::t_abd321bbaf080c 1-16,18,20-36,80-161,163-166,170-212,218,220-225,348
+  s_39d98c00fb89ff::t_259eca0fcb9cbb 213-217,219
+  s_39d98c00fb89ff::t_fc233c066438c8 162,167-169
+  s_39d98c00fb89ff::t_518537853f8e76 226-227,229-233,236-238,240-242,247-274,276-282,284-288,290-304,306-308,310-312,314-317,319-326,328,330-334,336-338,340-347
+  s_39d98c00fb89ff::t_c8d171a4bf75c8 17,19,37-38,43-50,53-79
+lib/db/reader.ts
+  s_39d98c00fb89ff::t_15fcc389704c44 65-68
+  s_39d98c00fb89ff::t_9412c185bfa9ff 69-81
+.env
+  h_b221bcce5c2edf 12-13
+lib/db/reading-plan.ts
+  s_39d98c00fb89ff::t_d76e7df0d26a90 13-16
+  s_39d98c00fb89ff::t_d5904bb85c4d4f 34-50
+lib/config/moly-axios.ts
+  h_b221bcce5c2edf 13
+  s_39d98c00fb89ff::t_5ac5132fe99cf4 6-9
+  s_39d98c00fb89ff::t_2cbcc1ff9fd9b4 1
+int-tests/lib/db/reading-plan_test.ts
+  s_39d98c00fb89ff::t_e9b1ca905cde29 33,37
+  s_39d98c00fb89ff::t_14b1ca70cb9f39 16
+  s_39d98c00fb89ff::t_874dd9be11c95a 212-256
+lib/mod.ts
+  s_39d98c00fb89ff::t_9f237020a1aa8c 35
+  s_39d98c00fb89ff::t_3f8046aba42548 32
+lib/db/book.ts
+  s_39d98c00fb89ff::t_109d532f1ac9fa 199-216
+  s_39d98c00fb89ff::t_9d8944f5976492 48-51
+int-tests/lib/db/book_test.ts
+  s_39d98c00fb89ff::t_20ec6e1a6c8078 1023-1090
+  s_39d98c00fb89ff::t_e4ee1f1acae181 9-10,18
+lib/services/moly/reading-plan.ts
+  s_39d98c00fb89ff::t_ca95ddf4de1fb2 82-98,110
+  s_39d98c00fb89ff::t_a24487c6d476ca 151,153
+  s_39d98c00fb89ff::t_abf8fc4128f7b5 105-108,111-118
+  s_39d98c00fb89ff::t_4b4cf0e16f5184 7
+  s_39d98c00fb89ff::t_38b9f0bd0e6aea 163,167,170
+  s_39d98c00fb89ff::t_088cf0e63b68a3 137-142,147-149,157,175-179
+  s_39d98c00fb89ff::t_86e434ef805c6f 3,8-13,16,24-35,41-48,50-60,62-63,66-67
+  s_39d98c00fb89ff::t_d5b4d35cfeb516 160,174,180-182
+  s_39d98c00fb89ff::t_8c16b6a1b5ee7a 4,6
+  s_39d98c00fb89ff::t_8e93401d882a8a 121-136,146,154,159,164-166,168-169,184-188,191-193,195-201,207-211,214-215
+  s_39d98c00fb89ff::t_dc763db34bd8f8 1-2,5,14-15
+  s_39d98c00fb89ff::t_b4f117ba49e241 17-23,36-40,49,61,64-65
+  s_39d98c00fb89ff::t_a73e720fe129e7 68,101,103-104,109,119-120,143-145,150,152,155-156,158,161-162,171-173,183,189-190,194,202-206,212-213,216
+  s_39d98c00fb89ff::t_392594ec5181a9 73-76,78-79,81,102
+  s_39d98c00fb89ff::t_59bd9037f51b38 99-100
+  s_39d98c00fb89ff::t_eb75f83a634982 69-72,77,80
+lib/services/moly/auth.ts
+  s_39d98c00fb89ff::t_8f5d18d310004d 6
+  s_39d98c00fb89ff::t_f739e329c16243 72-74,88-90
+  s_39d98c00fb89ff::t_b226baf74632b3 3-5,11-58
+  s_39d98c00fb89ff::t_84e1fa0d3c64ff 113-116
+  s_39d98c00fb89ff::t_23aa15707f54c0 1-2,7-10,59-71,75-87,91-112,117-123
+int-tests/lib/db/reader_test.ts
+  s_39d98c00fb89ff::t_e2ae6a164173a6 7,9,12,17
+  s_39d98c00fb89ff::t_e37256c97559bb 97-98,110,119-123,153,155-159
+  s_39d98c00fb89ff::t_013d07f7a18804 99-109,111-118,124-152,154,160-162
+  s_39d98c00fb89ff::t_f4f3b555bff568 16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "7a28326a1e1e667190288e1c4a537ed200d09111",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
