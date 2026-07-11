@@ -78,14 +78,23 @@
         "genre": "Műfaj",
         "url": "Lista linkje",
         "pendingUrl": "Besorolásra váró polc linkje",
-        "readers": "Zsűritagok"
+        "readers": "Zsűritagok",
+        "archived": "Archivált"
       },
       "form": {
-        "selectReaders": "Válassz zsűritagokat"
+        "selectReaders": "Válassz zsűritagokat",
+        "archivedDescription": "Archivált könyvlisták esetén az olvasási tervek módosítása már nem lehetséges, valamint az olvasások és a könyvek sem frissülnek molyról."
       },
       "table": {
         "title": "Könyvlisták",
         "addNew": "Új lista"
+      },
+      "sync": {
+        "bookLists": "Könyvek frissítése molyról",
+        "readings": "Olvasások frissítése molyról",
+        "bookListsSuccess": "Könyvek sikeresen frissítve molyról",
+        "readingsSuccess": "Olvasások sikeresen frissítve molyról",
+        "error": "A molyról való frissítés sikertelen"
       },
       "dialog": {
         "createTitle": "Új könyvlista",
@@ -157,6 +166,7 @@
       },
       "statuses": {
         "read": "olvastam",
+        "molyRead": "olvastam (moly)",
         "willRead": "olvasni fogom",
         "willNotRead": "nem olvasom",
         "noPlan": "még nem tudom"
@@ -164,11 +174,13 @@
       "notJuryMember": "Nem vagy zsűritagja ennek a könyvlistának",
       "loadError": "Nem sikerült betölteni az olvasási listát.",
       "updateError": "Nem sikerült frissíteni az olvasási tervet.",
-      "noBooks": "Még nincsenek jóváhagyott könyvek."
+      "noBooks": "Még nincsenek jóváhagyott könyvek.",
+      "archived": "Archivált"
     },
     "Admin": {
       "title": "{year} {genreName} könyvlista",
       "addBook": "Új könyv",
+      "archived": "Archivált",
       "syncFromMoly": "Frissítés molyról",
       "syncSuccess": "Sikeresen frissítve",
       "syncError": "Frissítés közben hiba történt",

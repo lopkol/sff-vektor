@@ -5,6 +5,7 @@ import {
   molyBaseUrl,
   raxConfig,
 } from "@/config/moly-axios.ts";
+import { logger } from "@/helpers/logger.ts";
 import {
   getAuthorsFromBookPage,
   getOriginalVersionUrlFromBookPage,
@@ -120,8 +121,7 @@ export async function createOrUpdateBookFromMoly(
       authors: authorIds,
     });
   } catch (error) {
-    // TODO: logging
-    console.error(error);
+    logger.error("Failed to get book details from Moly", { url, error });
     throw new Error(`Failed to get book details from ${url}`);
   }
 }

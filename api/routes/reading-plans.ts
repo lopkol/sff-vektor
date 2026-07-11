@@ -7,8 +7,10 @@ import {
   isReaderOfBookList,
   setReadingPlan,
   setReadingPlanSchema,
+  syncReadingPlansFromMoly,
 } from "@sffvektor/lib";
 import { validateBody } from "@/middlewares/validator.ts";
+import { isUserAdminMiddleware } from "@/middlewares/role-check.ts";
 import { HttpStatusCode } from "@/helpers/http-code.ts";
 import { mapExceptions } from "@/middlewares/map-exceptions.ts";
 
@@ -43,5 +45,14 @@ app.put(
 
     await setReadingPlan(pool, { readerId: user.readerId, bookId, status });
     return c.json({ message: "Reading plan updated" });
+  },
+);
+
+app.post(
+  "/api/reading-plans/sync-from-moly",
+  isUserAdminMiddleware,
+  async (c) => {
+    const result = await syncReadingPlansFromMoly();
+    return c.json(result);
   },
 );

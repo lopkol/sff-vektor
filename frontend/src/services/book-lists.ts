@@ -41,6 +41,7 @@ export async function updateBookList(
     {
       url: bookList.url,
       pendingUrl: bookList.pendingUrl,
+      archivedAt: bookList.archivedAt,
       readers: bookList.readers,
     },
   );
@@ -52,4 +53,8 @@ export async function deleteBookList(
   genre: Genre,
 ): Promise<void> {
   await http.delete(`/book-lists/${year}/${genre}`);
+}
+
+export async function syncBookListsFromMoly(): Promise<void> {
+  await http.post("/book-lists/sync-from-moly");
 }

@@ -84,7 +84,7 @@ export function AppSidebar() {
   const bookListMenu = useMemo(() => {
     const sortedYears: string[] = [];
     const unorderedBookListByYear: Record<string | number, MenuItem> = {};
-    for (const { year, genre } of rawBookLists ?? []) {
+    for (const { year, genre, archivedAt } of rawBookLists ?? []) {
       const yearStr = year.toString();
       if (!unorderedBookListByYear[year]) {
         sortedYears.push(yearStr);
@@ -99,17 +99,25 @@ export function AppSidebar() {
         title: capitalize(genre),
         url: `/book-lists/${year}/${genre}`,
         icon: iconByGenre[genre as keyof typeof iconByGenre] ?? null,
+        muted: !!archivedAt,
       });
     }
 
     return sortedYears.map((year) => {
       const bookList = unorderedBookListByYear[year];
+      // At this point the children are the genre book-list entries; if every one
+      // of them is archived, grey out the whole year (and all its sub-menus).
+      const allArchived = bookList.children!.length > 0 &&
+        bookList.children!.every((child) => child.muted);
+      bookList.muted = allArchived;
+
       // The year-level "Books" page is admin-only.
       if (isAdmin) {
         bookList.children!.push({
           title: t("books"),
           url: `/book-lists/${year}/books`,
           icon: BookCopy,
+          muted: allArchived,
         });
       }
       return bookList;
@@ -220,6 +228,7 @@ function NestableMenuItem({
                   <SidebarMenuButton
                     tooltip={item.title}
                     isActive={activePage.startsWith(item.url)}
+                    className={item.muted ? "opacity-50" : undefined}
                   >
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -234,7 +243,11 @@ function NestableMenuItem({
                           asChild
                           isActive={item.url === activePage}
                         >
-                          <Link href={subItem.url} onClick={handleNavigate}>
+                          <Link
+                            href={subItem.url}
+                            onClick={handleNavigate}
+                            className={subItem.muted ? "opacity-50" : undefined}
+                          >
                             {subItem.icon && <subItem.icon />}
                             <span>{subItem.title}</span>
                           </Link>
@@ -248,7 +261,11 @@ function NestableMenuItem({
           )) || (
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={item.url === activePage}>
-                <Link href={item.url} onClick={handleNavigate}>
+                <Link
+                  href={item.url}
+                  onClick={handleNavigate}
+                  className={item.muted ? "opacity-50" : undefined}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
                 </Link>

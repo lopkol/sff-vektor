@@ -15,7 +15,11 @@ import {
 } from "@/helpers/moly/book-list.ts";
 import type { Genre } from "@/schema/book.ts";
 import { getOrCreateDatabasePool } from "@/config/database.ts";
-import { getBookList, getBookListsByYear } from "@/db/book-list.ts";
+import {
+  getBookList,
+  getBookListsByYear,
+  getActiveBookLists,
+} from "@/db/book-list.ts";
 import { EntityNotFoundException } from "@/exceptions/entity-not-found.exception.ts";
 import { createOrUpdateBookFromMoly } from "@/services/moly/book.ts";
 import { logger } from "@sffvektor/lib";
@@ -40,8 +44,7 @@ async function getBooksFromList(url: string): Promise<BookFromList[]> {
 
     return books.concat(...otherPagesBooks);
   } catch (error) {
-    // TODO: logging
-    console.error(error);
+    logger.error("Failed to get books from Moly list", { url, error });
     throw new Error(`failed to get books from list ${url}`);
   }
 }
@@ -66,8 +69,7 @@ async function getBooksFromPendingShelf(url: string): Promise<BookFromShelf[]> {
 
     return books.concat(...otherPagesBooks);
   } catch (error) {
-    // TODO: logging
-    console.error(error);
+    logger.error("Failed to get books from Moly shelf", { url, error });
     throw new Error(`failed to get books from shelf ${url}`);
   }
 }
@@ -83,6 +85,12 @@ async function createOrUpdateBooksOfListFromMoly(
       year,
       genre,
     });
+  }
+
+  // Archived book lists are frozen: never synced from Moly.
+  if (bookList.archivedAt) {
+    logger.info("Skipping book sync for archived book list", { year, genre });
+    return;
   }
 
   const { url, pendingUrl } = bookList;
@@ -113,7 +121,6 @@ async function createOrUpdateBooksOfListFromMoly(
     }));
   }
 
-  // TODO: logging
   logger.info("Books updated for list", { year, genre });
 }
 
@@ -136,6 +143,18 @@ export async function createOrUpdateBooksFromMoly(
     await createOrUpdateBooksOfListFromMoly(db, year, bookList.genre);
   }
 
-  // TODO: logging
   logger.info("Books updated for year", { year });
+}
+
+// Runs the book sync for every non-archived book list,
+// across all years and genres.
+export async function syncAllBookListsFromMoly(): Promise<void> {
+  const db = await getOrCreateDatabasePool();
+  const bookLists = await getActiveBookLists(db);
+
+  for (const bookList of bookLists) {
+    await createOrUpdateBooksOfListFromMoly(db, bookList.year, bookList.genre);
+  }
+
+  logger.info("Books updated for all book lists", { count: bookLists.length });
 }

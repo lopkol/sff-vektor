@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBooks, updateBooksFromMoly } from "@/services/books";
+import { getBookLists } from "@/services/book-lists";
 import {
   Table,
   TableBody,
@@ -50,6 +51,15 @@ export default function Page() {
     queryKey: ["books", year],
     queryFn: () => getBooks({ year }),
   });
+
+  // If every book list of this year is archived, there is nothing to sync.
+  const { data: bookLists } = useQuery({
+    queryKey: ["book-lists"],
+    queryFn: getBookLists,
+  });
+  const yearBookLists = bookLists?.filter((bookList) => bookList.year === year);
+  const isYearFullyArchived = !!yearBookLists?.length &&
+    yearBookLists.every((bookList) => bookList.archivedAt);
 
   const { mutate: syncBooks, isPending: isSyncing } = useMutation({
     mutationFn: () => updateBooksFromMoly(year),
@@ -166,7 +176,7 @@ export default function Page() {
             <Button
               variant="outline"
               onClick={() => syncBooks()}
-              disabled={isSyncing}
+              disabled={isSyncing || isYearFullyArchived}
               className="min-w-10"
             >
               <RefreshCw

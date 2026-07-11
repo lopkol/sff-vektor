@@ -39,6 +39,9 @@ const sql = createSqlTag({
     id: z.object({
       id: z.string(),
     }),
+    archived: z.object({
+      archived: z.boolean(),
+    }),
   },
 });
 
@@ -50,8 +53,8 @@ export async function createBookList(
     try {
       // deno-fmt-ignore
       const bookListResult = await trConnection.query(sql.typeAlias("bookList")`
-        insert into "book_list" ("year", "genre", "url", "pendingUrl")
-        values (${props.year}, ${props.genre}, ${props.url}, ${props.pendingUrl ?? null})
+        insert into "book_list" ("year", "genre", "url", "pendingUrl", "archivedAt")
+        values (${props.year}, ${props.genre}, ${props.url}, ${props.pendingUrl ?? null}, ${props.archivedAt ?? null})
         returning *
       `);
       const bookList = bookListResult.rows[0];
@@ -121,8 +124,21 @@ export async function getAllBookLists(
   db: CommonQueryMethods,
 ): Promise<ShortBookList[]> {
   const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
-    select "year", "genre", "url", "pendingUrl"
+    select "year", "genre", "url", "pendingUrl", "archivedAt"
     from "book_list"
+    order by "year" desc, "genre" desc
+  `);
+
+  return mutable(bookListsResult.rows);
+}
+
+export async function getActiveBookLists(
+  db: CommonQueryMethods,
+): Promise<ShortBookList[]> {
+  const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
+    select "year", "genre", "url", "pendingUrl", "archivedAt"
+    from "book_list"
+    where "archivedAt" is null
     order by "year" desc, "genre" desc
   `);
 
@@ -134,7 +150,7 @@ export async function getBookListsByYear(
   year: number,
 ): Promise<ShortBookList[]> {
   const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
-    select "year", "genre", "url", "pendingUrl"
+    select "year", "genre", "url", "pendingUrl", "archivedAt"
     from "book_list"
     where "year" = ${year}
     order by "genre" desc
@@ -148,7 +164,7 @@ export async function getBookListsForReader(
   readerId: string,
 ): Promise<ShortBookList[]> {
   const bookListsResult = await db.query(sql.typeAlias("shortBookList")`
-    select bl."year", bl."genre", bl."url", bl."pendingUrl"
+    select bl."year", bl."genre", bl."url", bl."pendingUrl", bl."archivedAt"
     from "book_list" bl
     join "book_list_reader" blr
       on blr."bookListYear" = bl."year" and blr."bookListGenre" = bl."genre"
@@ -157,6 +173,25 @@ export async function getBookListsForReader(
   `);
 
   return mutable(bookListsResult.rows);
+}
+
+// Whether the book list a book belongs to (matched by year + genre) is archived.
+// Returns false for books with no genre (not part of any list).
+export async function isBookListArchivedForBook(
+  db: CommonQueryMethods,
+  bookId: string,
+): Promise<boolean> {
+  const result = await db.query(sql.typeAlias("archived")`
+    select coalesce((
+      select bl."archivedAt" is not null
+      from "book" b
+      join "book_list" bl
+        on bl."year" = b."year" and bl."genre" = b."genre"
+      where b."id" = ${bookId}
+    ), false) as "archived"
+  `);
+
+  return result.rows[0].archived;
 }
 
 export async function updateBookList(
@@ -172,6 +207,7 @@ export async function updateBookList(
   ([
     "url",
     "pendingUrl",
+    "archivedAt",
   ] satisfies Partial<keyof UpdateBookList>[])
     .forEach((key) => {
       if (props[key] !== undefined) {

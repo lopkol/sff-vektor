@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { getBooksWithReadingPlan } from "@/services/books";
 import { setReadingPlan } from "@/services/reading-plans";
+import { getBookLists } from "@/services/book-lists";
 import {
   Table,
   TableBody,
@@ -26,9 +27,12 @@ import { useBookListGenre } from "../book-list-genre-provider";
 import { useBookListYear } from "@/app/book-lists/[year]/book-list-year-provider";
 import { toast } from "sonner";
 import { MolyLink } from "@/components/moly-link";
+import { LockIcon } from "lucide-react";
 import { BookWithReadingPlan } from "@/types/book";
 import { ReadingPlanStatus } from "@/types/reading-plan";
 
+// Statuses a reader can set by hand. `molyRead` is intentionally excluded: it is
+// synced from Moly and locked, so it never appears as a selectable option.
 const READING_PLAN_STATUSES: ReadingPlanStatus[] = [
   "noPlan",
   "willRead",
@@ -40,6 +44,7 @@ const READING_PLAN_EMOJI: Record<ReadingPlanStatus, string> = {
   noPlan: "🤔",
   willRead: "🔖",
   read: "✅",
+  molyRead: "✅",
   willNotRead: "🚫",
 };
 
@@ -55,6 +60,15 @@ export default function Page() {
     queryFn: () => getBooksWithReadingPlan(year, genre),
     retry: false,
   });
+
+  // Archived lists are frozen: reading plans become read-only.
+  const { data: bookLists } = useQuery({
+    queryKey: ["book-lists"],
+    queryFn: getBookLists,
+  });
+  const isArchived = !!bookLists?.find(
+    (bookList) => bookList.year === year && bookList.genre === genre,
+  )?.archivedAt;
 
   const { mutate: updateReadingPlan } = useMutation({
     mutationFn: (
@@ -106,7 +120,14 @@ export default function Page() {
     <Card>
       <CardHeader>
         <CardTitle>
-          <h1 className="text-2xl font-bold">{t("title", { genreName })}</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            {t("title", { genreName })}
+            {isArchived && (
+              <span className="rounded bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
+                {t("archived")}
+              </span>
+            )}
+          </h1>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -127,25 +148,36 @@ export default function Page() {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Select
-                    value={book.readingPlanStatus ?? "noPlan"}
-                    onValueChange={(value) =>
-                      updateReadingPlan({
-                        bookId: book.id,
-                        status: value as ReadingPlanStatus,
-                      })}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {READING_PLAN_STATUSES.map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {READING_PLAN_EMOJI[status]} {t(`statuses.${status}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {book.readingPlanStatus === "molyRead"
+                    ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 text-muted-foreground">
+                        {READING_PLAN_EMOJI.molyRead} {t("statuses.molyRead")}
+                        <LockIcon className="size-3.5" />
+                      </span>
+                    )
+                    : (
+                      <Select
+                        value={book.readingPlanStatus ?? "noPlan"}
+                        disabled={isArchived}
+                        onValueChange={(value) =>
+                          updateReadingPlan({
+                            bookId: book.id,
+                            status: value as ReadingPlanStatus,
+                          })}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {READING_PLAN_STATUSES.map((status) => (
+                            <SelectItem key={status} value={status}>
+                              {READING_PLAN_EMOJI[status]}{" "}
+                              {t(`statuses.${status}`)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                 </TableCell>
               </TableRow>
             ))}

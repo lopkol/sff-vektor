@@ -5,6 +5,7 @@ export type BookList = {
   genre: Genre;
   url: string;
   pendingUrl: string | null;
+  archivedAt: string | null;
   readers: string[];
   createdAt: string;
   updatedAt: string;
@@ -12,7 +13,7 @@ export type BookList = {
 
 export type ShortBookList = Pick<
   BookList,
-  "year" | "genre" | "url" | "pendingUrl"
+  "year" | "genre" | "url" | "pendingUrl" | "archivedAt"
 >;
 
 export type CreateBookList = Omit<BookList, "createdAt" | "updatedAt">;

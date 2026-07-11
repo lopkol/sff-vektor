@@ -3,6 +3,7 @@ import { afterAll, afterEach, beforeAll, describe, it } from "@std/testing/bdd";
 import { setup } from "@/setup/setup.ts";
 import { teardown } from "@/setup/teardown.ts";
 import { clearDatabase } from "@/setup/clear_database.ts";
+import { seedReadingPlan } from "@/setup/seed.ts";
 import {
   type Author,
   type BookWithReadingPlan,
@@ -12,11 +13,12 @@ import {
   createReader,
   Genre,
   getApprovedBooksWithReadingPlan,
+  getMolyReadPlansForReader,
   getOrCreateDatabasePool,
   getReadingPlan,
   isReaderOfBookList,
   ReadingPlanStatus,
-  setReadingPlan,
+  upsertReadingPlan,
 } from "@sffvektor/lib";
 import type { CommonQueryMethods } from "slonik";
 
@@ -28,9 +30,11 @@ async function createBookWithAuthor(
     author: Author;
     year?: number;
     genre?: Genre;
+    molyId?: string;
   },
 ) {
   return await createBook(db, {
+    molyId: props.molyId ?? null,
     title: props.title,
     year: props.year ?? 2024,
     genre: props.genre ?? Genre.Fantasy,
@@ -143,7 +147,7 @@ describe("reading plan db functions", () => {
         author: unapprovedAuthor,
       });
 
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: planned.id,
         status: ReadingPlanStatus.WillRead,
@@ -188,7 +192,7 @@ describe("reading plan db functions", () => {
         author,
       });
 
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: otherReader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
@@ -205,7 +209,111 @@ describe("reading plan db functions", () => {
     });
   });
 
-  describe("setReadingPlan", () => {
+  describe("getMolyReadPlansForReader", () => {
+    it("returns only the reader's molyRead plans, each with the book's molyId", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const syncedBook = await createBookWithAuthor(pool, {
+        title: "Synced",
+        isApproved: true,
+        author,
+        molyId: "111",
+      });
+      const manualBook = await createBookWithAuthor(pool, {
+        title: "Manual",
+        isApproved: true,
+        author,
+        molyId: "222",
+      });
+
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: syncedBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+      // a manual status must not be returned
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: manualBook.id,
+        status: ReadingPlanStatus.Read,
+      });
+
+      const result = await getMolyReadPlansForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].bookId, syncedBook.id);
+      assertEquals(result[0].molyId, "111");
+    });
+
+    it("excludes molyRead plans in archived book lists so they stay frozen", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://moly.hu/tagok/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      await createBookList(pool, {
+        year: 2024,
+        genre: Genre.Fantasy,
+        url: "https://example.com/active",
+        pendingUrl: null,
+        readers: [reader.id],
+      });
+      await createBookList(pool, {
+        year: 2023,
+        genre: Genre.Fantasy,
+        url: "https://example.com/archived",
+        pendingUrl: null,
+        archivedAt: "2020-01-01T00:00:00.000Z",
+        readers: [reader.id],
+      });
+
+      const activeBook = await createBookWithAuthor(pool, {
+        title: "Active",
+        isApproved: true,
+        author,
+        year: 2024,
+        molyId: "111",
+      });
+      const archivedBook = await createBookWithAuthor(pool, {
+        title: "Archived",
+        isApproved: true,
+        author,
+        year: 2023,
+        molyId: "222",
+      });
+
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: activeBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: archivedBook.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      const result = await getMolyReadPlansForReader(pool, reader.id);
+
+      assertEquals(result.length, 1);
+      assertEquals(result[0].bookId, activeBook.id);
+    });
+  });
+
+  describe("upsertReadingPlan", () => {
     it("inserts a new reading plan", async () => {
       const pool = await getOrCreateDatabasePool();
       const reader = await createReader(pool, {
@@ -223,7 +331,7 @@ describe("reading plan db functions", () => {
         author,
       });
 
-      await setReadingPlan(pool, {
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.WillRead,
@@ -250,13 +358,13 @@ describe("reading plan db functions", () => {
         isApproved: true,
         author,
       });
-
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.WillRead,
       });
-      await setReadingPlan(pool, {
+
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
@@ -282,13 +390,13 @@ describe("reading plan db functions", () => {
         isApproved: true,
         author,
       });
-
-      await setReadingPlan(pool, {
+      await seedReadingPlan({
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.Read,
       });
-      await setReadingPlan(pool, {
+
+      await upsertReadingPlan(pool, {
         readerId: reader.id,
         bookId: book.id,
         status: ReadingPlanStatus.NoPlan,
@@ -296,6 +404,70 @@ describe("reading plan db functions", () => {
 
       const plan = await getReadingPlan(pool, reader.id, book.id);
       assertExists(plan);
+      assertEquals(plan?.status, ReadingPlanStatus.NoPlan);
+    });
+
+    it("promotes an existing manual status to molyRead (sync promote)", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://example.com/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const book = await createBookWithAuthor(pool, {
+        title: "Book",
+        isApproved: true,
+        author,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.WillRead,
+      });
+
+      await upsertReadingPlan(pool, {
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      const plan = await getReadingPlan(pool, reader.id, book.id);
+      assertEquals(plan?.status, ReadingPlanStatus.MolyRead);
+    });
+
+    it("downgrades a molyRead status to noPlan (sync downgrade)", async () => {
+      const pool = await getOrCreateDatabasePool();
+      const reader = await createReader(pool, {
+        molyUsername: "r1",
+        molyUrl: "https://example.com/r1",
+      });
+      const author = await createAuthor(pool, {
+        displayName: "Author",
+        sortName: "Author",
+        isApproved: true,
+      });
+      const book = await createBookWithAuthor(pool, {
+        title: "Book",
+        isApproved: true,
+        author,
+      });
+      await seedReadingPlan({
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.MolyRead,
+      });
+
+      await upsertReadingPlan(pool, {
+        readerId: reader.id,
+        bookId: book.id,
+        status: ReadingPlanStatus.NoPlan,
+      });
+
+      const plan = await getReadingPlan(pool, reader.id, book.id);
       assertEquals(plan?.status, ReadingPlanStatus.NoPlan);
     });
   });

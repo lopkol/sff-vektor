@@ -11,6 +11,7 @@ import {
   getBookListsForReader,
   getOrCreateDatabasePool,
   InvalidArgumentException,
+  syncAllBookListsFromMoly,
   updateBookList,
   updateBookListSchema,
   UserRole,
@@ -54,6 +55,15 @@ app.get(
       genre,
     );
     return c.json(bookList);
+  },
+);
+
+app.post(
+  "/api/book-lists/sync-from-moly",
+  isUserAdminMiddleware,
+  async (c) => {
+    await syncAllBookListsFromMoly();
+    return c.json({ message: "Book lists synced from Moly" });
   },
 );
 

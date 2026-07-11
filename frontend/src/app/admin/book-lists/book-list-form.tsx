@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import MultipleSelector from "@/components/ui/multiple-selector";
+import { Switch } from "@/components/ui/switch";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -66,6 +68,7 @@ export function BookListForm(
         pendingUrl: z.string().url({ message: t("error.pendingUrl") }).or(
           z.literal("").nullable(),
         ),
+        archivedAt: z.string().nullable(),
         readers: z.array(z.string()),
       }) satisfies z.ZodSchema<CreateBookList>,
     [],
@@ -92,6 +95,7 @@ export function BookListForm(
       genre: bookList?.genre ?? "sci-fi",
       url: bookList?.url ?? "",
       pendingUrl: bookList?.pendingUrl ?? "",
+      archivedAt: bookList?.archivedAt ?? null,
       readers: bookList?.readers ?? [],
     },
   });
@@ -195,6 +199,29 @@ export function BookListForm(
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="archivedAt"
+          render={({ field }) => (
+            <FormItem className="flex items-center justify-between gap-4">
+              <div className="space-y-1">
+                <FormLabel>{t("props.archived")}</FormLabel>
+                <FormDescription>
+                  {t("form.archivedDescription")}
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={!!field.value}
+                  onCheckedChange={(checked) =>
+                    field.onChange(
+                      checked ? (field.value ?? new Date().toISOString()) : null,
+                    )}
+                />
+              </FormControl>
             </FormItem>
           )}
         />

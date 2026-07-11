@@ -1,1 +1,6 @@
-export type ReadingPlanStatus = "read" | "willRead" | "willNotRead" | "noPlan";
+export type ReadingPlanStatus =
+  | "read"
+  | "molyRead"
+  | "willRead"
+  | "willNotRead"
+  | "noPlan";

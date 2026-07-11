@@ -89,14 +89,23 @@
         "genre": "Genre",
         "url": "List URL",
         "pendingUrl": "Pending shelf URL",
-        "readers": "Jury members"
+        "readers": "Jury members",
+        "archived": "Archived"
       },
       "form": {
-        "selectReaders": "Select jury members"
+        "selectReaders": "Select jury members",
+        "archivedDescription": "When archived, Moly syncs and reading plan changes no longer happen for this list."
       },
       "table": {
         "title": "Book lists",
         "addNew": "Add new"
+      },
+      "sync": {
+        "bookLists": "Sync books from Moly",
+        "readings": "Sync readings from Moly",
+        "bookListsSuccess": "Books synced from Moly",
+        "readingsSuccess": "Readings synced from Moly",
+        "error": "Sync from Moly failed"
       },
       "dialog": {
         "createTitle": "Add new book list",
@@ -178,6 +187,7 @@
       },
       "statuses": {
         "read": "Read",
+        "molyRead": "Read (Moly)",
         "willRead": "Will read",
         "willNotRead": "Will not read",
         "noPlan": "No plan yet"
@@ -185,11 +195,13 @@
       "notJuryMember": "You are not a jury member for this book list",
       "loadError": "Could not load the reading list.",
       "updateError": "Could not update the reading plan.",
-      "noBooks": "There are no approved books yet."
+      "noBooks": "There are no approved books yet.",
+      "archived": "Archived"
     },
     "Admin": {
       "title": "{year} {genreName} book list",
       "addBook": "Add book",
+      "archived": "Archived",
       "syncFromMoly": "Sync from moly",
       "syncSuccess": "Sync successful",
       "syncError": "Failed to sync",
