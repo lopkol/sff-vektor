@@ -14,7 +14,7 @@ const neonProject = new neon.Project(
   "neonProject",
   {
     name: "sff-vektor-backend",
-    pgVersion: 17,
+    pgVersion: 18,
     regionId: "aws-eu-central-1",
     // 6 hours of retention (Neon free-tier max)
     historyRetentionSeconds: 21600,
