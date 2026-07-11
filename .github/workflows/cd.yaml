@@ -12,7 +12,7 @@ env:
   DOCKER_IMAGE_TAG: ${{ github.ref_name }}
   PULUMI_STACK_NAME: prod
   APPS_DEPLOYMENT_REPO: SylvainMarty/apps-deployment
-  ARGOCD_APP_NAME: sff-vektor
+  ARGOCD_APP_PROJECT: sff-vektor
 
 jobs:
   pulumi-up:
@@ -280,4 +280,4 @@ jobs:
             --password ${{ secrets.ARGOCD_PASSWORD }}
       - name: Sync ArgoCD Application
         run: |
-          argocd app sync ${{ env.ARGOCD_APP_NAME }}
+          argocd app sync --project ${{ env.ARGOCD_APP_PROJECT }}
