@@ -114,3 +114,5 @@ export const defaultAdminEmail = config.getSecret("defaultAdminEmail");
 export const googleClientId = config.getSecret("googleClientId");
 export const googleClientSecret = config.getSecret("googleClientSecret");
 export const nextAuthSecret = config.getSecret("nextAuthSecret");
+export const molyUsername = config.getSecret("molyUsername");
+export const molyPassword = config.getSecret("molyPassword");
