@@ -1,0 +1,28 @@
+lib/services/moly/book-list.ts
+  s_39d98c00fb89ff::t_5f6aa94b734da5 43
+  s_39d98c00fb89ff::t_702878a70aa529 68
+lib/services/moly/book.ts
+  s_39d98c00fb89ff::t_2c065b9774cdc6 124
+  s_39d98c00fb89ff::t_597187624773da 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "9b0a5e2a89771d2bc015ff0a1a9e7b096bc77773",
+  "prompts": {},
+  "humans": {
+    "h_b221bcce5c2edf": {
+      "author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  },
+  "sessions": {
+    "s_39d98c00fb89ff": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3f0c704a-597a-444d-933f-34bd49887fb1",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Nora <nora.szoke@roundtable.eu>"
+    }
+  }
+}
