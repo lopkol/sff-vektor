@@ -41,6 +41,7 @@ export async function updateBookList(
     {
       url: bookList.url,
       pendingUrl: bookList.pendingUrl,
+      archivedAt: bookList.archivedAt,
       readers: bookList.readers,
     },
   );

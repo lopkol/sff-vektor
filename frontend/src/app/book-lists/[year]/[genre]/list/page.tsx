@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { getBooksWithReadingPlan } from "@/services/books";
 import { setReadingPlan } from "@/services/reading-plans";
+import { getBookLists } from "@/services/book-lists";
 import {
   Table,
   TableBody,
@@ -60,6 +61,15 @@ export default function Page() {
     retry: false,
   });
 
+  // Archived lists are frozen: reading plans become read-only.
+  const { data: bookLists } = useQuery({
+    queryKey: ["book-lists"],
+    queryFn: getBookLists,
+  });
+  const isArchived = !!bookLists?.find(
+    (bookList) => bookList.year === year && bookList.genre === genre,
+  )?.archivedAt;
+
   const { mutate: updateReadingPlan } = useMutation({
     mutationFn: (
       { bookId, status }: { bookId: string; status: ReadingPlanStatus },
@@ -110,7 +120,14 @@ export default function Page() {
     <Card>
       <CardHeader>
         <CardTitle>
-          <h1 className="text-2xl font-bold">{t("title", { genreName })}</h1>
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
+            {t("title", { genreName })}
+            {isArchived && (
+              <span className="rounded bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
+                {t("archived")}
+              </span>
+            )}
+          </h1>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -141,6 +158,7 @@ export default function Page() {
                     : (
                       <Select
                         value={book.readingPlanStatus ?? "noPlan"}
+                        disabled={isArchived}
                         onValueChange={(value) =>
                           updateReadingPlan({
                             bookId: book.id,

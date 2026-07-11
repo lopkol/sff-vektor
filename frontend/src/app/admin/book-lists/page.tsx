@@ -18,7 +18,7 @@ import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShortBookList } from "@/types/book-list";
 import { PageSkeleton } from "@/components/page-skeleton";
-import { RefreshCw } from "lucide-react";
+import { Check, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 
 export default function BookListsPage() {
@@ -120,6 +120,7 @@ export default function BookListsPage() {
               <TableHead className="hidden md:table-cell">
                 {t("props.pendingUrl")}
               </TableHead>
+              <TableHead>{t("props.archived")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -154,6 +155,9 @@ export default function BookListsPage() {
                       {bookList.pendingUrl}
                     </a>
                   )}
+                </TableCell>
+                <TableCell>
+                  {bookList.archivedAt ? <Check className="h-4 w-4" /> : null}
                 </TableCell>
               </TableRow>
             ))}

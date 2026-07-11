@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getBooks, updateBooksFromMoly } from "@/services/books";
+import { getBookLists } from "@/services/book-lists";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +29,15 @@ export default function AdminPage() {
     queryKey: ["books", year, genre],
     queryFn: () => getBooks({ year, genre }),
   });
+
+  // Archived lists are frozen: no syncing from Moly.
+  const { data: bookLists } = useQuery({
+    queryKey: ["book-lists"],
+    queryFn: getBookLists,
+  });
+  const isArchived = !!bookLists?.find(
+    (bookList) => bookList.year === year && bookList.genre === genre,
+  )?.archivedAt;
 
   const { mutate: syncBooks, isPending: isSyncing } = useMutation({
     mutationFn: () => updateBooksFromMoly(year, genre),
@@ -67,14 +77,19 @@ export default function AdminPage() {
     <Card>
       <CardHeader>
         <CardTitle className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">
+          <h1 className="flex items-center gap-2 text-2xl font-bold">
             {t("title", { year, genreName })}
+            {isArchived && (
+              <span className="rounded bg-muted px-2 py-0.5 text-sm font-normal text-muted-foreground">
+                {t("archived")}
+              </span>
+            )}
           </h1>
           <div className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => syncBooks()}
-              disabled={isSyncing}
+              disabled={isSyncing || isArchived}
               className="min-w-10"
             >
               <RefreshCw
