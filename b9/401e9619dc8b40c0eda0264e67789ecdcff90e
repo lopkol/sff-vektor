@@ -1,0 +1,34 @@
+.github/workflows/cd.yaml
+  s_9f4ad9ad9126b9::t_3c085f5210fea1 22
+  s_9f4ad9ad9126b9::t_8330cc0899b688 52,107,162,220
+  s_9f4ad9ad9126b9::t_60996ee40d894a 76,131,195
+  s_9f4ad9ad9126b9::t_bd3e7d1ed7c8a7 164
+  s_9f4ad9ad9126b9::t_454bdf480a391e 62,117,181
+  s_9f4ad9ad9126b9::t_21b5a9d204b58e 59,114,178
+  s_9f4ad9ad9126b9::t_9bffd5cec74a31 69,124,188
+  s_9f4ad9ad9126b9::t_27be9e9a2db8e1 21
+  s_9f4ad9ad9126b9::t_7f8be1bb93e984 28
+infra/src/main.ts
+  h_c79d0d58c8ed87 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.12",
+  "base_commit_sha": "b9401e9619dc8b40c0eda0264e67789ecdcff90e",
+  "prompts": {},
+  "humans": {
+    "h_c79d0d58c8ed87": {
+      "author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_9f4ad9ad9126b9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c72ab423-5c35-4cc3-a0c3-adec5427d566",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Sylvain Marty <10723351+SylvainMarty@users.noreply.github.com>"
+    }
+  }
+}
