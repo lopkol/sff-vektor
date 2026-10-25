@@ -5,10 +5,7 @@ import { getTranslations } from "next-intl/server";
 export default async function Layout({
   children,
   params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ year: string }>;
-}) {
+}: LayoutProps<"/book-lists/[year]/books">) {
   const { year } = await params;
   const t = await getTranslations("Sidebar");
 

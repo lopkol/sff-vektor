@@ -3,10 +3,7 @@ import { BookListYearProvider } from "./book-list-year-provider";
 export default async function YearLayout({
   children,
   params,
-}: {
-  children: React.ReactNode;
-  params: Promise<{ year: string }>;
-}) {
+}: LayoutProps<"/book-lists/[year]">) {
   const { year } = await params;
 
   return (
