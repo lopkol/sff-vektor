@@ -7,8 +7,11 @@
 - Linux distribution recommended
 - You need Docker installed (or PostgreSQL installed if you're that kind of
   person)
-- Deno installed locally:
-  https://docs.deno.com/runtime/getting_started/installation/
+- Deno **2.9.8** installed locally (same version as the backend Docker image; see `.dvmrc`):
+  ```sh
+  curl -fsSL https://deno.land/install.sh | sh -s v2.9.8
+  ```
+  Then add `~/.deno/bin` to your `PATH`, or run `deno upgrade 2.9.8` if Deno is already installed.
 
 ### To run the project locally
 

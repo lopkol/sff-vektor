@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22.14.0
+ARG NODE_VERSION=24.22.1
 
 #
 # Base stage
